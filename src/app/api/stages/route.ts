@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
+    const user = await requireCurrentUser();
     const body = await request.json();
 
     const { goalId, name, description, order } = body;
@@ -21,6 +23,7 @@ export async function POST(request: Request) {
     const goal = await prisma.goal.findUnique({
       where: {
         id: goalId,
+        userId: user.id,
       },
     });
 
@@ -38,6 +41,7 @@ export async function POST(request: Request) {
     const stage = await prisma.stage.create({
       data: {
         goalId,
+        userId: user.id,
         name: name.trim(),
         description: description?.trim() || null,
         order: Number.isInteger(order) ? order : 0,
@@ -48,6 +52,7 @@ export async function POST(request: Request) {
       status: 201,
     });
   } catch (error) {
+    if (error instanceof Error && error.message === "Autentikasi diperlukan.") return authErrorResponse(error);
     console.error("POST /api/stages error:", error);
 
     return NextResponse.json(

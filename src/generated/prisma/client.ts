@@ -76,3 +76,8 @@ export type DailyFocus = Prisma.DailyFocusModel
  * 
  */
 export type Capture = Prisma.CaptureModel
+/**
+ * Model User
+ * 
+ */
+export type User = Prisma.UserModel

@@ -36,6 +36,7 @@ export type DailyFocusSumAggregateOutputType = {
 
 export type DailyFocusMinAggregateOutputType = {
   id: string | null
+  userId: string | null
   date: Date | null
   taskId: string | null
   order: number | null
@@ -44,6 +45,7 @@ export type DailyFocusMinAggregateOutputType = {
 
 export type DailyFocusMaxAggregateOutputType = {
   id: string | null
+  userId: string | null
   date: Date | null
   taskId: string | null
   order: number | null
@@ -52,6 +54,7 @@ export type DailyFocusMaxAggregateOutputType = {
 
 export type DailyFocusCountAggregateOutputType = {
   id: number
+  userId: number
   date: number
   taskId: number
   order: number
@@ -70,6 +73,7 @@ export type DailyFocusSumAggregateInputType = {
 
 export type DailyFocusMinAggregateInputType = {
   id?: true
+  userId?: true
   date?: true
   taskId?: true
   order?: true
@@ -78,6 +82,7 @@ export type DailyFocusMinAggregateInputType = {
 
 export type DailyFocusMaxAggregateInputType = {
   id?: true
+  userId?: true
   date?: true
   taskId?: true
   order?: true
@@ -86,6 +91,7 @@ export type DailyFocusMaxAggregateInputType = {
 
 export type DailyFocusCountAggregateInputType = {
   id?: true
+  userId?: true
   date?: true
   taskId?: true
   order?: true
@@ -181,6 +187,7 @@ export type DailyFocusGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 
 export type DailyFocusGroupByOutputType = {
   id: string
+  userId: string
   date: Date
   taskId: string
   order: number
@@ -212,20 +219,24 @@ export type DailyFocusWhereInput = {
   OR?: Prisma.DailyFocusWhereInput[]
   NOT?: Prisma.DailyFocusWhereInput | Prisma.DailyFocusWhereInput[]
   id?: Prisma.StringFilter<"DailyFocus"> | string
+  userId?: Prisma.StringFilter<"DailyFocus"> | string
   date?: Prisma.DateTimeFilter<"DailyFocus"> | Date | string
   taskId?: Prisma.StringFilter<"DailyFocus"> | string
   order?: Prisma.IntFilter<"DailyFocus"> | number
   createdAt?: Prisma.DateTimeFilter<"DailyFocus"> | Date | string
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type DailyFocusOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   task?: Prisma.TaskOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type DailyFocusWhereUniqueInput = Prisma.AtLeast<{
@@ -234,15 +245,18 @@ export type DailyFocusWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.DailyFocusWhereInput | Prisma.DailyFocusWhereInput[]
   OR?: Prisma.DailyFocusWhereInput[]
   NOT?: Prisma.DailyFocusWhereInput | Prisma.DailyFocusWhereInput[]
+  userId?: Prisma.StringFilter<"DailyFocus"> | string
   date?: Prisma.DateTimeFilter<"DailyFocus"> | Date | string
   taskId?: Prisma.StringFilter<"DailyFocus"> | string
   order?: Prisma.IntFilter<"DailyFocus"> | number
   createdAt?: Prisma.DateTimeFilter<"DailyFocus"> | Date | string
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "date_taskId">
 
 export type DailyFocusOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -259,6 +273,7 @@ export type DailyFocusScalarWhereWithAggregatesInput = {
   OR?: Prisma.DailyFocusScalarWhereWithAggregatesInput[]
   NOT?: Prisma.DailyFocusScalarWhereWithAggregatesInput | Prisma.DailyFocusScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"DailyFocus"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"DailyFocus"> | string
   date?: Prisma.DateTimeWithAggregatesFilter<"DailyFocus"> | Date | string
   taskId?: Prisma.StringWithAggregatesFilter<"DailyFocus"> | string
   order?: Prisma.IntWithAggregatesFilter<"DailyFocus"> | number
@@ -271,10 +286,12 @@ export type DailyFocusCreateInput = {
   order?: number
   createdAt?: Date | string
   task: Prisma.TaskCreateNestedOneWithoutDailyFocusesInput
+  user?: Prisma.UserCreateNestedOneWithoutDailyFocusesInput
 }
 
 export type DailyFocusUncheckedCreateInput = {
   id?: string
+  userId?: string
   date: Date | string
   taskId: string
   order?: number
@@ -287,10 +304,12 @@ export type DailyFocusUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   task?: Prisma.TaskUpdateOneRequiredWithoutDailyFocusesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutDailyFocusesNestedInput
 }
 
 export type DailyFocusUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   taskId?: Prisma.StringFieldUpdateOperationsInput | string
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -299,6 +318,7 @@ export type DailyFocusUncheckedUpdateInput = {
 
 export type DailyFocusCreateManyInput = {
   id?: string
+  userId?: string
   date: Date | string
   taskId: string
   order?: number
@@ -314,6 +334,7 @@ export type DailyFocusUpdateManyMutationInput = {
 
 export type DailyFocusUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   taskId?: Prisma.StringFieldUpdateOperationsInput | string
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -337,6 +358,7 @@ export type DailyFocusDateTaskIdCompoundUniqueInput = {
 
 export type DailyFocusCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -349,6 +371,7 @@ export type DailyFocusAvgOrderByAggregateInput = {
 
 export type DailyFocusMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -357,6 +380,7 @@ export type DailyFocusMaxOrderByAggregateInput = {
 
 export type DailyFocusMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -409,15 +433,59 @@ export type DailyFocusUncheckedUpdateManyWithoutTaskNestedInput = {
   deleteMany?: Prisma.DailyFocusScalarWhereInput | Prisma.DailyFocusScalarWhereInput[]
 }
 
+export type DailyFocusCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.DailyFocusCreateWithoutUserInput, Prisma.DailyFocusUncheckedCreateWithoutUserInput> | Prisma.DailyFocusCreateWithoutUserInput[] | Prisma.DailyFocusUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.DailyFocusCreateOrConnectWithoutUserInput | Prisma.DailyFocusCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.DailyFocusCreateManyUserInputEnvelope
+  connect?: Prisma.DailyFocusWhereUniqueInput | Prisma.DailyFocusWhereUniqueInput[]
+}
+
+export type DailyFocusUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.DailyFocusCreateWithoutUserInput, Prisma.DailyFocusUncheckedCreateWithoutUserInput> | Prisma.DailyFocusCreateWithoutUserInput[] | Prisma.DailyFocusUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.DailyFocusCreateOrConnectWithoutUserInput | Prisma.DailyFocusCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.DailyFocusCreateManyUserInputEnvelope
+  connect?: Prisma.DailyFocusWhereUniqueInput | Prisma.DailyFocusWhereUniqueInput[]
+}
+
+export type DailyFocusUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.DailyFocusCreateWithoutUserInput, Prisma.DailyFocusUncheckedCreateWithoutUserInput> | Prisma.DailyFocusCreateWithoutUserInput[] | Prisma.DailyFocusUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.DailyFocusCreateOrConnectWithoutUserInput | Prisma.DailyFocusCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.DailyFocusUpsertWithWhereUniqueWithoutUserInput | Prisma.DailyFocusUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.DailyFocusCreateManyUserInputEnvelope
+  set?: Prisma.DailyFocusWhereUniqueInput | Prisma.DailyFocusWhereUniqueInput[]
+  disconnect?: Prisma.DailyFocusWhereUniqueInput | Prisma.DailyFocusWhereUniqueInput[]
+  delete?: Prisma.DailyFocusWhereUniqueInput | Prisma.DailyFocusWhereUniqueInput[]
+  connect?: Prisma.DailyFocusWhereUniqueInput | Prisma.DailyFocusWhereUniqueInput[]
+  update?: Prisma.DailyFocusUpdateWithWhereUniqueWithoutUserInput | Prisma.DailyFocusUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.DailyFocusUpdateManyWithWhereWithoutUserInput | Prisma.DailyFocusUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.DailyFocusScalarWhereInput | Prisma.DailyFocusScalarWhereInput[]
+}
+
+export type DailyFocusUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.DailyFocusCreateWithoutUserInput, Prisma.DailyFocusUncheckedCreateWithoutUserInput> | Prisma.DailyFocusCreateWithoutUserInput[] | Prisma.DailyFocusUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.DailyFocusCreateOrConnectWithoutUserInput | Prisma.DailyFocusCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.DailyFocusUpsertWithWhereUniqueWithoutUserInput | Prisma.DailyFocusUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.DailyFocusCreateManyUserInputEnvelope
+  set?: Prisma.DailyFocusWhereUniqueInput | Prisma.DailyFocusWhereUniqueInput[]
+  disconnect?: Prisma.DailyFocusWhereUniqueInput | Prisma.DailyFocusWhereUniqueInput[]
+  delete?: Prisma.DailyFocusWhereUniqueInput | Prisma.DailyFocusWhereUniqueInput[]
+  connect?: Prisma.DailyFocusWhereUniqueInput | Prisma.DailyFocusWhereUniqueInput[]
+  update?: Prisma.DailyFocusUpdateWithWhereUniqueWithoutUserInput | Prisma.DailyFocusUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.DailyFocusUpdateManyWithWhereWithoutUserInput | Prisma.DailyFocusUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.DailyFocusScalarWhereInput | Prisma.DailyFocusScalarWhereInput[]
+}
+
 export type DailyFocusCreateWithoutTaskInput = {
   id?: string
   date: Date | string
   order?: number
   createdAt?: Date | string
+  user?: Prisma.UserCreateNestedOneWithoutDailyFocusesInput
 }
 
 export type DailyFocusUncheckedCreateWithoutTaskInput = {
   id?: string
+  userId?: string
   date: Date | string
   order?: number
   createdAt?: Date | string
@@ -453,14 +521,57 @@ export type DailyFocusScalarWhereInput = {
   OR?: Prisma.DailyFocusScalarWhereInput[]
   NOT?: Prisma.DailyFocusScalarWhereInput | Prisma.DailyFocusScalarWhereInput[]
   id?: Prisma.StringFilter<"DailyFocus"> | string
+  userId?: Prisma.StringFilter<"DailyFocus"> | string
   date?: Prisma.DateTimeFilter<"DailyFocus"> | Date | string
   taskId?: Prisma.StringFilter<"DailyFocus"> | string
   order?: Prisma.IntFilter<"DailyFocus"> | number
   createdAt?: Prisma.DateTimeFilter<"DailyFocus"> | Date | string
 }
 
+export type DailyFocusCreateWithoutUserInput = {
+  id?: string
+  date: Date | string
+  order?: number
+  createdAt?: Date | string
+  task: Prisma.TaskCreateNestedOneWithoutDailyFocusesInput
+}
+
+export type DailyFocusUncheckedCreateWithoutUserInput = {
+  id?: string
+  date: Date | string
+  taskId: string
+  order?: number
+  createdAt?: Date | string
+}
+
+export type DailyFocusCreateOrConnectWithoutUserInput = {
+  where: Prisma.DailyFocusWhereUniqueInput
+  create: Prisma.XOR<Prisma.DailyFocusCreateWithoutUserInput, Prisma.DailyFocusUncheckedCreateWithoutUserInput>
+}
+
+export type DailyFocusCreateManyUserInputEnvelope = {
+  data: Prisma.DailyFocusCreateManyUserInput | Prisma.DailyFocusCreateManyUserInput[]
+}
+
+export type DailyFocusUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.DailyFocusWhereUniqueInput
+  update: Prisma.XOR<Prisma.DailyFocusUpdateWithoutUserInput, Prisma.DailyFocusUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.DailyFocusCreateWithoutUserInput, Prisma.DailyFocusUncheckedCreateWithoutUserInput>
+}
+
+export type DailyFocusUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.DailyFocusWhereUniqueInput
+  data: Prisma.XOR<Prisma.DailyFocusUpdateWithoutUserInput, Prisma.DailyFocusUncheckedUpdateWithoutUserInput>
+}
+
+export type DailyFocusUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.DailyFocusScalarWhereInput
+  data: Prisma.XOR<Prisma.DailyFocusUpdateManyMutationInput, Prisma.DailyFocusUncheckedUpdateManyWithoutUserInput>
+}
+
 export type DailyFocusCreateManyTaskInput = {
   id?: string
+  userId?: string
   date: Date | string
   order?: number
   createdAt?: Date | string
@@ -471,10 +582,12 @@ export type DailyFocusUpdateWithoutTaskInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutDailyFocusesNestedInput
 }
 
 export type DailyFocusUncheckedUpdateWithoutTaskInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -482,7 +595,40 @@ export type DailyFocusUncheckedUpdateWithoutTaskInput = {
 
 export type DailyFocusUncheckedUpdateManyWithoutTaskInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DailyFocusCreateManyUserInput = {
+  id?: string
+  date: Date | string
+  taskId: string
+  order?: number
+  createdAt?: Date | string
+}
+
+export type DailyFocusUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  task?: Prisma.TaskUpdateOneRequiredWithoutDailyFocusesNestedInput
+}
+
+export type DailyFocusUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taskId?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DailyFocusUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taskId?: Prisma.StringFieldUpdateOperationsInput | string
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -491,57 +637,69 @@ export type DailyFocusUncheckedUpdateManyWithoutTaskInput = {
 
 export type DailyFocusSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   date?: boolean
   taskId?: boolean
   order?: boolean
   createdAt?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dailyFocus"]>
 
 export type DailyFocusSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   date?: boolean
   taskId?: boolean
   order?: boolean
   createdAt?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dailyFocus"]>
 
 export type DailyFocusSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   date?: boolean
   taskId?: boolean
   order?: boolean
   createdAt?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dailyFocus"]>
 
 export type DailyFocusSelectScalar = {
   id?: boolean
+  userId?: boolean
   date?: boolean
   taskId?: boolean
   order?: boolean
   createdAt?: boolean
 }
 
-export type DailyFocusOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "date" | "taskId" | "order" | "createdAt", ExtArgs["result"]["dailyFocus"]>
+export type DailyFocusOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "date" | "taskId" | "order" | "createdAt", ExtArgs["result"]["dailyFocus"]>
 export type DailyFocusInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type DailyFocusIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type DailyFocusIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $DailyFocusPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DailyFocus"
   objects: {
     task: Prisma.$TaskPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    userId: string
     date: Date
     taskId: string
     order: number
@@ -941,6 +1099,7 @@ readonly fields: DailyFocusFieldRefs;
 export interface Prisma__DailyFocusClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   task<T extends Prisma.TaskDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskDefaultArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -971,6 +1130,7 @@ export interface Prisma__DailyFocusClient<T, Null = never, ExtArgs extends runti
  */
 export interface DailyFocusFieldRefs {
   readonly id: Prisma.FieldRef<"DailyFocus", 'String'>
+  readonly userId: Prisma.FieldRef<"DailyFocus", 'String'>
   readonly date: Prisma.FieldRef<"DailyFocus", 'DateTime'>
   readonly taskId: Prisma.FieldRef<"DailyFocus", 'String'>
   readonly order: Prisma.FieldRef<"DailyFocus", 'Int'>

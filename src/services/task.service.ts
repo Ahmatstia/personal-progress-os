@@ -15,8 +15,8 @@ export class TaskServiceError extends Error {
   }
 }
 
-export async function createTask(input: CreateTaskInput) {
-  if (!(await findStageForTask(input.stageId))) throw new TaskServiceError("Stage tidak ditemukan.", "STAGE_NOT_FOUND");
+export async function createTask(input: CreateTaskInput, userId?: string) {
+  if (!(await findStageForTask(input.stageId, userId))) throw new TaskServiceError("Stage tidak ditemukan.", "STAGE_NOT_FOUND");
   return createTaskRecord({
     stageId: input.stageId,
     name: input.name,
@@ -26,11 +26,12 @@ export async function createTask(input: CreateTaskInput) {
     status: "NOT_STARTED",
     estimatedHours: input.estimatedHours,
     notes: input.notes || null,
+    ...(userId ? { userId } : {}),
   });
 }
 
-export async function updateTask(id: string, input: UpdateTaskInput) {
-  const task = await findTask(id);
+export async function updateTask(id: string, input: UpdateTaskInput, userId?: string) {
+  const task = await findTask(id, userId);
   if (!task) throw new TaskServiceError("Task tidak ditemukan.", "TASK_NOT_FOUND");
 
   const data: Record<string, unknown> = { ...input };
@@ -40,7 +41,7 @@ export async function updateTask(id: string, input: UpdateTaskInput) {
     data.completedAt = input.status === "COMPLETED" ? new Date() : null;
     if (input.status !== "NOT_STARTED") data.startedAt = task.startedAt ?? new Date();
   }
-  return updateTaskRecord(id, data);
+  return updateTaskRecord(id, data, userId);
 }
 
 export function completeTask(id: string) {
@@ -51,21 +52,21 @@ export function reopenTask(id: string) {
   return updateTask(id, { status: "IN_PROGRESS" });
 }
 
-export async function deleteTask(id: string) {
-  if (!(await findTask(id))) throw new TaskServiceError("Task tidak ditemukan.", "TASK_NOT_FOUND");
-  return deleteTaskRecord(id);
+export async function deleteTask(id: string, userId?: string) {
+  if (!(await findTask(id, userId))) throw new TaskServiceError("Task tidak ditemukan.", "TASK_NOT_FOUND");
+  return deleteTaskRecord(id, userId);
 }
 
-export async function getTaskDetail(id: string) {
-  const task = await findTaskDetail(id);
+export async function getTaskDetail(id: string, userId?: string) {
+  const task = await findTaskDetail(id, userId);
   if (!task) return null;
   const activeSession = task.sessions.find((session) => session.endedAt === null) ?? null;
   return { task, activeSession };
 }
 
-export async function findMatchingTasks(query: string) {
+export async function findMatchingTasks(query: string, userId?: string) {
   const normalizedQuery = query.trim().toLocaleLowerCase("id-ID");
-  const tasks = await findTasksForAI();
+  const tasks = await findTasksForAI(userId);
   if (!normalizedQuery) return tasks;
   return tasks.filter((task) => task.name.toLocaleLowerCase("id-ID").includes(normalizedQuery));
 }

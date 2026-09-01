@@ -9,6 +9,7 @@ datasource db {
 
 model Goal {
   id          String    @id @default(cuid())
+  userId      String    @default("dev-user")
   name        String
   description String?
   type        String    @default("LEARNING")
@@ -20,10 +21,13 @@ model Goal {
 
   stages      Stage[]
   reviews     Review[]
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
 }
 
 model Stage {
   id          String    @id @default(cuid())
+  userId      String    @default("dev-user")
   goalId      String
   name        String
   description String?
@@ -34,10 +38,13 @@ model Stage {
 
   goal        Goal      @relation(fields: [goalId], references: [id], onDelete: Cascade)
   tasks       Task[]
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
 }
 
 model Task {
   id             String    @id @default(cuid())
+  userId         String    @default("dev-user")
   stageId        String
 
   name           String
@@ -61,10 +68,13 @@ model Task {
   stage          Stage     @relation(fields: [stageId], references: [id], onDelete: Cascade)
   sessions       Session[]
   dailyFocuses   DailyFocus[]
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
 }
 
 model Session {
   id               String    @id @default(cuid())
+  userId           String    @default("dev-user")
   taskId           String
 
   startedAt        DateTime
@@ -80,10 +90,13 @@ model Session {
   createdAt        DateTime  @default(now())
 
   task             Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
 }
 
 model Review {
   id          String    @id @default(cuid())
+  userId      String    @default("dev-user")
   goalId      String
 
   periodStart DateTime
@@ -101,23 +114,46 @@ model Review {
   createdAt    DateTime @default(now())
 
   goal         Goal      @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
 }
 
 model DailyFocus {
   id        String   @id @default(cuid())
+  userId    String   @default("dev-user")
   date      DateTime
   taskId    String
   order     Int      @default(0)
   createdAt DateTime @default(now())
 
   task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([date, taskId])
   @@index([date, order])
+  @@index([userId])
 }
 
 model Capture {
   id        String   @id @default(cuid())
+  userId    String   @default("dev-user")
   content   String
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model User {
+  id           String       @id
+  email        String       @unique
+  name         String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  goals        Goal[]
+  stages       Stage[]
+  tasks        Task[]
+  sessions     Session[]
+  reviews      Review[]
+  dailyFocuses DailyFocus[]
+  captures     Capture[]
 }

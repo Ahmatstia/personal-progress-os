@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { SessionServiceError, getSession } from "@/services/session.service";
+import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
 
 export async function GET(
   _request: Request,
   context: { params: Promise<{ id: string }> },
 ) {
-  const session = await getSession((await context.params).id);
+  try {
+    const user = await requireCurrentUser();
+    const session = await getSession((await context.params).id, user.id);
   if (!session) {
     return NextResponse.json(
       { success: false, error: { message: "Session tidak ditemukan.", code: "SESSION_NOT_FOUND" } },
@@ -13,6 +16,7 @@ export async function GET(
     );
   }
   return NextResponse.json({ success: true, data: session });
+  } catch (error) { return authErrorResponse(error); }
 }
 
 export function handleSessionError(error: unknown) {

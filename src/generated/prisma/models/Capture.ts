@@ -26,18 +26,21 @@ export type AggregateCapture = {
 
 export type CaptureMinAggregateOutputType = {
   id: string | null
+  userId: string | null
   content: string | null
   createdAt: Date | null
 }
 
 export type CaptureMaxAggregateOutputType = {
   id: string | null
+  userId: string | null
   content: string | null
   createdAt: Date | null
 }
 
 export type CaptureCountAggregateOutputType = {
   id: number
+  userId: number
   content: number
   createdAt: number
   _all: number
@@ -46,18 +49,21 @@ export type CaptureCountAggregateOutputType = {
 
 export type CaptureMinAggregateInputType = {
   id?: true
+  userId?: true
   content?: true
   createdAt?: true
 }
 
 export type CaptureMaxAggregateInputType = {
   id?: true
+  userId?: true
   content?: true
   createdAt?: true
 }
 
 export type CaptureCountAggregateInputType = {
   id?: true
+  userId?: true
   content?: true
   createdAt?: true
   _all?: true
@@ -137,6 +143,7 @@ export type CaptureGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type CaptureGroupByOutputType = {
   id: string
+  userId: string
   content: string
   createdAt: Date
   _count: CaptureCountAggregateOutputType | null
@@ -164,14 +171,18 @@ export type CaptureWhereInput = {
   OR?: Prisma.CaptureWhereInput[]
   NOT?: Prisma.CaptureWhereInput | Prisma.CaptureWhereInput[]
   id?: Prisma.StringFilter<"Capture"> | string
+  userId?: Prisma.StringFilter<"Capture"> | string
   content?: Prisma.StringFilter<"Capture"> | string
   createdAt?: Prisma.DateTimeFilter<"Capture"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type CaptureOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type CaptureWhereUniqueInput = Prisma.AtLeast<{
@@ -179,12 +190,15 @@ export type CaptureWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CaptureWhereInput | Prisma.CaptureWhereInput[]
   OR?: Prisma.CaptureWhereInput[]
   NOT?: Prisma.CaptureWhereInput | Prisma.CaptureWhereInput[]
+  userId?: Prisma.StringFilter<"Capture"> | string
   content?: Prisma.StringFilter<"Capture"> | string
   createdAt?: Prisma.DateTimeFilter<"Capture"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type CaptureOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.CaptureCountOrderByAggregateInput
@@ -197,6 +211,7 @@ export type CaptureScalarWhereWithAggregatesInput = {
   OR?: Prisma.CaptureScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CaptureScalarWhereWithAggregatesInput | Prisma.CaptureScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Capture"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"Capture"> | string
   content?: Prisma.StringWithAggregatesFilter<"Capture"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Capture"> | Date | string
 }
@@ -205,10 +220,12 @@ export type CaptureCreateInput = {
   id?: string
   content: string
   createdAt?: Date | string
+  user?: Prisma.UserCreateNestedOneWithoutCapturesInput
 }
 
 export type CaptureUncheckedCreateInput = {
   id?: string
+  userId?: string
   content: string
   createdAt?: Date | string
 }
@@ -217,16 +234,19 @@ export type CaptureUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutCapturesNestedInput
 }
 
 export type CaptureUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CaptureCreateManyInput = {
   id?: string
+  userId?: string
   content: string
   createdAt?: Date | string
 }
@@ -239,61 +259,207 @@ export type CaptureUpdateManyMutationInput = {
 
 export type CaptureUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CaptureCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type CaptureMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type CaptureMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type CaptureListRelationFilter = {
+  every?: Prisma.CaptureWhereInput
+  some?: Prisma.CaptureWhereInput
+  none?: Prisma.CaptureWhereInput
+}
+
+export type CaptureOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
+export type CaptureCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.CaptureCreateWithoutUserInput, Prisma.CaptureUncheckedCreateWithoutUserInput> | Prisma.CaptureCreateWithoutUserInput[] | Prisma.CaptureUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CaptureCreateOrConnectWithoutUserInput | Prisma.CaptureCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.CaptureCreateManyUserInputEnvelope
+  connect?: Prisma.CaptureWhereUniqueInput | Prisma.CaptureWhereUniqueInput[]
+}
+
+export type CaptureUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.CaptureCreateWithoutUserInput, Prisma.CaptureUncheckedCreateWithoutUserInput> | Prisma.CaptureCreateWithoutUserInput[] | Prisma.CaptureUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CaptureCreateOrConnectWithoutUserInput | Prisma.CaptureCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.CaptureCreateManyUserInputEnvelope
+  connect?: Prisma.CaptureWhereUniqueInput | Prisma.CaptureWhereUniqueInput[]
+}
+
+export type CaptureUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.CaptureCreateWithoutUserInput, Prisma.CaptureUncheckedCreateWithoutUserInput> | Prisma.CaptureCreateWithoutUserInput[] | Prisma.CaptureUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CaptureCreateOrConnectWithoutUserInput | Prisma.CaptureCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.CaptureUpsertWithWhereUniqueWithoutUserInput | Prisma.CaptureUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.CaptureCreateManyUserInputEnvelope
+  set?: Prisma.CaptureWhereUniqueInput | Prisma.CaptureWhereUniqueInput[]
+  disconnect?: Prisma.CaptureWhereUniqueInput | Prisma.CaptureWhereUniqueInput[]
+  delete?: Prisma.CaptureWhereUniqueInput | Prisma.CaptureWhereUniqueInput[]
+  connect?: Prisma.CaptureWhereUniqueInput | Prisma.CaptureWhereUniqueInput[]
+  update?: Prisma.CaptureUpdateWithWhereUniqueWithoutUserInput | Prisma.CaptureUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.CaptureUpdateManyWithWhereWithoutUserInput | Prisma.CaptureUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CaptureScalarWhereInput | Prisma.CaptureScalarWhereInput[]
+}
+
+export type CaptureUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.CaptureCreateWithoutUserInput, Prisma.CaptureUncheckedCreateWithoutUserInput> | Prisma.CaptureCreateWithoutUserInput[] | Prisma.CaptureUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CaptureCreateOrConnectWithoutUserInput | Prisma.CaptureCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.CaptureUpsertWithWhereUniqueWithoutUserInput | Prisma.CaptureUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.CaptureCreateManyUserInputEnvelope
+  set?: Prisma.CaptureWhereUniqueInput | Prisma.CaptureWhereUniqueInput[]
+  disconnect?: Prisma.CaptureWhereUniqueInput | Prisma.CaptureWhereUniqueInput[]
+  delete?: Prisma.CaptureWhereUniqueInput | Prisma.CaptureWhereUniqueInput[]
+  connect?: Prisma.CaptureWhereUniqueInput | Prisma.CaptureWhereUniqueInput[]
+  update?: Prisma.CaptureUpdateWithWhereUniqueWithoutUserInput | Prisma.CaptureUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.CaptureUpdateManyWithWhereWithoutUserInput | Prisma.CaptureUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CaptureScalarWhereInput | Prisma.CaptureScalarWhereInput[]
+}
+
+export type CaptureCreateWithoutUserInput = {
+  id?: string
+  content: string
+  createdAt?: Date | string
+}
+
+export type CaptureUncheckedCreateWithoutUserInput = {
+  id?: string
+  content: string
+  createdAt?: Date | string
+}
+
+export type CaptureCreateOrConnectWithoutUserInput = {
+  where: Prisma.CaptureWhereUniqueInput
+  create: Prisma.XOR<Prisma.CaptureCreateWithoutUserInput, Prisma.CaptureUncheckedCreateWithoutUserInput>
+}
+
+export type CaptureCreateManyUserInputEnvelope = {
+  data: Prisma.CaptureCreateManyUserInput | Prisma.CaptureCreateManyUserInput[]
+}
+
+export type CaptureUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.CaptureWhereUniqueInput
+  update: Prisma.XOR<Prisma.CaptureUpdateWithoutUserInput, Prisma.CaptureUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.CaptureCreateWithoutUserInput, Prisma.CaptureUncheckedCreateWithoutUserInput>
+}
+
+export type CaptureUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.CaptureWhereUniqueInput
+  data: Prisma.XOR<Prisma.CaptureUpdateWithoutUserInput, Prisma.CaptureUncheckedUpdateWithoutUserInput>
+}
+
+export type CaptureUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.CaptureScalarWhereInput
+  data: Prisma.XOR<Prisma.CaptureUpdateManyMutationInput, Prisma.CaptureUncheckedUpdateManyWithoutUserInput>
+}
+
+export type CaptureScalarWhereInput = {
+  AND?: Prisma.CaptureScalarWhereInput | Prisma.CaptureScalarWhereInput[]
+  OR?: Prisma.CaptureScalarWhereInput[]
+  NOT?: Prisma.CaptureScalarWhereInput | Prisma.CaptureScalarWhereInput[]
+  id?: Prisma.StringFilter<"Capture"> | string
+  userId?: Prisma.StringFilter<"Capture"> | string
+  content?: Prisma.StringFilter<"Capture"> | string
+  createdAt?: Prisma.DateTimeFilter<"Capture"> | Date | string
+}
+
+export type CaptureCreateManyUserInput = {
+  id?: string
+  content: string
+  createdAt?: Date | string
+}
+
+export type CaptureUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CaptureUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CaptureUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
 
 export type CaptureSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   content?: boolean
   createdAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["capture"]>
 
 export type CaptureSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   content?: boolean
   createdAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["capture"]>
 
 export type CaptureSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   content?: boolean
   createdAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["capture"]>
 
 export type CaptureSelectScalar = {
   id?: boolean
+  userId?: boolean
   content?: boolean
   createdAt?: boolean
 }
 
-export type CaptureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "createdAt", ExtArgs["result"]["capture"]>
+export type CaptureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "content" | "createdAt", ExtArgs["result"]["capture"]>
+export type CaptureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type CaptureIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type CaptureIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
 
 export type $CapturePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Capture"
-  objects: {}
+  objects: {
+    user: Prisma.$UserPayload<ExtArgs>
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    userId: string
     content: string
     createdAt: Date
   }, ExtArgs["result"]["capture"]>
@@ -690,6 +856,7 @@ readonly fields: CaptureFieldRefs;
  */
 export interface Prisma__CaptureClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -720,6 +887,7 @@ export interface Prisma__CaptureClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface CaptureFieldRefs {
   readonly id: Prisma.FieldRef<"Capture", 'String'>
+  readonly userId: Prisma.FieldRef<"Capture", 'String'>
   readonly content: Prisma.FieldRef<"Capture", 'String'>
   readonly createdAt: Prisma.FieldRef<"Capture", 'DateTime'>
 }
@@ -739,6 +907,10 @@ export type CaptureFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.CaptureOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureInclude<ExtArgs> | null
+  /**
    * Filter, which Capture to fetch.
    */
   where: Prisma.CaptureWhereUniqueInput
@@ -757,6 +929,10 @@ export type CaptureFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.CaptureOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureInclude<ExtArgs> | null
+  /**
    * Filter, which Capture to fetch.
    */
   where: Prisma.CaptureWhereUniqueInput
@@ -774,6 +950,10 @@ export type CaptureFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Capture
    */
   omit?: Prisma.CaptureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureInclude<ExtArgs> | null
   /**
    * Filter, which Capture to fetch.
    */
@@ -823,6 +1003,10 @@ export type CaptureFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.CaptureOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureInclude<ExtArgs> | null
+  /**
    * Filter, which Capture to fetch.
    */
   where?: Prisma.CaptureWhereInput
@@ -870,6 +1054,10 @@ export type CaptureFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Capture
    */
   omit?: Prisma.CaptureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureInclude<ExtArgs> | null
   /**
    * Filter, which Captures to fetch.
    */
@@ -919,6 +1107,10 @@ export type CaptureCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.CaptureOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureInclude<ExtArgs> | null
+  /**
    * The data needed to create a Capture.
    */
   data: Prisma.XOR<Prisma.CaptureCreateInput, Prisma.CaptureUncheckedCreateInput>
@@ -950,6 +1142,10 @@ export type CaptureCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many Captures.
    */
   data: Prisma.CaptureCreateManyInput | Prisma.CaptureCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -964,6 +1160,10 @@ export type CaptureUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Capture
    */
   omit?: Prisma.CaptureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureInclude<ExtArgs> | null
   /**
    * The data needed to update a Capture.
    */
@@ -1016,6 +1216,10 @@ export type CaptureUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many Captures to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1030,6 +1234,10 @@ export type CaptureUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Capture
    */
   omit?: Prisma.CaptureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureInclude<ExtArgs> | null
   /**
    * The filter to search for the Capture to update in case it exists.
    */
@@ -1056,6 +1264,10 @@ export type CaptureDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Capture
    */
   omit?: Prisma.CaptureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureInclude<ExtArgs> | null
   /**
    * Filter which Capture to delete.
    */
@@ -1088,4 +1300,8 @@ export type CaptureDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Capture
    */
   omit?: Prisma.CaptureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaptureInclude<ExtArgs> | null
 }

@@ -10,28 +10,28 @@ const sessionInclude = {
   },
 } as const;
 
-export function createSession(taskId: string) {
+export function createSession(taskId: string, userId?: string) {
   return prisma.session.create({
-    data: { taskId, startedAt: new Date() },
+    data: { taskId, startedAt: new Date(), ...(userId ? { userId } : {}) },
     include: sessionInclude,
   });
 }
 
-export function findActiveSessionByTaskId(taskId: string) {
+export function findActiveSessionByTaskId(taskId: string, userId?: string) {
   return prisma.session.findFirst({
-    where: { taskId, endedAt: null },
+    where: { taskId, endedAt: null, ...(userId ? { userId } : {}) },
     orderBy: { startedAt: "desc" },
     include: sessionInclude,
   });
 }
 
-export function findAnyActiveSession() {
-  return prisma.session.findFirst({ where: { endedAt: null }, orderBy: { startedAt: "desc" }, include: sessionInclude });
+export function findAnyActiveSession(userId?: string) {
+  return prisma.session.findFirst({ where: { endedAt: null, ...(userId ? { userId } : {}) }, orderBy: { startedAt: "desc" }, include: sessionInclude });
 }
 
-export function findSessionById(id: string) {
+export function findSessionById(id: string, userId?: string) {
   return prisma.session.findUnique({
-    where: { id },
+    where: { id, ...(userId ? { userId } : {}) },
     include: sessionInclude,
   });
 }
@@ -54,17 +54,17 @@ export function endSession(
   });
 }
 
-export function findSessionsByTaskId(taskId: string) {
+export function findSessionsByTaskId(taskId: string, userId?: string) {
   return prisma.session.findMany({
-    where: { taskId },
+    where: { taskId, ...(userId ? { userId } : {}) },
     orderBy: { startedAt: "desc" },
     include: sessionInclude,
   });
 }
 
-export function sumCompletedSessionMinutes(taskId: string) {
+export function sumCompletedSessionMinutes(taskId: string, userId?: string) {
   return prisma.session.aggregate({
-    where: { taskId, endedAt: { not: null } },
+    where: { taskId, endedAt: { not: null }, ...(userId ? { userId } : {}) },
     _sum: { durationMinutes: true },
   });
 }
@@ -76,8 +76,8 @@ export function updateTaskActualHours(taskId: string, actualHours: number) {
   });
 }
 
-export function findTaskForSession(taskId: string) {
-  return prisma.task.findUnique({ where: { id: taskId } });
+export function findTaskForSession(taskId: string, userId?: string) {
+  return prisma.task.findFirst({ where: { id: taskId, ...(userId ? { userId } : {}) } });
 }
 
 export function markTaskInProgress(taskId: string, startedAt: Date) {

@@ -76,11 +76,11 @@ export function buildAnalytics(goals: Goal[], start: Date, end: Date): Analytics
   };
 }
 
-export async function getPeriodAnalytics(start: Date, end: Date, goalId?: string) { return buildAnalytics(await findAnalyticsGoals(goalId) as unknown as Goal[], start, end); }
-export async function getDashboardAnalytics(query: AnalyticsQuery = { days: 30 }) {
+export async function getPeriodAnalytics(start: Date, end: Date, goalId?: string, userId?: string) { return buildAnalytics(await findAnalyticsGoals(goalId, userId) as unknown as Goal[], start, end); }
+export async function getDashboardAnalytics(query: AnalyticsQuery = { days: 30 }, userId?: string) {
   const end = query.end ?? new Date();
   const start = query.start ?? new Date(startOfDay(end).getTime() - ((query.days - 1) * 86400000));
-  return getPeriodAnalytics(start, end, query.goalId);
+  return getPeriodAnalytics(start, end, query.goalId, userId);
 }
 export async function getGoalAnalytics(goalId: string, start?: Date, end?: Date) { const finish = end ?? new Date(); return getPeriodAnalytics(start ?? new Date(startOfDay(finish).getTime() - 29 * 86400000), finish, goalId); }
 export async function getTaskAnalytics(taskId: string) { const goals = await findAnalyticsGoals(); const task = flattenTasks(goals).find((item) => item.id === taskId); return task ? { sessionCount: task.sessions.filter((session) => session.endedAt).length, totalActualHours: task.actualHours, estimatedHours: task.estimatedHours, estimateAccuracy: task.estimatedHours > 0 ? round(task.actualHours / task.estimatedHours, 2) : null, averageSessionMinutes: task.sessions.length ? round(task.sessions.reduce((sum, session) => sum + (session.durationMinutes ?? 0), 0) / task.sessions.length) : 0, status: task.status, daysSinceCreated: Math.floor((Date.now() - task.createdAt.getTime()) / 86400000), daysSinceLastActivity: Math.floor((Date.now() - task.updatedAt.getTime()) / 86400000) } : null; }

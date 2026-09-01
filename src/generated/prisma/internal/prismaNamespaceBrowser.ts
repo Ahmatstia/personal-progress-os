@@ -57,7 +57,8 @@ export const ModelName = {
   Session: 'Session',
   Review: 'Review',
   DailyFocus: 'DailyFocus',
-  Capture: 'Capture'
+  Capture: 'Capture',
+  User: 'User'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -75,6 +76,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const GoalScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   name: 'name',
   description: 'description',
   type: 'type',
@@ -89,6 +91,7 @@ export type GoalScalarFieldEnum = (typeof GoalScalarFieldEnum)[keyof typeof Goal
 
 export const StageScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   goalId: 'goalId',
   name: 'name',
   description: 'description',
@@ -102,6 +105,7 @@ export type StageScalarFieldEnum = (typeof StageScalarFieldEnum)[keyof typeof St
 
 export const TaskScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   stageId: 'stageId',
   name: 'name',
   description: 'description',
@@ -122,6 +126,7 @@ export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof Task
 
 export const SessionScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   taskId: 'taskId',
   startedAt: 'startedAt',
   endedAt: 'endedAt',
@@ -138,6 +143,7 @@ export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeo
 
 export const ReviewScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   goalId: 'goalId',
   periodStart: 'periodStart',
   periodEnd: 'periodEnd',
@@ -156,6 +162,7 @@ export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof 
 
 export const DailyFocusScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   date: 'date',
   taskId: 'taskId',
   order: 'order',
@@ -167,11 +174,23 @@ export type DailyFocusScalarFieldEnum = (typeof DailyFocusScalarFieldEnum)[keyof
 
 export const CaptureScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   content: 'content',
   createdAt: 'createdAt'
 } as const
 
 export type CaptureScalarFieldEnum = (typeof CaptureScalarFieldEnum)[keyof typeof CaptureScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
 export const SortOrder = {

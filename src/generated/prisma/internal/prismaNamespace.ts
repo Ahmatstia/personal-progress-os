@@ -403,7 +403,8 @@ export const ModelName = {
   Session: 'Session',
   Review: 'Review',
   DailyFocus: 'DailyFocus',
-  Capture: 'Capture'
+  Capture: 'Capture',
+  User: 'User'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "goal" | "stage" | "task" | "session" | "review" | "dailyFocus" | "capture"
+    modelProps: "goal" | "stage" | "task" | "session" | "review" | "dailyFocus" | "capture" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -941,6 +942,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    User: {
+      payload: Prisma.$UserPayload<ExtArgs>
+      fields: Prisma.UserFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        findFirst: {
+          args: Prisma.UserFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        findMany: {
+          args: Prisma.UserFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>[]
+        }
+        create: {
+          args: Prisma.UserCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        createMany: {
+          args: Prisma.UserCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>[]
+        }
+        delete: {
+          args: Prisma.UserDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        update: {
+          args: Prisma.UserUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        aggregate: {
+          args: Prisma.UserAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUser>
+        }
+        groupBy: {
+          args: Prisma.UserGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -979,6 +1054,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const GoalScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   name: 'name',
   description: 'description',
   type: 'type',
@@ -993,6 +1069,7 @@ export type GoalScalarFieldEnum = (typeof GoalScalarFieldEnum)[keyof typeof Goal
 
 export const StageScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   goalId: 'goalId',
   name: 'name',
   description: 'description',
@@ -1006,6 +1083,7 @@ export type StageScalarFieldEnum = (typeof StageScalarFieldEnum)[keyof typeof St
 
 export const TaskScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   stageId: 'stageId',
   name: 'name',
   description: 'description',
@@ -1026,6 +1104,7 @@ export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof Task
 
 export const SessionScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   taskId: 'taskId',
   startedAt: 'startedAt',
   endedAt: 'endedAt',
@@ -1042,6 +1121,7 @@ export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeo
 
 export const ReviewScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   goalId: 'goalId',
   periodStart: 'periodStart',
   periodEnd: 'periodEnd',
@@ -1060,6 +1140,7 @@ export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof 
 
 export const DailyFocusScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   date: 'date',
   taskId: 'taskId',
   order: 'order',
@@ -1071,11 +1152,23 @@ export type DailyFocusScalarFieldEnum = (typeof DailyFocusScalarFieldEnum)[keyof
 
 export const CaptureScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   content: 'content',
   createdAt: 'createdAt'
 } as const
 
 export type CaptureScalarFieldEnum = (typeof CaptureScalarFieldEnum)[keyof typeof CaptureScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1285,6 +1378,7 @@ export type GlobalOmitConfig = {
   review?: Prisma.ReviewOmit
   dailyFocus?: Prisma.DailyFocusOmit
   capture?: Prisma.CaptureOmit
+  user?: Prisma.UserOmit
 }
 
 /* Types for Logging */

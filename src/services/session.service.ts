@@ -25,20 +25,20 @@ export function calculateDuration(startedAt: Date, endedAt: Date = new Date()) {
   return Math.max(0, Math.round((endedAt.getTime() - startedAt.getTime()) / 60000));
 }
 
-export async function startSession(taskId: string) {
-  const task = await findTaskForSession(taskId);
+export async function startSession(taskId: string, userId?: string) {
+  const task = await findTaskForSession(taskId, userId);
   if (!task) {
     throw new SessionServiceError("Task tidak ditemukan.", "TASK_NOT_FOUND");
   }
 
-  if (await findActiveSessionByTaskId(taskId)) {
+  if (await findActiveSessionByTaskId(taskId, userId)) {
     throw new SessionServiceError(
       "Task ini sudah memiliki session aktif.",
       "ACTIVE_SESSION_EXISTS",
     );
   }
 
-  const session = await createSession(taskId);
+  const session = await createSession(taskId, userId);
   if (task.status === "NOT_STARTED") {
     await markTaskInProgress(taskId, task.startedAt ?? session.startedAt);
   }
@@ -46,31 +46,31 @@ export async function startSession(taskId: string) {
   return session;
 }
 
-export function getActiveSession(taskId: string) {
-  return findActiveSessionByTaskId(taskId);
+export function getActiveSession(taskId: string, userId?: string) {
+  return findActiveSessionByTaskId(taskId, userId);
 }
 
-export function getAnyActiveSession() {
-  return findAnyActiveSession();
+export function getAnyActiveSession(userId?: string) {
+  return findAnyActiveSession(userId);
 }
 
-export function getSession(sessionId: string) {
-  return findSessionById(sessionId);
+export function getSession(sessionId: string, userId?: string) {
+  return findSessionById(sessionId, userId);
 }
 
-export function getSessionHistory(taskId: string) {
-  return findSessionsByTaskId(taskId);
+export function getSessionHistory(taskId: string, userId?: string) {
+  return findSessionsByTaskId(taskId, userId);
 }
 
-export async function updateTaskActualHours(taskId: string) {
-  const result = await sumCompletedSessionMinutes(taskId);
+export async function updateTaskActualHours(taskId: string, userId?: string) {
+  const result = await sumCompletedSessionMinutes(taskId, userId);
   const actualHours = (result._sum.durationMinutes ?? 0) / 60;
   await updateTaskActualHoursRecord(taskId, actualHours);
   return actualHours;
 }
 
-export async function endSession(sessionId: string, data: EndSessionInput) {
-  const session = await findSessionById(sessionId);
+export async function endSession(sessionId: string, data: EndSessionInput, userId?: string) {
+  const session = await findSessionById(sessionId, userId);
   if (!session) {
     throw new SessionServiceError("Session tidak ditemukan.", "SESSION_NOT_FOUND");
   }
@@ -91,6 +91,6 @@ export async function endSession(sessionId: string, data: EndSessionInput) {
     nextAction: data.nextAction || undefined,
   });
 
-  await updateTaskActualHours(session.taskId);
+  await updateTaskActualHours(session.taskId, userId);
   return completedSession;
 }

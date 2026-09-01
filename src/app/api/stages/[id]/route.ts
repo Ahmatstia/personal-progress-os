@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { updateStageSchema } from "@/schemas/stage.schema";
 import { deleteStage, moveStage, StageServiceError, updateStage } from "@/services/stage.service";
+import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
 
 type Context = { params: Promise<{ id: string }> };
 
@@ -10,6 +11,7 @@ function errorResponse(error: unknown) {
 }
 
 export async function PATCH(request: Request, context: Context) {
+  try { await requireCurrentUser(); } catch (error) { return authErrorResponse(error); }
   try {
     const body = await request.json();
     if (body.order === "up" || body.order === "down") {
@@ -22,6 +24,7 @@ export async function PATCH(request: Request, context: Context) {
 }
 
 export async function DELETE(_request: Request, context: Context) {
+  try { await requireCurrentUser(); } catch (error) { return authErrorResponse(error); }
   try { return NextResponse.json({ success: true, data: await deleteStage((await context.params).id) }); }
   catch (error) { return errorResponse(error); }
 }

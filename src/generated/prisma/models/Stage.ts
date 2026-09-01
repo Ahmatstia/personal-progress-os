@@ -36,6 +36,7 @@ export type StageSumAggregateOutputType = {
 
 export type StageMinAggregateOutputType = {
   id: string | null
+  userId: string | null
   goalId: string | null
   name: string | null
   description: string | null
@@ -46,6 +47,7 @@ export type StageMinAggregateOutputType = {
 
 export type StageMaxAggregateOutputType = {
   id: string | null
+  userId: string | null
   goalId: string | null
   name: string | null
   description: string | null
@@ -56,6 +58,7 @@ export type StageMaxAggregateOutputType = {
 
 export type StageCountAggregateOutputType = {
   id: number
+  userId: number
   goalId: number
   name: number
   description: number
@@ -76,6 +79,7 @@ export type StageSumAggregateInputType = {
 
 export type StageMinAggregateInputType = {
   id?: true
+  userId?: true
   goalId?: true
   name?: true
   description?: true
@@ -86,6 +90,7 @@ export type StageMinAggregateInputType = {
 
 export type StageMaxAggregateInputType = {
   id?: true
+  userId?: true
   goalId?: true
   name?: true
   description?: true
@@ -96,6 +101,7 @@ export type StageMaxAggregateInputType = {
 
 export type StageCountAggregateInputType = {
   id?: true
+  userId?: true
   goalId?: true
   name?: true
   description?: true
@@ -193,6 +199,7 @@ export type StageGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type StageGroupByOutputType = {
   id: string
+  userId: string
   goalId: string
   name: string
   description: string | null
@@ -226,6 +233,7 @@ export type StageWhereInput = {
   OR?: Prisma.StageWhereInput[]
   NOT?: Prisma.StageWhereInput | Prisma.StageWhereInput[]
   id?: Prisma.StringFilter<"Stage"> | string
+  userId?: Prisma.StringFilter<"Stage"> | string
   goalId?: Prisma.StringFilter<"Stage"> | string
   name?: Prisma.StringFilter<"Stage"> | string
   description?: Prisma.StringNullableFilter<"Stage"> | string | null
@@ -234,10 +242,12 @@ export type StageWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Stage"> | Date | string
   goal?: Prisma.XOR<Prisma.GoalScalarRelationFilter, Prisma.GoalWhereInput>
   tasks?: Prisma.TaskListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type StageOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   goalId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -246,6 +256,7 @@ export type StageOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   goal?: Prisma.GoalOrderByWithRelationInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type StageWhereUniqueInput = Prisma.AtLeast<{
@@ -253,6 +264,7 @@ export type StageWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.StageWhereInput | Prisma.StageWhereInput[]
   OR?: Prisma.StageWhereInput[]
   NOT?: Prisma.StageWhereInput | Prisma.StageWhereInput[]
+  userId?: Prisma.StringFilter<"Stage"> | string
   goalId?: Prisma.StringFilter<"Stage"> | string
   name?: Prisma.StringFilter<"Stage"> | string
   description?: Prisma.StringNullableFilter<"Stage"> | string | null
@@ -261,10 +273,12 @@ export type StageWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Stage"> | Date | string
   goal?: Prisma.XOR<Prisma.GoalScalarRelationFilter, Prisma.GoalWhereInput>
   tasks?: Prisma.TaskListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type StageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   goalId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -283,6 +297,7 @@ export type StageScalarWhereWithAggregatesInput = {
   OR?: Prisma.StageScalarWhereWithAggregatesInput[]
   NOT?: Prisma.StageScalarWhereWithAggregatesInput | Prisma.StageScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Stage"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"Stage"> | string
   goalId?: Prisma.StringWithAggregatesFilter<"Stage"> | string
   name?: Prisma.StringWithAggregatesFilter<"Stage"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Stage"> | string | null
@@ -300,10 +315,12 @@ export type StageCreateInput = {
   updatedAt?: Date | string
   goal: Prisma.GoalCreateNestedOneWithoutStagesInput
   tasks?: Prisma.TaskCreateNestedManyWithoutStageInput
+  user?: Prisma.UserCreateNestedOneWithoutStagesInput
 }
 
 export type StageUncheckedCreateInput = {
   id?: string
+  userId?: string
   goalId: string
   name: string
   description?: string | null
@@ -322,10 +339,12 @@ export type StageUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   goal?: Prisma.GoalUpdateOneRequiredWithoutStagesNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutStageNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStagesNestedInput
 }
 
 export type StageUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   goalId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -337,6 +356,7 @@ export type StageUncheckedUpdateInput = {
 
 export type StageCreateManyInput = {
   id?: string
+  userId?: string
   goalId: string
   name: string
   description?: string | null
@@ -356,6 +376,7 @@ export type StageUpdateManyMutationInput = {
 
 export type StageUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   goalId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -376,6 +397,7 @@ export type StageOrderByRelationAggregateInput = {
 
 export type StageCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   goalId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -390,6 +412,7 @@ export type StageAvgOrderByAggregateInput = {
 
 export type StageMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   goalId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -400,6 +423,7 @@ export type StageMaxOrderByAggregateInput = {
 
 export type StageMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   goalId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -481,6 +505,48 @@ export type StageUpdateOneRequiredWithoutTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StageUpdateToOneWithWhereWithoutTasksInput, Prisma.StageUpdateWithoutTasksInput>, Prisma.StageUncheckedUpdateWithoutTasksInput>
 }
 
+export type StageCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.StageCreateWithoutUserInput, Prisma.StageUncheckedCreateWithoutUserInput> | Prisma.StageCreateWithoutUserInput[] | Prisma.StageUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.StageCreateOrConnectWithoutUserInput | Prisma.StageCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.StageCreateManyUserInputEnvelope
+  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+}
+
+export type StageUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.StageCreateWithoutUserInput, Prisma.StageUncheckedCreateWithoutUserInput> | Prisma.StageCreateWithoutUserInput[] | Prisma.StageUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.StageCreateOrConnectWithoutUserInput | Prisma.StageCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.StageCreateManyUserInputEnvelope
+  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+}
+
+export type StageUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.StageCreateWithoutUserInput, Prisma.StageUncheckedCreateWithoutUserInput> | Prisma.StageCreateWithoutUserInput[] | Prisma.StageUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.StageCreateOrConnectWithoutUserInput | Prisma.StageCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.StageUpsertWithWhereUniqueWithoutUserInput | Prisma.StageUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.StageCreateManyUserInputEnvelope
+  set?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  disconnect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  delete?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  update?: Prisma.StageUpdateWithWhereUniqueWithoutUserInput | Prisma.StageUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.StageUpdateManyWithWhereWithoutUserInput | Prisma.StageUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
+}
+
+export type StageUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.StageCreateWithoutUserInput, Prisma.StageUncheckedCreateWithoutUserInput> | Prisma.StageCreateWithoutUserInput[] | Prisma.StageUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.StageCreateOrConnectWithoutUserInput | Prisma.StageCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.StageUpsertWithWhereUniqueWithoutUserInput | Prisma.StageUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.StageCreateManyUserInputEnvelope
+  set?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  disconnect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  delete?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  update?: Prisma.StageUpdateWithWhereUniqueWithoutUserInput | Prisma.StageUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.StageUpdateManyWithWhereWithoutUserInput | Prisma.StageUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
+}
+
 export type StageCreateWithoutGoalInput = {
   id?: string
   name: string
@@ -489,10 +555,12 @@ export type StageCreateWithoutGoalInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskCreateNestedManyWithoutStageInput
+  user?: Prisma.UserCreateNestedOneWithoutStagesInput
 }
 
 export type StageUncheckedCreateWithoutGoalInput = {
   id?: string
+  userId?: string
   name: string
   description?: string | null
   order?: number
@@ -531,6 +599,7 @@ export type StageScalarWhereInput = {
   OR?: Prisma.StageScalarWhereInput[]
   NOT?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
   id?: Prisma.StringFilter<"Stage"> | string
+  userId?: Prisma.StringFilter<"Stage"> | string
   goalId?: Prisma.StringFilter<"Stage"> | string
   name?: Prisma.StringFilter<"Stage"> | string
   description?: Prisma.StringNullableFilter<"Stage"> | string | null
@@ -547,10 +616,12 @@ export type StageCreateWithoutTasksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   goal: Prisma.GoalCreateNestedOneWithoutStagesInput
+  user?: Prisma.UserCreateNestedOneWithoutStagesInput
 }
 
 export type StageUncheckedCreateWithoutTasksInput = {
   id?: string
+  userId?: string
   goalId: string
   name: string
   description?: string | null
@@ -583,10 +654,12 @@ export type StageUpdateWithoutTasksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   goal?: Prisma.GoalUpdateOneRequiredWithoutStagesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStagesNestedInput
 }
 
 export type StageUncheckedUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   goalId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -595,8 +668,56 @@ export type StageUncheckedUpdateWithoutTasksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type StageCreateWithoutUserInput = {
+  id?: string
+  name: string
+  description?: string | null
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  goal: Prisma.GoalCreateNestedOneWithoutStagesInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutStageInput
+}
+
+export type StageUncheckedCreateWithoutUserInput = {
+  id?: string
+  goalId: string
+  name: string
+  description?: string | null
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutStageInput
+}
+
+export type StageCreateOrConnectWithoutUserInput = {
+  where: Prisma.StageWhereUniqueInput
+  create: Prisma.XOR<Prisma.StageCreateWithoutUserInput, Prisma.StageUncheckedCreateWithoutUserInput>
+}
+
+export type StageCreateManyUserInputEnvelope = {
+  data: Prisma.StageCreateManyUserInput | Prisma.StageCreateManyUserInput[]
+}
+
+export type StageUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.StageWhereUniqueInput
+  update: Prisma.XOR<Prisma.StageUpdateWithoutUserInput, Prisma.StageUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.StageCreateWithoutUserInput, Prisma.StageUncheckedCreateWithoutUserInput>
+}
+
+export type StageUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.StageWhereUniqueInput
+  data: Prisma.XOR<Prisma.StageUpdateWithoutUserInput, Prisma.StageUncheckedUpdateWithoutUserInput>
+}
+
+export type StageUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.StageScalarWhereInput
+  data: Prisma.XOR<Prisma.StageUpdateManyMutationInput, Prisma.StageUncheckedUpdateManyWithoutUserInput>
+}
+
 export type StageCreateManyGoalInput = {
   id?: string
+  userId?: string
   name: string
   description?: string | null
   order?: number
@@ -612,10 +733,12 @@ export type StageUpdateWithoutGoalInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUpdateManyWithoutStageNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStagesNestedInput
 }
 
 export type StageUncheckedUpdateWithoutGoalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -626,6 +749,49 @@ export type StageUncheckedUpdateWithoutGoalInput = {
 
 export type StageUncheckedUpdateManyWithoutGoalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StageCreateManyUserInput = {
+  id?: string
+  goalId: string
+  name: string
+  description?: string | null
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StageUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  goal?: Prisma.GoalUpdateOneRequiredWithoutStagesNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutStageNestedInput
+}
+
+export type StageUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  goalId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutStageNestedInput
+}
+
+export type StageUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  goalId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -666,6 +832,7 @@ export type StageCountOutputTypeCountTasksArgs<ExtArgs extends runtime.Types.Ext
 
 export type StageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   goalId?: boolean
   name?: boolean
   description?: boolean
@@ -674,11 +841,13 @@ export type StageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   updatedAt?: boolean
   goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.Stage$tasksArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.StageCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stage"]>
 
 export type StageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   goalId?: boolean
   name?: boolean
   description?: boolean
@@ -686,10 +855,12 @@ export type StageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stage"]>
 
 export type StageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   goalId?: boolean
   name?: boolean
   description?: boolean
@@ -697,10 +868,12 @@ export type StageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stage"]>
 
 export type StageSelectScalar = {
   id?: boolean
+  userId?: boolean
   goalId?: boolean
   name?: boolean
   description?: boolean
@@ -709,17 +882,20 @@ export type StageSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "goalId" | "name" | "description" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["stage"]>
+export type StageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "goalId" | "name" | "description" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["stage"]>
 export type StageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.Stage$tasksArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.StageCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type StageIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $StagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -727,9 +903,11 @@ export type $StagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     goal: Prisma.$GoalPayload<ExtArgs>
     tasks: Prisma.$TaskPayload<ExtArgs>[]
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    userId: string
     goalId: string
     name: string
     description: string | null
@@ -1132,6 +1310,7 @@ export interface Prisma__StageClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   goal<T extends Prisma.GoalDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GoalDefaultArgs<ExtArgs>>): Prisma.Prisma__GoalClient<runtime.Types.Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   tasks<T extends Prisma.Stage$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Stage$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1162,6 +1341,7 @@ export interface Prisma__StageClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface StageFieldRefs {
   readonly id: Prisma.FieldRef<"Stage", 'String'>
+  readonly userId: Prisma.FieldRef<"Stage", 'String'>
   readonly goalId: Prisma.FieldRef<"Stage", 'String'>
   readonly name: Prisma.FieldRef<"Stage", 'String'>
   readonly description: Prisma.FieldRef<"Stage", 'String'>

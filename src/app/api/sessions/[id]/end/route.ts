@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { endSessionSchema } from "@/schemas/session.schema";
 import { endSession, SessionServiceError } from "@/services/session.service";
+import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
 
 export async function POST(
   request: Request,
@@ -23,8 +24,10 @@ export async function POST(
   }
 
   try {
-    return NextResponse.json({ success: true, data: await endSession(id, parsed.data) });
+    const user = await requireCurrentUser();
+    return NextResponse.json({ success: true, data: await endSession(id, parsed.data, user.id) });
   } catch (error) {
+    if (error instanceof Error && error.message === "Autentikasi diperlukan.") return authErrorResponse(error);
     const serviceError = error instanceof SessionServiceError;
     return NextResponse.json(
       {
