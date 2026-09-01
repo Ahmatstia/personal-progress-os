@@ -4,7 +4,7 @@ import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
-    const user = await requireCurrentUser();
+    const user = await requireCurrentUser(request);
     const body = await request.json();
 
     const { goalId, name, description, order } = body;

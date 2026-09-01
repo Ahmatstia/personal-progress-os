@@ -24,7 +24,7 @@ export async function POST(
   }
 
   try {
-    const user = await requireCurrentUser();
+    const user = await requireCurrentUser(request);
     return NextResponse.json({ success: true, data: await endSession(id, parsed.data, user.id) });
   } catch (error) {
     if (error instanceof Error && error.message === "Autentikasi diperlukan.") return authErrorResponse(error);

@@ -7,7 +7,7 @@ export async function GET(
   context: { params: Promise<{ id: string }> },
 ) {
   try {
-    const user = await requireCurrentUser();
+    const user = await requireCurrentUser(_request);
     const session = await getSession((await context.params).id, user.id);
   if (!session) {
     return NextResponse.json(

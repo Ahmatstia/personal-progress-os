@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 const state = vi.hoisted(() => ({ executeAICommand: vi.fn(async () => ({ success: true, code: "OK", message: "Aman", interpretation: { intent: "TODAY" } })) }));
 vi.mock("../src/services/ai-command.service", () => ({ executeAICommand: state.executeAICommand }));
+vi.mock("../src/lib/auth", () => ({ requireCurrentUser: vi.fn(async () => ({ id: "test-user", email: "test@example.com", name: "Test User" })), authErrorResponse: vi.fn() }));
 
 import { POST } from "../src/app/api/ai/command/route";
 
@@ -15,6 +16,6 @@ describe("POST /api/ai/command", () => {
   it("passes validated commands to the command service", async () => {
     const response = await POST(new Request("http://localhost/api/ai/command", { method: "POST", body: JSON.stringify({ text: "apa hari ini" }) }));
     expect(response.status).toBe(200);
-    expect(state.executeAICommand).toHaveBeenCalledWith({ text: "apa hari ini", confirmed: false });
+    expect(state.executeAICommand).toHaveBeenCalledWith({ text: "apa hari ini", confirmed: false }, "test-user");
   });
 });

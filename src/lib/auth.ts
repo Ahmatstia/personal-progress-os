@@ -19,6 +19,8 @@ function tokenFor(userId: string) {
   return `${payload}.${signature(payload)}`;
 }
 
+export function createSessionToken(userId: string) { return tokenFor(userId); }
+
 function verify(token: string) {
   const parts = token.split(".");
   if (parts.length !== 3) return null;
@@ -30,15 +32,16 @@ function verify(token: string) {
   return a.length === b.length && timingSafeEqual(a, b) ? userId : null;
 }
 
-export async function getCurrentUser() {
-  const token = (await cookies()).get(SESSION_COOKIE)?.value;
+export async function getCurrentUser(request?: Request) {
+  const token = request
+    ? request.headers.get("cookie")?.split(";").map((item) => item.trim()).find((item) => item.startsWith(`${SESSION_COOKIE}=`))?.slice(SESSION_COOKIE.length + 1)
+    : (await cookies()).get(SESSION_COOKIE)?.value;
   const userId = token ? verify(token) : null;
   return userId ? prisma.user.findUnique({ where: { id: userId } }) : null;
 }
 
-export async function requireCurrentUser() {
-  if (process.env.NODE_ENV === "test") return { id: "test-user", email: "test@example.com", name: "Test User" };
-  const user = await getCurrentUser();
+export async function requireCurrentUser(request?: Request) {
+  const user = await getCurrentUser(request);
   if (!user) throw new AuthorizationError("Autentikasi diperlukan.", 401);
   return user;
 }

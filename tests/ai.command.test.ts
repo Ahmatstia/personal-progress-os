@@ -10,7 +10,7 @@ vi.mock("@/services/ai.service", () => ({
   interpretInput: vi.fn((text: string) => ({
     input: text,
     normalizedText: text.toLocaleLowerCase("id-ID"),
-    intent: text.includes("random") ? "UNKNOWN" : "TASK_COMPLETE",
+    intent: text.includes("random") || text.includes("yang tadi") ? "UNKNOWN" : "TASK_COMPLETE",
     confidence: text.includes("random") ? 0 : 0.74,
     confidenceLevel: text.includes("random") ? "LOW" : "MEDIUM",
     entities: [],

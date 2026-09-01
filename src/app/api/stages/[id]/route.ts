@@ -11,7 +11,7 @@ function errorResponse(error: unknown) {
 }
 
 export async function PATCH(request: Request, context: Context) {
-  let user; try { user = await requireCurrentUser(); } catch (error) { return authErrorResponse(error); }
+  let user; try { user = await requireCurrentUser(request); } catch (error) { return authErrorResponse(error); }
   try {
     const body = await request.json();
     if (body.order === "up" || body.order === "down") {
@@ -24,7 +24,7 @@ export async function PATCH(request: Request, context: Context) {
 }
 
 export async function DELETE(_request: Request, context: Context) {
-  let user; try { user = await requireCurrentUser(); } catch (error) { return authErrorResponse(error); }
+  let user; try { user = await requireCurrentUser(_request); } catch (error) { return authErrorResponse(error); }
   try { return NextResponse.json({ success: true, data: await deleteStage((await context.params).id, user.id) }); }
   catch (error) { return errorResponse(error); }
 }

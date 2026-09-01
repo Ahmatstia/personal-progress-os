@@ -11,7 +11,7 @@ const createGoalSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    const user = await requireCurrentUser();
+    const user = await requireCurrentUser(request);
     const body = await request.json();
 
     const result = createGoalSchema.safeParse(body);

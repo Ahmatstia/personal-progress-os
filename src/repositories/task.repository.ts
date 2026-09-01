@@ -26,7 +26,7 @@ export function deleteTask(userId: string, id: string) {
 }
 
 export function findTaskDetail(userId: string, id: string) {
-  return prisma.task.findUnique({
+  return prisma.task.findFirst({
     where: { id, userId },
     include: {
       stage: { include: { goal: true } },

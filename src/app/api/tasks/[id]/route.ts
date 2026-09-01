@@ -15,7 +15,7 @@ function serviceErrorResponse(error: unknown) {
 
 export async function PATCH(request: Request, context: Context) {
   try {
-    const user = await requireCurrentUser();
+    const user = await requireCurrentUser(request);
     const body = await request.json();
     const parsed = updateTaskSchema.safeParse({
       ...body,
@@ -30,7 +30,7 @@ export async function PATCH(request: Request, context: Context) {
 
 export async function DELETE(_request: Request, context: Context) {
   try {
-    const user = await requireCurrentUser();
+    const user = await requireCurrentUser(_request);
     return NextResponse.json({ success: true, data: await deleteTask((await context.params).id, user.id) });
   } catch (error) {
     return error instanceof Error && error.message === "Autentikasi diperlukan." ? authErrorResponse(error) : serviceErrorResponse(error);

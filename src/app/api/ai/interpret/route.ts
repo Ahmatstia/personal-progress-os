@@ -4,7 +4,7 @@ import { interpretInput } from "@/services/ai.service";
 import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
 
 export async function POST(request: Request) {
-  try { await requireCurrentUser(); } catch (error) { return authErrorResponse(error); }
+  try { await requireCurrentUser(request); } catch (error) { return authErrorResponse(error); }
   let body: unknown;
   try { body = await request.json(); } catch { body = {}; }
   const parsed = aiInputSchema.safeParse(body);
