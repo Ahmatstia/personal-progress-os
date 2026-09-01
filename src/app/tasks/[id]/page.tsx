@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import SessionTimer from "@/app/components/SessionTimer";
+import TaskActions from "@/app/components/TaskActions";
 import { getTaskDetail } from "@/services/task.service";
 
 function formatDate(value: Date) {
@@ -25,6 +26,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
           </div>
           <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">{task.status}</span>
         </div>
+        <TaskActions id={task.id} status={task.status} name={task.name} description={task.description} priority={task.priority} estimatedHours={task.estimatedHours} notes={task.notes} />
 
         <div className="mt-8 grid gap-4 sm:grid-cols-4">
           {[['Priority', task.priority], ['Estimated', `${task.estimatedHours}h`], ['Actual', `${task.actualHours.toFixed(1)}h`], ['Sessions', String(task.sessions.length)]].map(([label, value]) => (

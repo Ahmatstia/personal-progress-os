@@ -11,6 +11,7 @@ type TaskItemProps = {
   priority: string;
   status: string;
   estimatedHours?: number;
+  actualHours?: number;
   notes?: string | null;
 };
 
@@ -21,6 +22,7 @@ export default function TaskItem({
   priority,
   status,
   estimatedHours = 0,
+  actualHours = 0,
   notes = null,
 }: TaskItemProps) {
   const router = useRouter();
@@ -48,13 +50,13 @@ export default function TaskItem({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          status: completed ? "NOT_STARTED" : "COMPLETED",
+          status: completed ? "IN_PROGRESS" : status === "NOT_STARTED" ? "IN_PROGRESS" : "COMPLETED",
         }),
       });
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || "Gagal memperbarui task.");
+        throw new Error(data.error?.message || data.error || "Gagal memperbarui task.");
       }
 
       router.refresh();
@@ -91,7 +93,7 @@ export default function TaskItem({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Gagal menyimpan perubahan.");
+        throw new Error(data.error?.message || data.error || "Gagal menyimpan perubahan.");
       }
 
       setIsEditing(false);
@@ -268,6 +270,9 @@ export default function TaskItem({
               {description}
             </span>
           )}
+          <span className="mt-1 block text-xs text-slate-600">
+            {status.replace("_", " ")} · {actualHours.toFixed(1)}h / {estimatedHours.toFixed(1)}h
+          </span>
         </span>
       </button>
 

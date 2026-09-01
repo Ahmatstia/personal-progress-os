@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 
 type TaskFormProps = {
   stageId: string;
+  label?: string;
 };
 
-export default function TaskForm({ stageId }: TaskFormProps) {
+export default function TaskForm({ stageId, label = "+ Add Task" }: TaskFormProps) {
   const router = useRouter();
 
   const [name, setName] = useState("");
@@ -51,7 +52,7 @@ export default function TaskForm({ stageId }: TaskFormProps) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Gagal membuat task.");
+        throw new Error(data.error?.message || data.error || "Gagal membuat task.");
       }
 
       setName("");
@@ -76,7 +77,7 @@ export default function TaskForm({ stageId }: TaskFormProps) {
         onClick={() => setIsOpen(true)}
         className="mt-4 w-full rounded-xl border border-dashed border-slate-800 px-4 py-3 text-sm text-slate-500 transition hover:border-slate-600 hover:bg-slate-900 hover:text-white"
       >
-        + Add Task
+        {label}
       </button>
     );
   }

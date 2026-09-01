@@ -1,79 +1,18 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { createTaskSchema } from "@/schemas/task.schema";
+import { createTask, TaskServiceError } from "@/services/task.service";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-
-    const {
-      stageId,
-      name,
-      description,
-      type,
-      priority,
-      estimatedHours,
-      notes,
-    } = body;
-
-    if (!stageId || !name?.trim()) {
-      return NextResponse.json(
-        {
-          error: "stageId dan name wajib diisi.",
-        },
-        {
-          status: 400,
-        },
-      );
-    }
-
-    const stage = await prisma.stage.findUnique({
-      where: {
-        id: stageId,
-      },
+    const parsed = createTaskSchema.safeParse({
+      ...body,
+      estimatedHours: body.estimatedHours === "" || body.estimatedHours === undefined ? 0 : Number(body.estimatedHours),
     });
-
-    if (!stage) {
-      return NextResponse.json(
-        {
-          error: "Stage tidak ditemukan.",
-        },
-        {
-          status: 404,
-        },
-      );
-    }
-
-    const parsedEstimatedHours =
-      Number.isFinite(Number(estimatedHours)) && Number(estimatedHours) >= 0
-        ? Number(estimatedHours)
-        : 0;
-
-    const task = await prisma.task.create({
-      data: {
-        stageId,
-        name: name.trim(),
-        description: description?.trim() || null,
-        type: type || "TASK",
-        priority: priority || "MEDIUM",
-        status: "NOT_STARTED",
-        estimatedHours: parsedEstimatedHours,
-        notes: notes?.trim() || null,
-      },
-    });
-
-    return NextResponse.json(task, {
-      status: 201,
-    });
+    if (!parsed.success) return NextResponse.json({ success: false, error: { message: "Data task tidak valid.", code: "INVALID_INPUT" } }, { status: 400 });
+    return NextResponse.json({ success: true, data: await createTask(parsed.data) }, { status: 201 });
   } catch (error) {
-    console.error("POST /api/tasks error:", error);
-
-    return NextResponse.json(
-      {
-        error: "Gagal membuat task.",
-      },
-      {
-        status: 500,
-      },
-    );
+    const serviceError = error instanceof TaskServiceError;
+    return NextResponse.json({ success: false, error: { message: serviceError ? error.message : "Gagal membuat task.", code: serviceError ? error.code : "INTERNAL_ERROR" } }, { status: serviceError ? 404 : 500 });
   }
 }

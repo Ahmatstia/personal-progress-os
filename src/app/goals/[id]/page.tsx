@@ -2,8 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import StageForm from "@/app/components/StageForm";
-import TaskForm from "@/app/components/TaskForm";
-import TaskItem from "@/app/components/TaskItem";
+import NewTaskButton from "@/app/components/NewTaskButton";
+import TaskList from "@/app/components/TaskList";
+import StageActions from "@/app/components/StageActions";
 import {
   calculateGoalProgress,
   calculateStageProgress,
@@ -231,6 +232,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                             <p className="text-xs text-slate-600">
                               {completed} / {total} tasks
                             </p>
+                            <StageActions id={stage.id} name={stage.name} description={stage.description} canMoveUp={index > 0} canMoveDown={index < goal.stages.length - 1} />
                           </div>
                         </div>
 
@@ -243,32 +245,8 @@ export default async function GoalPage({ params }: GoalPageProps) {
                           />
                         </div>
 
-                        {stage.tasks.length > 0 && (
-                          <div className="mt-5 space-y-2">
-                            {stage.tasks.map((task) => (
-                              <TaskItem
-                                key={task.id}
-                                id={task.id}
-                                name={task.name}
-                                description={task.description}
-                                priority={task.priority}
-                                status={task.status}
-                                estimatedHours={task.estimatedHours}
-                                notes={task.notes}
-                              />
-                            ))}
-                          </div>
-                        )}
-
-                        {stage.tasks.length === 0 && (
-                          <div className="mt-5 rounded-xl border border-dashed border-slate-800 p-4">
-                            <p className="text-center text-xs text-slate-600">
-                              No tasks in this stage yet.
-                            </p>
-                          </div>
-                        )}
-
-                        <TaskForm stageId={stage.id} />
+                        <TaskList tasks={stage.tasks} />
+                        <NewTaskButton stageId={stage.id} />
                       </div>
                     </div>
                   </article>
