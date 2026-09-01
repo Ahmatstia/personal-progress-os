@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import StageForm from "@/app/components/StageForm";
+import TaskForm from "@/app/components/TaskForm";
 
 type GoalPageProps = {
   params: Promise<{
@@ -348,6 +349,8 @@ export default async function GoalPage({ params }: GoalPageProps) {
                             </p>
                           </div>
                         )}
+
+                        <TaskForm stageId={stage.id} />
                       </div>
                     </div>
                   </article>
