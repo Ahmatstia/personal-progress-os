@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type TaskItemProps = {
   id: string;
@@ -281,6 +282,10 @@ export default function TaskItem({
       >
         {priority}
       </span>
+
+      <Link href={`/tasks/${id}`} className="rounded-lg px-2 py-1 text-xs text-slate-500 hover:bg-slate-800 hover:text-white">
+        Open
+      </Link>
 
       <button
         type="button"
