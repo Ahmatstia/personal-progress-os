@@ -287,6 +287,8 @@ export default async function GoalPage({ params }: GoalPageProps) {
                                 description={task.description}
                                 priority={task.priority}
                                 status={task.status}
+                                estimatedHours={task.estimatedHours}
+                                notes={task.notes}
                               />
                             ))}
                           </div>
