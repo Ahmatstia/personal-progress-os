@@ -37,12 +37,14 @@ def load_corpus(path: Path = CORPUS_PATH) -> dict[str, Any]:
 def audit_corpus(corpus: dict[str, Any]) -> dict[str, Any]:
     examples = corpus["examples"]
     texts = [example["text"].strip() for example in examples]
+    normalized = [normalize_text(text) for text in texts]
     counts = {intent: sum(example["intent"] == intent for example in examples) for intent in corpus["intents"]}
     return {
         "examples": len(examples),
         "intents": len(corpus["intents"]),
         "classDistribution": counts,
         "duplicateExact": len(texts) - len(set(texts)),
+        "duplicateNormalized": len(normalized) - len(set(normalized)),
         "tooShort": sum(len(text.split()) < 3 for text in texts),
         "emptyText": sum(not text for text in texts),
         "invalidIntent": sorted({example["intent"] for example in examples} - set(corpus["intents"])),

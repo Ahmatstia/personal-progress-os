@@ -11,7 +11,7 @@ class EvaluationTests(unittest.TestCase):
         self.assertEqual(len(corpus["examples"]), 480)
 
     def test_corpus_quality_invariants(self):
-        for filename, expected_version, expected_count in (("corpus_v1.json", "1.0.0", 480), ("corpus_v2.json", "2.0.0", 720)):
+        for filename, expected_version, expected_count in (("corpus_v1.json", "1.0.0", 480), ("corpus_v2.json", "2.0.0", 720), ("corpus_v3.json", "3.0.0", 960)):
             corpus = load_corpus(Path(__file__).parent / "data" / filename)
             self.assertRegex(corpus["version"], r"^\d+\.\d+\.\d+$")
             self.assertEqual(corpus["version"], expected_version)
@@ -19,6 +19,7 @@ class EvaluationTests(unittest.TestCase):
             self.assertTrue(all(example.get("text", "").strip() for example in corpus["examples"]))
             self.assertTrue(all(example.get("intent") in corpus["intents"] for example in corpus["examples"]))
             self.assertEqual(audit_corpus(corpus)["duplicateExact"], 0)
+            self.assertEqual(audit_corpus(corpus)["duplicateNormalized"], 0)
             self.assertTrue(all(count > 0 for count in audit_corpus(corpus)["classDistribution"].values()))
 
     def test_normalization_is_stable(self):
