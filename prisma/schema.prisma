@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}   
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Goal {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  type        String    @default("LEARNING")
+  status      String    @default("ACTIVE")
+  targetDate  DateTime?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  stages      Stage[]
+  reviews     Review[]
+}
+
+model Stage {
+  id          String    @id @default(cuid())
+  goalId      String
+  name        String
+  description String?
+  order       Int       @default(0)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  goal        Goal      @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+}
+
+model Task {
+  id             String    @id @default(cuid())
+  stageId        String
+
+  name           String
+  description    String?
+
+  type           String    @default("TASK")
+  priority       String    @default("MEDIUM")
+  status         String    @default("NOT_STARTED")
+
+  estimatedHours Float     @default(0)
+  actualHours    Float     @default(0)
+
+  startedAt      DateTime?
+  completedAt    DateTime?
+
+  notes          String?
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  stage          Stage     @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  sessions       Session[]
+}
+
+model Session {
+  id               String    @id @default(cuid())
+  taskId           String
+
+  startedAt        DateTime
+  endedAt          DateTime?
+
+  durationMinutes  Int?
+
+  activity         String?
+  understanding    Int?
+  obstacle         String?
+  nextAction       String?
+
+  createdAt        DateTime  @default(now())
+
+  task             Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id          String    @id @default(cuid())
+  goalId      String
+
+  periodStart DateTime
+  periodEnd   DateTime
+
+  learningHours Float   @default(0)
+  tasksCompleted Int    @default(0)
+  understanding  Float?
+
+  wentWell     String?
+  difficulties String?
+  improvements String?
+  nextFocus    String?
+
+  createdAt    DateTime @default(now())
+
+  goal         Goal      @relation(fields: [goalId], references: [id], onDelete: Cascade)
+}
