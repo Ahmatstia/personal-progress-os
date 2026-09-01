@@ -1,10 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { Dialog } from "./ui/Dialog";
+import { Button } from "./ui/Button";
+import { useToast } from "./ui/Toast";
+
+const goalTypes = ["LEARNING", "PROJECT", "PERSONAL", "HEALTH", "CAREER", "OTHER"];
 
 export default function NewGoalButton() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -12,37 +18,29 @@ export default function NewGoalButton() {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
+    if (!name.trim()) {
+      toast("Give your goal a name.", "error");
+      return;
+    }
     setLoading(true);
-
     try {
       const response = await fetch("/api/goals", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          type,
-          description,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, type, description }),
       });
-
-      if (!response.ok) {
-        throw new Error("Gagal membuat goal");
-      }
-
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error?.message ?? data.error ?? "Couldn't create the goal.");
       setName("");
-      setType("LEARNING");
       setDescription("");
+      setType("LEARNING");
       setOpen(false);
-
+      toast("Goal created.", "success");
       router.refresh();
     } catch (error) {
-      console.error(error);
-      alert("Gagal membuat goal");
+      toast(error instanceof Error ? error.message : "Couldn't create the goal.", "error");
     } finally {
       setLoading(false);
     }
@@ -50,94 +48,64 @@ export default function NewGoalButton() {
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-slate-200"
+      <Button icon="plus" onClick={() => setOpen(true)}>
+        New goal
+      </Button>
+
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Create a new goal"
+        description="Turn something important into a clear path forward."
       >
-        + New Goal
-      </button>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Goal name</span>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Learn Spanish, Build a portfolio, Run a 10k"
+              required
+              className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+            />
+          </label>
 
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold text-white">
-                Create New Goal
-              </h2>
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Type</span>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
+            >
+              {goalTypes.map((t) => (
+                <option key={t} value={t}>
+                  {t.charAt(0) + t.slice(1).toLowerCase()}
+                </option>
+              ))}
+            </select>
+          </label>
 
-              <p className="mt-1 text-sm text-slate-400">
-                Buat tujuan baru yang ingin kamu kembangkan.
-              </p>
-            </div>
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Description</span>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="What do you want to achieve?"
+              rows={4}
+              className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+            />
+          </label>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-slate-300">
-                  Goal Name
-                </label>
-
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Contoh: Belajar Python"
-                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-slate-500"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-slate-300">
-                  Type
-                </label>
-
-                <select
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
-                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none"
-                >
-                  <option value="LEARNING">Learning</option>
-                  <option value="PROJECT">Project</option>
-                  <option value="PERSONAL">Personal</option>
-                  <option value="HEALTH">Health</option>
-                  <option value="OTHER">Other</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-slate-300">
-                  Description
-                </label>
-
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Apa yang ingin kamu capai?"
-                  rows={4}
-                  className="w-full resize-none rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-slate-500"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-950 hover:bg-slate-200 disabled:opacity-50"
-                >
-                  {loading ? "Creating..." : "Create Goal"}
-                </button>
-              </div>
-            </form>
+          <div className="flex justify-end gap-2 pt-1">
+            <Button variant="secondary" onClick={() => setOpen(false)} type="button">
+              Cancel
+            </Button>
+            <Button type="submit" icon="check" loading={loading}>
+              Create goal
+            </Button>
           </div>
-        </div>
-      )}
+        </form>
+      </Dialog>
     </>
   );
 }

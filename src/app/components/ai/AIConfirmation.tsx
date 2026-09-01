@@ -2,6 +2,9 @@
 
 import type { AICommandResponse } from "@/ai/command-types";
 import { intentToReadable } from "@/ai/command-types";
+import { Button } from "../ui/Button";
+import { Badge } from "../ui/Badge";
+import { Icon } from "../ui/Icon";
 
 type AIConfirmationProps = {
   response: AICommandResponse;
@@ -10,73 +13,74 @@ type AIConfirmationProps = {
   loading: boolean;
 };
 
-function ConfirmationDataPreview({ data }: { data: unknown }) {
+function Preview({ data }: { data: unknown }) {
   if (!data || typeof data !== "object") return null;
-
   if (Array.isArray(data)) {
-    if (data.length === 0) return null;
     const first = data[0];
     if (first && typeof first === "object" && "name" in first) {
+      const r = first as Record<string, unknown>;
       return (
-        <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-          <p className="text-sm text-white">{String((first as Record<string, unknown>).name)}</p>
-          {typeof (first as Record<string, unknown>).status === "string" && (
-            <p className="mt-1 text-xs text-slate-500">Status: {String((first as Record<string, unknown>).status)}</p>
-          )}
+        <div className="rounded-xl border border-surface-200 bg-surface-0 p-4">
+          <p className="font-semibold text-surface-800">{String(r.name)}</p>
+          {typeof r.status === "string" && <p className="mt-1 text-xs text-surface-500">Status: {r.status}</p>}
         </div>
       );
     }
     return null;
   }
-
   const obj = data as Record<string, unknown>;
-  if ("name" in obj && typeof obj.name === "string") {
+  if (obj.name !== undefined) {
     return (
-      <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-        <p className="text-sm text-white">{obj.name}</p>
-        {typeof obj.status === "string" && (
-          <p className="mt-1 text-xs text-slate-500">Status: {obj.status}</p>
-        )}
+      <div className="rounded-xl border border-surface-200 bg-surface-0 p-4">
+        <p className="font-semibold text-surface-800">{String(obj.name)}</p>
+        {typeof obj.status === "string" && <p className="mt-1 text-xs text-surface-500">Status: {obj.status}</p>}
       </div>
     );
   }
-
+  if (obj.taskName !== undefined) {
+    return (
+      <div className="rounded-xl border border-surface-200 bg-surface-0 p-4">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">Task</p>
+        <p className="mt-1 font-semibold text-surface-800">{String(obj.taskName)}</p>
+      </div>
+    );
+  }
   return null;
 }
 
 export default function AIConfirmation({ response, onConfirm, onCancel, loading }: AIConfirmationProps) {
   const { interpretation, message, data } = response;
-
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        <span className="rounded-full border border-yellow-500/30 px-2 py-0.5 text-xs text-yellow-400">
-          Konfirmasi diperlukan
+    <div className="rounded-2xl border border-warning-200 bg-warning-50 p-4">
+      <div className="flex items-start gap-2.5">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-warning-100 text-warning-600">
+          <Icon name="alert" size={16} />
         </span>
-        <span className="text-xs text-slate-500">{intentToReadable(interpretation.intent)}</span>
-      </div>
-
-      <p className="text-sm leading-relaxed text-slate-200">{message}</p>
-
-      <ConfirmationDataPreview data={data} />
-
-      <div className="flex gap-3 pt-1">
-        <button
-          onClick={onConfirm}
-          disabled={loading}
-          aria-label="Konfirmasi perintah"
-          className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {loading ? "Memproses..." : "Konfirmasi"}
-        </button>
-        <button
-          onClick={onCancel}
-          disabled={loading}
-          aria-label="Batalkan perintah"
-          className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:bg-slate-800 disabled:opacity-50"
-        >
-          Batal
-        </button>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge tone="warning" icon="alert">
+              Confirmation required
+            </Badge>
+            <Badge tone="ai">{intentToReadable(interpretation.intent)}</Badge>
+          </div>
+          <p className="mt-2 text-sm font-medium leading-relaxed text-surface-800">{message}</p>
+          {data !== undefined && data !== null && (
+            <div className="mt-3">
+              <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-surface-500">
+                This will change
+              </p>
+              <Preview data={data} />
+            </div>
+          )}
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button variant="success" icon="check" onClick={onConfirm} loading={loading}>
+              Confirm
+            </Button>
+            <Button variant="secondary" onClick={onCancel} disabled={loading}>
+              Cancel
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

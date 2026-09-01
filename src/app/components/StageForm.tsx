@@ -1,7 +1,10 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { Dialog } from "./ui/Dialog";
+import { Button } from "./ui/Button";
+import { useToast } from "./ui/Toast";
 
 type StageFormProps = {
   goalId: string;
@@ -10,148 +13,83 @@ type StageFormProps = {
 
 export default function StageForm({ goalId, nextOrder }: StageFormProps) {
   const router = useRouter();
+  const { toast } = useToast();
 
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if (!name.trim()) {
-      setError("Nama stage wajib diisi.");
+      toast("Stage name is required.", "error");
       return;
     }
-
-    setIsSubmitting(true);
-    setError("");
-
+    setSubmitting(true);
     try {
       const response = await fetch("/api/stages", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          goalId,
-          name,
-          description,
-          order: nextOrder,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goalId, name, description, order: nextOrder }),
       });
-
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Gagal membuat stage.");
-      }
-
+      if (!response.ok) throw new Error(data.error || "Couldn't create the stage.");
       setName("");
       setDescription("");
-      setIsOpen(false);
-
+      setOpen(false);
+      toast("Stage added.", "success");
       router.refresh();
     } catch (error) {
-      setError(error instanceof Error ? error.message : "Terjadi kesalahan.");
+      toast(error instanceof Error ? error.message : "Couldn't create the stage.", "error");
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
   }
 
-  if (!isOpen) {
-    return (
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="rounded-xl bg-white px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-slate-200"
-      >
-        + Add Stage
-      </button>
-    );
-  }
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="rounded-2xl border border-slate-800 bg-slate-900 p-5"
-    >
-      <div className="mb-5">
-        <h3 className="font-semibold">Add New Stage</h3>
+    <>
+      <Button variant="secondary" icon="plus" size="sm" onClick={() => setOpen(true)}>
+        Add stage
+      </Button>
 
-        <p className="mt-1 text-xs text-slate-500">
-          Buat tahapan baru untuk goal ini.
-        </p>
-      </div>
-
-      <div className="space-y-4">
-        <div>
-          <label
-            htmlFor="stage-name"
-            className="mb-2 block text-sm font-medium text-slate-300"
-          >
-            Stage Name
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Add a new stage"
+        description="A stage is a meaningful chunk of the goal's journey."
+      >
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Stage name</span>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Foundations, Build, Polish"
+              required
+              className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+            />
           </label>
-
-          <input
-            id="stage-name"
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="Contoh: Python Fundamentals"
-            disabled={isSubmitting}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-slate-500"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="stage-description"
-            className="mb-2 block text-sm font-medium text-slate-300"
-          >
-            Description
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Description</span>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="What happens during this stage?"
+              rows={3}
+              className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+            />
           </label>
-
-          <textarea
-            id="stage-description"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            placeholder="Apa yang ingin dicapai pada tahap ini?"
-            rows={3}
-            disabled={isSubmitting}
-            className="w-full resize-none rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-slate-500"
-          />
-        </div>
-      </div>
-
-      {error && (
-        <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-          {error}
-        </div>
-      )}
-
-      <div className="mt-5 flex justify-end gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            setIsOpen(false);
-            setError("");
-          }}
-          disabled={isSubmitting}
-          className="rounded-xl border border-slate-800 px-4 py-2 text-sm text-slate-400 transition hover:bg-slate-800 hover:text-white"
-        >
-          Cancel
-        </button>
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="rounded-xl bg-white px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isSubmitting ? "Saving..." : "Create Stage"}
-        </button>
-      </div>
-    </form>
+          <div className="flex justify-end gap-2 pt-1">
+            <Button variant="secondary" onClick={() => setOpen(false)} type="button">
+              Cancel
+            </Button>
+            <Button type="submit" icon="check" loading={submitting}>
+              Add stage
+            </Button>
+          </div>
+        </form>
+      </Dialog>
+    </>
   );
 }

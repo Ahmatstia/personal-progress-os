@@ -1,6 +1,8 @@
 "use client";
 
 import type { AICommandResponse } from "@/ai/command-types";
+import { Badge } from "../ui/Badge";
+import { PriorityBadge, StatusBadge } from "../ui/Badge";
 
 type AIAmbiguousSelectorProps = {
   response: AICommandResponse;
@@ -18,53 +20,52 @@ function extractTasks(data: unknown): Array<{ id: string; name: string; status?:
 
 export default function AIAmbiguousSelector({ response, onSelect, loading }: AIAmbiguousSelectorProps) {
   const tasks = extractTasks(response.data);
-
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <span className="rounded-full border border-yellow-500/30 px-2 py-0.5 text-xs text-yellow-400">
-          Pilih task
-        </span>
+        <Badge tone="ai" icon="search">
+          I found several matches
+        </Badge>
       </div>
+      <p className="text-sm leading-relaxed text-surface-700">{response.message}</p>
 
-      <p className="text-sm leading-relaxed text-slate-200">{response.message}</p>
-
-      <div className="space-y-2">
+      <div className="space-y-2" role="listbox" aria-label="Select a task">
         {tasks.map((task, index) => (
           <button
             key={task.id}
             onClick={() => onSelect(task.id, task.name)}
             disabled={loading}
-            aria-label={`Pilih task: ${task.name}`}
-            className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-left transition hover:border-slate-600 disabled:opacity-50"
+            role="option"
+            aria-selected="false"
+            className="flex w-full items-center justify-between gap-3 rounded-xl border border-surface-200 bg-surface-0 px-4 py-3 text-left shadow-soft transition hover:border-primary-300 hover:bg-primary-50/40 disabled:opacity-50"
           >
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-600">{index + 1}.</span>
-                <span className="truncate text-sm text-white">{task.name}</span>
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface-100 text-xs font-bold text-surface-600">
+                  {index + 1}
+                </span>
+                <span className="truncate font-medium text-surface-800">{task.name}</span>
               </div>
               {task.stage && (
-                <p className="mt-1 truncate pl-5 text-xs text-slate-500">
-                  {task.stage.goal?.name}{task.stage.goal ? " · " : ""}{task.stage.name}
+                <p className="mt-1 truncate pl-8 text-xs text-surface-500">
+                  {task.stage.goal?.name}
+                  {task.stage.goal ? " · " : ""}
+                  {task.stage.name}
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-2">
-              {task.priority && (
-                <span className="rounded border border-slate-700 px-2 py-0.5 text-xs text-slate-400">
-                  {task.priority}
-                </span>
-              )}
-              {task.status && (
-                <span className="text-xs text-slate-500">{task.status}</span>
-              )}
+            <div className="flex shrink-0 items-center gap-2">
+              {task.priority && <PriorityBadge priority={task.priority} />}
+              {task.status && <StatusBadge status={task.status} />}
             </div>
           </button>
         ))}
       </div>
 
       {tasks.length === 0 && (
-        <p className="text-sm text-slate-500">Tidak ada task yang tersedia untuk dipilih.</p>
+        <div className="rounded-xl border border-surface-200 bg-surface-0 p-4 text-sm text-surface-500">
+          No matching tasks are available to select.
+        </div>
       )}
     </div>
   );

@@ -1,21 +1,156 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* ------------------------------------------------------------------
+     Personal Progress OS — Design Tokens
+     Warm neutral foundation · sophisticated indigo/violet primary
+     ------------------------------------------------------------------ */
+
+  /* Brand / primary — indigo→violet family (the "intelligence" color) */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #5551ee;
+  --color-primary-700: #4a46d8;
+  --color-primary-800: #3c39ae;
+  --color-primary-900: #333089;
+
+  /* AI accent — violet family (distinct from page primary) */
+  --color-ai-50: #f5f3ff;
+  --color-ai-100: #ede9fe;
+  --color-ai-200: #ddd6fe;
+  --color-ai-300: #c4b5fd;
+  --color-ai-400: #a78bfa;
+  --color-ai-500: #8b5cf6;
+  --color-ai-600: #7c3aed;
+  --color-ai-700: #6d28d9;
+
+  /* Semantic */
+  --color-success-50: #eefaf2;
+  --color-success-100: #d5f2e0;
+  --color-success-200: #aee5c6;
+  --color-success-300: #7bd3a5;
+  --color-success-400: #46ba7f;
+  --color-success-500: #2fa263;
+  --color-success-600: #228352;
+  --color-success-700: #1d6844;
+
+  --color-warning-50: #fdf6e7;
+  --color-warning-100: #faeac4;
+  --color-warning-200: #f5d58a;
+  --color-warning-300: #eebc55;
+  --color-warning-400: #e7a93a;
+  --color-warning-500: #d98f24;
+  --color-warning-600: #b8731d;
+
+  --color-danger-50: #fdf1f1;
+  --color-danger-100: #f9dcdc;
+  --color-danger-200: #f2b8b8;
+  --color-danger-300: #e88a8a;
+  --color-danger-400: #d95f5f;
+  --color-danger-500: #c73d3d;
+  --color-danger-600: #a52f2f;
+
+  --color-info-50: #eef7fd;
+  --color-info-100: #d4ecfa;
+  --color-info-200: #a8d9f5;
+  --color-info-300: #6fbce8;
+  --color-info-400: #3d9bda;
+  --color-info-500: #2b80be;
+
+  /* Warm neutral foundation (stone-like, slightly warm) */
+  --color-surface-0: #ffffff;
+  --color-surface-50: #faf9f7;
+  --color-surface-100: #f4f2ee;
+  --color-surface-150: #ece9e3;
+  --color-surface-200: #e3dfd7;
+  --color-surface-300: #d3cdc2;
+  --color-surface-400: #a8a194;
+  --color-surface-500: #8a8378;
+  --color-surface-600: #6b655c;
+  --color-surface-700: #524d46;
+  --color-surface-800: #37342f;
+  --color-surface-900: #26241f;
+  --color-surface-950: #171613;
+
+  /* Typography */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Elevation */
+  --shadow-soft: 0 1px 2px rgba(38, 35, 30, 0.04),
+    0 4px 12px -2px rgba(38, 35, 30, 0.06);
+  --shadow-raised: 0 2px 4px rgba(38, 35, 30, 0.05),
+    0 12px 28px -6px rgba(38, 35, 30, 0.12);
+  --shadow-pop: 0 8px 24px -6px rgba(38, 35, 30, 0.18),
+    0 24px 60px -12px rgba(38, 35, 30, 0.22);
 }
 
-* {
-  box-sizing: border-box;
+@layer base {
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-surface-50);
+    color: var(--color-surface-900);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-primary-100);
+    color: var(--color-primary-900);
+  }
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+@layer utilities {
+  /* Skeleton shimmer */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-surface-150);
+  }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    animation: skeleton-shimmer 1.6s infinite;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.65),
+      transparent
+    );
+  }
+  @keyframes skeleton-shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
+  .animate-in-soft {
+    animation: animate-in-soft 0.24s ease-out both;
+  }
+  @keyframes animate-in-soft {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

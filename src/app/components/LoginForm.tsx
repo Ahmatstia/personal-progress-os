@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState, type FormEvent } from "react";
 
 export default function LoginForm() {
   const [error, setError] = useState("");
@@ -12,24 +12,61 @@ export default function LoginForm() {
     setBusy(true);
     setError("");
     const form = new FormData(event.currentTarget);
-    const response = await fetch("/api/auth/login", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.fromEntries(form)) });
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(Object.fromEntries(form)),
+    });
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
-      setError(body.error ?? "Login gagal.");
+      setError(body.error ?? "Sign-in failed.");
       setBusy(false);
       return;
     }
     window.location.reload();
   }
 
-  return <form onSubmit={submit} className="mt-6 space-y-4">
-    <input name="email" type="email" required defaultValue="dev@example.com" placeholder="Email" className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-emerald-400" />
-    <input name="name" placeholder="Nama (opsional)" className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-emerald-400" />
-    <div className="relative">
-      <input name="accessCode" type={showCode ? "text" : "password"} required defaultValue="development-access-code" placeholder="Access code" className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 pr-12 text-sm text-white outline-none focus:border-emerald-400" />
-      <button type="button" onClick={() => setShowCode(!showCode)} aria-label={showCode ? "Sembunyikan access code" : "Tampilkan access code"} className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-slate-400 hover:text-white">{showCode ? <span className="text-sm">Sembunyi</span> : <span className="text-sm">Lihat</span>}</button>
-    </div>
-    {error && <p className="text-sm text-red-300">{error}</p>}
-    <button disabled={busy} className="w-full rounded-lg bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950 disabled:opacity-50">{busy ? "Signing in..." : "Sign in"}</button>
-  </form>;
+  const inputClass =
+    "w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-3 text-sm text-surface-900 outline-none placeholder:text-surface-400 transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100";
+
+  return (
+    <form onSubmit={submit} className="mt-6 space-y-4">
+      <label className="block">
+        <span className="mb-1.5 block text-sm font-medium text-surface-700">Email</span>
+        <input name="email" type="email" required defaultValue="dev@example.com" placeholder="you@example.com" className={inputClass} />
+      </label>
+      <label className="block">
+        <span className="mb-1.5 block text-sm font-medium text-surface-700">Name (optional)</span>
+        <input name="name" placeholder="What should we call you?" className={inputClass} />
+      </label>
+      <label className="block">
+        <span className="mb-1.5 block text-sm font-medium text-surface-700">Access code</span>
+        <div className="relative">
+          <input
+            name="accessCode"
+            type={showCode ? "text" : "password"}
+            required
+            defaultValue="development-access-code"
+            placeholder="Access code"
+            className={`${inputClass} pr-16`}
+          />
+          <button
+            type="button"
+            onClick={() => setShowCode(!showCode)}
+            aria-label={showCode ? "Hide access code" : "Show access code"}
+            className="absolute inset-y-0 right-0 flex w-14 items-center justify-center text-xs font-medium text-surface-500 hover:text-primary-700"
+          >
+            {showCode ? "Hide" : "Show"}
+          </button>
+        </div>
+      </label>
+      {error && <p className="text-sm text-danger-600">{error}</p>}
+      <button
+        disabled={busy}
+        className="w-full rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary-700 disabled:opacity-50"
+      >
+        {busy ? "Signing in…" : "Sign in"}
+      </button>
+    </form>
+  );
 }

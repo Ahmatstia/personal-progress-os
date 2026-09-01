@@ -1,20 +1,18 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import { Icon } from "../ui/Icon";
 
 type AIInputProps = {
   onSubmit: (text: string) => void;
   disabled: boolean;
   placeholder?: string;
+  autoFocus?: boolean;
 };
 
-export default function AIInput({ onSubmit, disabled, placeholder }: AIInputProps) {
+export default function AIInput({ onSubmit, disabled, placeholder, autoFocus = false }: AIInputProps) {
   const [value, setValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,32 +24,35 @@ export default function AIInput({ onSubmit, disabled, placeholder }: AIInputProp
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-2">
-      <input
-        ref={inputRef}
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        disabled={disabled}
-        placeholder={placeholder ?? "Ketik perintah..."}
-        aria-label="AI command input"
-        className="min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-slate-500 disabled:opacity-50"
-      />
+      <div className="relative min-w-0 flex-1">
+        <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-ai-500">
+          <Icon name="sparkles" size={17} />
+        </span>
+        <input
+          ref={inputRef}
+          data-ai-input
+          autoFocus={autoFocus}
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          disabled={disabled}
+          placeholder={placeholder ?? "Ask or command your system…"}
+          aria-label="AI command input"
+          className="h-11 w-full rounded-xl border border-surface-200 bg-surface-0 pl-10 pr-3.5 text-sm text-surface-900 outline-none transition placeholder:text-surface-400 focus:border-ai-400 focus:ring-2 focus:ring-ai-100 disabled:opacity-50"
+        />
+      </div>
       <button
         type="submit"
         disabled={disabled || !value.trim()}
-        aria-label="Kirim perintah"
-        className="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
+        aria-label="Submit command"
+        className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl bg-ai-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-ai-700 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {disabled ? (
-          <span className="flex items-center gap-2">
-            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-          </span>
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" aria-hidden="true" />
         ) : (
-          "Kirim"
+          <Icon name="arrowRight" size={16} />
         )}
+        <span className="hidden sm:inline">{disabled ? "Working" : "Go"}</span>
       </button>
     </form>
   );

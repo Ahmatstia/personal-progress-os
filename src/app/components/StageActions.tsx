@@ -2,36 +2,131 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Icon } from "./ui/Icon";
+import { useToast } from "./ui/Toast";
 
-export default function StageActions({ id, name, description, canMoveUp, canMoveDown }: { id: string; name: string; description: string | null; canMoveUp: boolean; canMoveDown: boolean }) {
+export default function StageActions({
+  id,
+  name,
+  description,
+  canMoveUp,
+  canMoveDown,
+}: {
+  id: string;
+  name: string;
+  description: string | null;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+}) {
   const router = useRouter();
+  const { toast } = useToast();
   const [editing, setEditing] = useState(false);
   const [stageName, setStageName] = useState(name);
   const [stageDescription, setStageDescription] = useState(description ?? "");
   const [error, setError] = useState("");
 
-  async function patch(body: object) {
+  async function patchRequest(body: object) {
     setError("");
-    const response = await fetch(`/api/stages/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const response = await fetch(`/api/stages/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error?.message ?? "Stage gagal diperbarui.");
+    if (!response.ok) throw new Error(result.error?.message ?? "Couldn't update the stage.");
     router.refresh();
   }
 
-  async function run(body: object) {
-    try { await patch(body); setEditing(false); } catch (value) { setError(value instanceof Error ? value.message : "Stage gagal diperbarui."); }
+  async function run(body: object, success = "Stage updated.") {
+    try {
+      await patchRequest(body);
+      setEditing(false);
+      toast(success, "success");
+    } catch (value) {
+      setError(value instanceof Error ? value.message : "Couldn't update the stage.");
+    }
   }
 
   async function remove() {
     try {
       const response = await fetch(`/api/stages/${id}`, { method: "DELETE" });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error?.message ?? "Stage gagal dihapus.");
+      if (!response.ok) throw new Error(result.error?.message ?? "Couldn't delete the stage.");
+      toast("Stage deleted.", "info");
       router.refresh();
-    } catch (value) { setError(value instanceof Error ? value.message : "Stage gagal dihapus."); }
+    } catch (value) {
+      setError(value instanceof Error ? value.message : "Couldn't delete the stage.");
+    }
   }
 
-  if (editing) return <div className="mt-3 space-y-2"><input value={stageName} onChange={(e) => setStageName(e.target.value)} className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white" /><textarea value={stageDescription} onChange={(e) => setStageDescription(e.target.value)} className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white" /><div className="flex gap-2"><button onClick={() => run({ name: stageName, description: stageDescription })} className="rounded-lg bg-white px-3 py-1.5 text-xs text-slate-950">Save</button><button onClick={() => setEditing(false)} className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-400">Cancel</button></div>{error && <p className="text-xs text-red-400">{error}</p>}</div>;
+  if (editing) {
+    return (
+      <div className="mt-3 space-y-2 rounded-xl border border-surface-200 bg-surface-0 p-3">
+        <input
+          value={stageName}
+          onChange={(e) => setStageName(e.target.value)}
+          className="w-full rounded-lg border border-surface-200 bg-surface-50 px-3 py-2 text-sm text-surface-900 outline-none focus:border-primary-400"
+        />
+        <textarea
+          value={stageDescription}
+          onChange={(e) => setStageDescription(e.target.value)}
+          rows={2}
+          className="w-full resize-none rounded-lg border border-surface-200 bg-surface-50 px-3 py-2 text-sm text-surface-900 outline-none focus:border-primary-400"
+        />
+        <div className="flex gap-2">
+          <button
+            onClick={() => run({ name: stageName, description: stageDescription })}
+            className="rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-700"
+          >
+            Save
+          </button>
+          <button
+            onClick={() => setEditing(false)}
+            className="rounded-lg border border-surface-200 px-3 py-1.5 text-xs text-surface-600 hover:bg-surface-100"
+          >
+            Cancel
+          </button>
+        </div>
+        {error && <p className="text-xs text-danger-600">{error}</p>}
+      </div>
+    );
+  }
 
-  return <div className="flex flex-wrap gap-1"><button disabled={!canMoveUp} onClick={() => run({ order: "up" })} className="rounded px-2 py-1 text-xs text-slate-500 hover:bg-slate-800 disabled:opacity-30">↑</button><button disabled={!canMoveDown} onClick={() => run({ order: "down" })} className="rounded px-2 py-1 text-xs text-slate-500 hover:bg-slate-800 disabled:opacity-30">↓</button><button onClick={() => setEditing(true)} className="rounded px-2 py-1 text-xs text-slate-500 hover:bg-slate-800 hover:text-white">Edit</button><button onClick={() => { if (window.confirm(`Delete stage "${name}"?`)) remove(); }} className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-red-500/10 hover:text-red-400">Delete</button>{error && <p className="w-full text-xs text-red-400">{error}</p>}</div>;
+  return (
+    <div className="flex flex-wrap gap-0.5">
+      <button
+        disabled={!canMoveUp}
+        onClick={() => run({ order: "up" })}
+        aria-label="Move stage up"
+        className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-surface-100 disabled:opacity-30"
+      >
+        <Icon name="chevronUp" size={15} />
+      </button>
+      <button
+        disabled={!canMoveDown}
+        onClick={() => run({ order: "down" })}
+        aria-label="Move stage down"
+        className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-surface-100 disabled:opacity-30"
+      >
+        <Icon name="chevronDown" size={15} />
+      </button>
+      <button
+        onClick={() => setEditing(true)}
+        aria-label="Edit stage"
+        className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-surface-100 hover:text-surface-800"
+      >
+        <Icon name="edit" size={14} />
+      </button>
+      <button
+        onClick={() => {
+          if (window.confirm(`Delete stage "${name}"? This will not delete its tasks.`)) remove();
+        }}
+        aria-label="Delete stage"
+        className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-danger-50 hover:text-danger-600"
+      >
+        <Icon name="trash" size={14} />
+      </button>
+      {error && <p className="w-full text-xs text-danger-600">{error}</p>}
+    </div>
+  );
 }
