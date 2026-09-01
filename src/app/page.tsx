@@ -1,5 +1,6 @@
 import Link from "next/link";
 import NewGoalButton from "./components/NewGoalButton";
+import AICommandPanel from "./components/AICommandPanel";
 import { getDashboardData } from "@/services/dashboard.service";
 import { calculateGoalProgress } from "@/services/progress.service";
 import { getToday } from "@/services/today.service";
@@ -77,6 +78,8 @@ export default async function Home() {
             </div>
           </div>
         </header>
+
+        <AICommandPanel />
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <article className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
