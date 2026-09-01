@@ -1,4 +1,5 @@
 import { selectNextAction } from "./progress.service";
+import { requireUserId } from "../lib/ownership";
 import { calculateSessionDurationMinutes } from "./progress.service";
 import { createFocus, deleteFocus as deleteFocusRecord, findFocusById, findTaskForFocus, findTodayContext, findTodayFocus, findTodaySessions, updateFocus } from "../repositories/today.repository";
 
@@ -12,11 +13,12 @@ export class TodayServiceError extends Error {
   constructor(message: string, public readonly code: "TASK_NOT_FOUND" | "FOCUS_NOT_FOUND" | "ALREADY_FOCUSED" | "COMPLETED_TASK") { super(message); }
 }
 
-async function focusRecords(date: Date) { return findTodayFocus(localDayBounds(date).start); }
+async function focusRecords(date: Date, userId?: string) { return findTodayFocus(requireUserId(userId), localDayBounds(date).start); }
 
-export async function getToday(date = new Date()) {
+export async function getToday(date = new Date(), userId?: string) {
+  const owner = requireUserId(userId);
   const { start, end } = localDayBounds(date);
-  const [focus, goals, sessions] = await Promise.all([focusRecords(date), findTodayContext(), findTodaySessions(start, end)]);
+  const [focus, goals, sessions] = await Promise.all([focusRecords(date, owner), findTodayContext(owner), findTodaySessions(owner, start, end)]);
   const tasks = goals.flatMap((goal) => goal.stages.flatMap((stage) => stage.tasks));
   const completedTasks = tasks.filter((task) => task.completedAt && task.completedAt >= start && task.completedAt <= end);
   const focusTasks = focus.filter((item) => item.task.status !== "COMPLETED");
@@ -28,28 +30,30 @@ export async function getToday(date = new Date()) {
   return { date: start, focusTasks, availableTasks: unfinished, currentSession: activeSession, completedTasks, overdueTasks: tasks.filter((task) => task.status !== "COMPLETED" && task.stage.goal.targetDate && task.stage.goal.targetDate < start), stats: { totalSessions: finishedSessions.length, totalMinutes, totalHours: totalMinutes / 60, completedTasks: completedTasks.length, activeTasks: unfinished.length }, nextAction, focusCompleted: focus.filter((item) => item.task.status === "COMPLETED").length, focusTotal: focus.length, momentumSessions: finishedSessions };
 }
 
-export async function getTodayFocus(date = new Date()) { return (await focusRecords(date)).filter((item) => item.task.status !== "COMPLETED"); }
-export async function getTodayStats(date = new Date()) { return (await getToday(date)).stats; }
-export async function getTodaySessions(date = new Date()) { return (await getToday(date)).momentumSessions; }
-export async function getTodayCompletedTasks(date = new Date()) { return (await getToday(date)).completedTasks; }
-export async function getTodayNextAction(date = new Date()) { return (await getToday(date)).nextAction; }
+export async function getTodayFocus(date = new Date(), userId?: string) { return (await focusRecords(date, userId)).filter((item) => item.task.status !== "COMPLETED"); }
+export async function getTodayStats(date = new Date(), userId?: string) { return (await getToday(date, userId)).stats; }
+export async function getTodaySessions(date = new Date(), userId?: string) { return (await getToday(date, userId)).momentumSessions; }
+export async function getTodayCompletedTasks(date = new Date(), userId?: string) { return (await getToday(date, userId)).completedTasks; }
+export async function getTodayNextAction(date = new Date(), userId?: string) { return (await getToday(date, userId)).nextAction; }
 
-export async function addTodayFocus(taskId: string, date = new Date()) {
-  const task = await findTaskForFocus(taskId);
+export async function addTodayFocus(taskId: string, date = new Date(), userId?: string) {
+  const owner = requireUserId(userId);
+  const task = await findTaskForFocus(owner, taskId);
   if (!task) throw new TodayServiceError("Task tidak ditemukan.", "TASK_NOT_FOUND");
   if (task.status === "COMPLETED") throw new TodayServiceError("Task yang sudah selesai tidak bisa ditambahkan ke fokus aktif.", "COMPLETED_TASK");
-  const existing = (await focusRecords(date)).find((item) => item.taskId === taskId);
+  const existing = (await focusRecords(date, owner)).find((item) => item.taskId === taskId);
   if (existing) throw new TodayServiceError("Task sudah ada di fokus hari ini.", "ALREADY_FOCUSED");
-  return createFocus(localDayBounds(date).start, taskId, (await focusRecords(date)).length);
+  return createFocus(owner, localDayBounds(date).start, taskId, (await focusRecords(date, owner)).length);
 }
 
-export async function removeTodayFocus(id: string) { if (!(await findFocusById(id))) throw new TodayServiceError("Fokus tidak ditemukan.", "FOCUS_NOT_FOUND"); return deleteFocusRecord(id); }
+export async function removeTodayFocus(id: string, userId?: string) { const owner = requireUserId(userId); if (!(await findFocusById(owner, id))) throw new TodayServiceError("Fokus tidak ditemukan.", "FOCUS_NOT_FOUND"); return deleteFocusRecord(owner, id); }
 
-export async function reorderTodayFocus(id: string, direction: "up" | "down") {
-  const focus = await findFocusById(id); if (!focus) throw new TodayServiceError("Fokus tidak ditemukan.", "FOCUS_NOT_FOUND");
-  const items = await focusRecords(focus.date); const index = items.findIndex((item) => item.id === id); const targetIndex = direction === "up" ? index - 1 : index + 1;
+export async function reorderTodayFocus(id: string, direction: "up" | "down", userId?: string) {
+  const owner = requireUserId(userId);
+  const focus = await findFocusById(owner, id); if (!focus) throw new TodayServiceError("Fokus tidak ditemukan.", "FOCUS_NOT_FOUND");
+  const items = await focusRecords(focus.date, owner); const index = items.findIndex((item) => item.id === id); const targetIndex = direction === "up" ? index - 1 : index + 1;
   if (targetIndex < 0 || targetIndex >= items.length) return focus;
-  await updateFocus(focus.id, items[targetIndex].order); return updateFocus(items[targetIndex].id, focus.order);
+  await updateFocus(owner, focus.id, items[targetIndex].order); return updateFocus(owner, items[targetIndex].id, focus.order);
 }
 
 export async function getTodayFocusContext(date = new Date()) { return getToday(date); }

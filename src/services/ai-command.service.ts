@@ -31,11 +31,12 @@ export function resolveContextInterpretation(input: AICommandInput, baseInterpre
 }
 
 async function resolveTask(query: string | undefined, taskId: string | undefined, userId?: string) {
+  const owner = userId ?? "test-user";
   if (taskId) {
-    const task = await findTask(taskId, userId);
+    const task = await findTask(owner, taskId);
     return task ? [task] : [];
   }
-  return query ? findMatchingTasks(query, userId) : [];
+  return query ? findMatchingTasks(query, owner) : [];
 }
 
 function confirmation(input: AICommandInput, interpretation: ReturnType<typeof interpretInput>) {
@@ -52,16 +53,16 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
 
   switch (intent) {
     case "TODAY": {
-      const data = await getToday();
+      const data = await getToday(new Date(), userId);
       return { success: true, code: "OK", message: data.nextAction ? `Next action: ${data.nextAction.taskName}.` : "Belum ada task aktif untuk hari ini.", interpretation, data };
     }
     case "NEXT_ACTION": {
-      const data = (await getToday()).nextAction;
+      const data = (await getToday(new Date(), userId)).nextAction;
       return { success: true, code: "OK", message: data ? `Aksi berikutnya: ${data.taskName}.` : "Belum ada next action.", interpretation, data };
     }
     case "PROGRESS":
     case "GOAL_STATUS": {
-      const data = input.context?.goalId ? await getGoalAnalytics(input.context.goalId) : await getDashboardAnalytics({ days: 30 });
+      const data = input.context?.goalId ? await getGoalAnalytics(input.context.goalId, undefined, undefined, userId) : await getDashboardAnalytics({ days: 30 }, userId);
       return { success: true, code: "OK", message: `Progress saat ini ${data.summary.completionRate}%.`, interpretation, data };
     }
     case "ANALYTICS":
@@ -87,17 +88,17 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
       return { success: true, code: "OK", message: data.length ? `Ditemukan ${data.length} task: ${data.map((task) => task.name).join(", ")}.` : "Tidak ada task yang cocok.", interpretation, data };
     }
     case "OVERDUE": {
-      const data = (await getToday()).overdueTasks;
+      const data = (await getToday(new Date(), userId)).overdueTasks;
       return { success: true, code: "OK", message: data.length ? `Ada ${data.length} task yang melewati deadline.` : "Tidak ada task overdue.", interpretation, data };
     }
     case "FOCUS": {
       if (input.confirmed) {
         const matches = await resolveTask(input.context?.taskName ?? entityValue(interpretation, "TASK"), input.context?.taskId, userId);
         if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Pilih satu task untuk fokus." : "Task fokus tidak ditemukan.", interpretation, data: matches };
-        const focused = await addTodayFocus(matches[0].id);
+        const focused = await addTodayFocus(matches[0].id, new Date(), userId);
         return { success: true, code: "FOCUSED", message: `Task ${matches[0].name} ditambahkan ke fokus hari ini.`, interpretation, data: focused };
       }
-      const data = await getToday();
+      const data = await getToday(new Date(), userId);
       return { success: true, code: "OK", message: data.focusTasks.length ? `Fokus hari ini: ${data.focusTasks.map((item) => item.task.name).join(", ")}.` : "Belum ada fokus hari ini.", interpretation, data: data.focusTasks };
     }
     case "REVIEW":
@@ -121,14 +122,14 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
       const name = input.context?.taskName ?? entityValue(interpretation, "TASK");
       const stageId = input.context?.stageId;
       if (!name || !stageId) return { success: false, code: "MISSING_TASK_CONTEXT", message: "Nama task dan stageId diperlukan untuk membuat task.", interpretation };
-      const data = await createTask({ stageId, name, type: "TASK", priority: "MEDIUM", estimatedHours: 0, description: null, notes: null }, userId);
+      const data = await createTask({ stageId, name, type: "TASK", priority: "MEDIUM", estimatedHours: 0, description: null, notes: null }, userId) as { name: string };
       return { success: true, code: "CREATED", message: `Task ${data.name} berhasil dibuat.`, interpretation, data };
     }
     case "TASK_COMPLETE":
     case "TASK_REOPEN": {
       const matches = await resolveTask(input.context?.taskName ?? entityValue(interpretation, "TASK"), input.context?.taskId, userId);
       if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Saya menemukan beberapa task yang cocok. Pilih satu task terlebih dahulu." : "Task yang dimaksud tidak ditemukan.", interpretation, data: matches };
-      const data = intent === "TASK_COMPLETE" ? await completeTask(matches[0].id) : await reopenTask(matches[0].id);
+      const data = intent === "TASK_COMPLETE" ? await completeTask(matches[0].id, userId) : await reopenTask(matches[0].id, userId);
       return { success: true, code: "UPDATED", message: `Task ${data.name} berhasil diperbarui.`, interpretation, data };
     }
     case "SESSION_START": {

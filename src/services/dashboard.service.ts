@@ -65,12 +65,13 @@ function formatMinutes(minutes: number) {
   return `${minutes} min`;
 }
 
-export async function getDashboardData(): Promise<DashboardData> {
+export async function getDashboardData(userId: string): Promise<DashboardData> {
   const now = new Date();
 
   const [goals, sessions] = await Promise.all([
     prisma.goal.findMany({
       where: {
+        userId,
         status: {
           not: "COMPLETED",
         },
@@ -94,6 +95,7 @@ export async function getDashboardData(): Promise<DashboardData> {
       },
     }),
     prisma.session.findMany({
+      where: { userId },
       orderBy: {
         startedAt: "desc",
       },

@@ -8,6 +8,6 @@ const include = {
   },
 } as const;
 
-export function findAnalyticsGoals(goalId?: string, userId?: string) {
-  return prisma.goal.findMany({ where: { ...(goalId ? { id: goalId } : { status: { not: "COMPLETED" } }), ...(userId ? { userId } : {}) }, include });
+export function findAnalyticsGoals(goalId: string | undefined, userId: string) {
+  return prisma.goal.findMany({ where: { ...(goalId ? { id: goalId } : { status: { not: "COMPLETED" } }), userId }, include });
 }

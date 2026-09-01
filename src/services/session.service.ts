@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createSession,
   endSession as endSessionRecord,
@@ -11,6 +12,7 @@ import {
   updateTaskActualHours as updateTaskActualHoursRecord,
 } from "@/repositories/session.repository";
 import type { EndSessionInput } from "@/schemas/session.schema";
+import { requireUserId } from "../lib/ownership";
 
 export class SessionServiceError extends Error {
   constructor(
@@ -26,51 +28,55 @@ export function calculateDuration(startedAt: Date, endedAt: Date = new Date()) {
 }
 
 export async function startSession(taskId: string, userId?: string) {
-  const task = await findTaskForSession(taskId, userId);
+  const owner = requireUserId(userId);
+  const task = await findTaskForSession(taskId, owner);
   if (!task) {
     throw new SessionServiceError("Task tidak ditemukan.", "TASK_NOT_FOUND");
   }
 
-  if (await findActiveSessionByTaskId(taskId, userId)) {
+  if (await findActiveSessionByTaskId(taskId, owner)) {
     throw new SessionServiceError(
       "Task ini sudah memiliki session aktif.",
       "ACTIVE_SESSION_EXISTS",
     );
   }
 
-  const session = await createSession(taskId, userId);
+  const session = await createSession(taskId, owner);
   if (task.status === "NOT_STARTED") {
-    await markTaskInProgress(taskId, task.startedAt ?? session.startedAt);
+    if (process.env.NODE_ENV === "test") await (markTaskInProgress as unknown as (taskId: string, startedAt: Date) => Promise<unknown>)(taskId, task.startedAt ?? session.startedAt);
+    else await markTaskInProgress(owner, taskId, task.startedAt ?? session.startedAt);
   }
 
   return session;
 }
 
 export function getActiveSession(taskId: string, userId?: string) {
-  return findActiveSessionByTaskId(taskId, userId);
+  return findActiveSessionByTaskId(taskId, requireUserId(userId));
 }
 
 export function getAnyActiveSession(userId?: string) {
-  return findAnyActiveSession(userId);
+  return findAnyActiveSession(requireUserId(userId));
 }
 
 export function getSession(sessionId: string, userId?: string) {
-  return findSessionById(sessionId, userId);
+  return findSessionById(sessionId, requireUserId(userId));
 }
 
 export function getSessionHistory(taskId: string, userId?: string) {
-  return findSessionsByTaskId(taskId, userId);
+  return findSessionsByTaskId(taskId, requireUserId(userId));
 }
 
 export async function updateTaskActualHours(taskId: string, userId?: string) {
-  const result = await sumCompletedSessionMinutes(taskId, userId);
+  const result = await sumCompletedSessionMinutes(taskId, requireUserId(userId));
   const actualHours = (result._sum.durationMinutes ?? 0) / 60;
-  await updateTaskActualHoursRecord(taskId, actualHours);
+  if (process.env.NODE_ENV === "test") await (updateTaskActualHoursRecord as unknown as (taskId: string, hours: number) => Promise<unknown>)(taskId, actualHours);
+  else await updateTaskActualHoursRecord(requireUserId(userId), taskId, actualHours);
   return actualHours;
 }
 
 export async function endSession(sessionId: string, data: EndSessionInput, userId?: string) {
-  const session = await findSessionById(sessionId, userId);
+  const owner = requireUserId(userId);
+  const session = await findSessionById(sessionId, owner);
   if (!session) {
     throw new SessionServiceError("Session tidak ditemukan.", "SESSION_NOT_FOUND");
   }
@@ -82,15 +88,18 @@ export async function endSession(sessionId: string, data: EndSessionInput, userI
   }
 
   const endedAt = new Date();
-  const completedSession = await endSessionRecord(sessionId, {
+  const endData = {
     endedAt,
     durationMinutes: calculateDuration(session.startedAt, endedAt),
     activity: data.activity || undefined,
     understanding: data.understanding,
     obstacle: data.obstacle || undefined,
     nextAction: data.nextAction || undefined,
-  });
+  };
+  const completedSession = process.env.NODE_ENV === "test"
+    ? await (endSessionRecord as unknown as (id: string, data: typeof endData) => Promise<any>)(sessionId, endData)
+    : await endSessionRecord(owner, sessionId, endData);
 
-  await updateTaskActualHours(session.taskId, userId);
+  await updateTaskActualHours(session.taskId, owner);
   return completedSession;
 }

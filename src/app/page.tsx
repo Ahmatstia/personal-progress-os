@@ -3,6 +3,8 @@ import NewGoalButton from "./components/NewGoalButton";
 import { getDashboardData } from "@/services/dashboard.service";
 import { calculateGoalProgress } from "@/services/progress.service";
 import { getToday } from "@/services/today.service";
+import { getCurrentUser } from "@/lib/auth";
+import LoginForm from "./components/LoginForm";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +32,9 @@ function formatDate(value: Date) {
 }
 
 export default async function Home() {
-  const [dashboard, today] = await Promise.all([getDashboardData(), getToday()]);
+  const user = await getCurrentUser();
+  if (!user) return <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white"><section className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-xl"><p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300">Personal Progress OS</p><h1 className="mt-4 text-3xl font-bold">Sign in to continue</h1><p className="mt-3 text-sm leading-6 text-slate-400">Your goals and progress are private to your account.</p><LoginForm /></section></main>;
+  const [dashboard, today] = await Promise.all([getDashboardData(user.id), getToday(new Date(), user.id)]);
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">

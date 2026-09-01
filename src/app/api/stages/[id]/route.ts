@@ -11,20 +11,20 @@ function errorResponse(error: unknown) {
 }
 
 export async function PATCH(request: Request, context: Context) {
-  try { await requireCurrentUser(); } catch (error) { return authErrorResponse(error); }
+  let user; try { user = await requireCurrentUser(); } catch (error) { return authErrorResponse(error); }
   try {
     const body = await request.json();
     if (body.order === "up" || body.order === "down") {
-      return NextResponse.json({ success: true, data: await moveStage((await context.params).id, body.order) });
+      return NextResponse.json({ success: true, data: await moveStage((await context.params).id, body.order, user.id) });
     }
     const parsed = updateStageSchema.safeParse({ ...body, order: body.order === undefined ? undefined : Number(body.order) });
     if (!parsed.success) return NextResponse.json({ success: false, error: { message: "Data stage tidak valid.", code: "INVALID_INPUT" } }, { status: 400 });
-    return NextResponse.json({ success: true, data: await updateStage((await context.params).id, parsed.data) });
+    return NextResponse.json({ success: true, data: await updateStage((await context.params).id, parsed.data, user.id) });
   } catch (error) { return errorResponse(error); }
 }
 
 export async function DELETE(_request: Request, context: Context) {
-  try { await requireCurrentUser(); } catch (error) { return authErrorResponse(error); }
-  try { return NextResponse.json({ success: true, data: await deleteStage((await context.params).id) }); }
+  let user; try { user = await requireCurrentUser(); } catch (error) { return authErrorResponse(error); }
+  try { return NextResponse.json({ success: true, data: await deleteStage((await context.params).id, user.id) }); }
   catch (error) { return errorResponse(error); }
 }

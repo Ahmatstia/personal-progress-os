@@ -40,7 +40,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
           <h2 className="text-lg font-semibold text-white">Recent sessions</h2>
           <div className="mt-3 space-y-2">
             {task.sessions.length === 0 && <p className="rounded-xl border border-dashed border-slate-800 p-5 text-sm text-slate-500">No sessions yet.</p>}
-            {task.sessions.map((session) => <div key={session.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4"><div><p className="text-sm text-slate-300">{session.activity || "Session"}</p><p className="mt-1 text-xs text-slate-500">{formatDate(session.startedAt)}</p></div><span className="font-mono text-sm text-slate-400">{session.durationMinutes ?? "Active"}{session.durationMinutes === null ? "" : "m"}</span></div>)}
+            {task.sessions.map((session: { id: string; activity: string | null; startedAt: Date; durationMinutes: number | null }) => <div key={session.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4"><div><p className="text-sm text-slate-300">{session.activity || "Session"}</p><p className="mt-1 text-xs text-slate-500">{formatDate(session.startedAt)}</p></div><span className="font-mono text-sm text-slate-400">{session.durationMinutes ?? "Active"}{session.durationMinutes === null ? "" : "m"}</span></div>)}
           </div>
         </section>
       </div>

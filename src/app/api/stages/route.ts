@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const goal = await prisma.goal.findUnique({
+    const goal = await prisma.goal.findFirst({
       where: {
         id: goalId,
         userId: user.id,
