@@ -110,6 +110,20 @@ export default async function Home() {
           </article>
         </section>
 
+        {dashboard.reviewSummary && (
+          <section className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-emerald-300">Weekly review</p>
+                <h2 className="mt-2 text-xl font-semibold">{dashboard.reviewSummary.review ? "This week" : "You haven't reviewed this week yet."}</h2>
+                <p className="mt-2 text-sm text-slate-400">{dashboard.reviewSummary.metrics.learningHours.toFixed(1)}h learning · {dashboard.reviewSummary.metrics.tasksCompleted} completed tasks</p>
+              </div>
+              <Link href={`/goals/${dashboard.reviewSummary.goalId}/reviews`} className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950">{dashboard.reviewSummary.review ? "View Review" : "Complete Weekly Review"}</Link>
+            </div>
+            {dashboard.reviewSummary.review?.nextFocus && <p className="mt-4 text-sm text-emerald-200">Next focus: {dashboard.reviewSummary.review.nextFocus}</p>}
+          </section>
+        )}
+
         <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
           <article className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
             <div className="flex items-start justify-between gap-4">

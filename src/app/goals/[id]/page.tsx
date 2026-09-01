@@ -171,6 +171,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
             </div>
 
             <StageForm goalId={goal.id} nextOrder={goal.stages.length} />
+            <Link href={`/goals/${goal.id}/reviews`} className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Review Progress</Link>
           </div>
 
           {goal.stages.length === 0 ? (

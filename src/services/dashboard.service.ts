@@ -6,6 +6,7 @@ import {
   selectNextAction,
   type NextActionTaskLike,
 } from "./progress.service";
+import { getPeriodReview, getPeriodMetrics, getWeekPeriod } from "./review.service";
 
 type GoalWithStages = Prisma.GoalGetPayload<{
   include: {
@@ -49,6 +50,7 @@ export type DashboardData = {
   recentSessions: SessionWithTask[];
   recentActivity: DashboardActivity[];
   nextAction: ReturnType<typeof selectNextAction>;
+  reviewSummary: { goalId: string; periodStart: Date; periodEnd: Date; review: Awaited<ReturnType<typeof getPeriodReview>>; metrics: Awaited<ReturnType<typeof getPeriodMetrics>> } | null;
 };
 
 function isSameLocalDay(left: Date, right: Date) {
@@ -158,6 +160,11 @@ export async function getDashboardData(): Promise<DashboardData> {
   }, 0);
 
   const nextAction = selectNextAction(tasks);
+  const period = getWeekPeriod(now);
+  const reviewGoal = goals[0];
+  const reviewSummary = reviewGoal
+    ? { goalId: reviewGoal.id, ...period, review: await getPeriodReview(reviewGoal.id, period.periodStart, period.periodEnd), metrics: await getPeriodMetrics(reviewGoal.id, period.periodStart, period.periodEnd) }
+    : null;
 
   const recentActivity: DashboardActivity[] = [
     ...sessions.map((session) => ({
@@ -197,5 +204,6 @@ export async function getDashboardData(): Promise<DashboardData> {
     recentSessions: sessions,
     recentActivity,
     nextAction,
+    reviewSummary,
   };
 }
