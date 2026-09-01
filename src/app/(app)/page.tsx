@@ -11,6 +11,7 @@ import { NextActionCard } from "@/app/components/core/NextActionCard";
 import { ProgressBar } from "@/app/components/ui/Progress";
 import { EmptyState } from "@/app/components/ui/EmptyState";
 import { Icon } from "@/app/components/ui/Icon";
+import { HistoryDeleteButton } from "@/app/components/ui/HistoryDeleteButton";
 import { formatDuration } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -242,6 +243,14 @@ export default async function Home() {
                   <p className="truncate text-xs text-surface-500">{item.detail}</p>
                 </div>
                 <span className="shrink-0 text-xs text-surface-400">{formatDate(item.timestamp)}</span>
+                {item.kind !== "task" && (
+                  <HistoryDeleteButton
+                    path={item.kind === "session" ? `/api/sessions/${item.entityId}` : `/api/captures/${item.entityId}`}
+                    message={item.kind === "session" ? "Hapus sesi ini dari riwayat?" : "Hapus catatan ini?"}
+                    toastMessage={item.kind === "session" ? "Sesi dihapus." : "Catatan dihapus."}
+                    aria-label="Hapus dari riwayat"
+                  />
+                )}
               </li>
             ))}
           </ul>

@@ -38,3 +38,11 @@ export function createCapture(userId: string, content: string) { return prisma.c
 export function findRecentCaptures(userId: string, limit: number) {
   return prisma.capture.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: limit });
 }
+
+export function findCapture(userId: string, id: string) {
+  return prisma.capture.findFirst({ where: { id, userId } });
+}
+
+export function deleteCaptureById(id: string) {
+  return prisma.capture.delete({ where: { id } });
+}

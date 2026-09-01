@@ -6,6 +6,7 @@ import { getTaskDetail } from "@/services/task.service";
 import { requireCurrentUser } from "@/lib/auth";
 import { StatusBadge } from "@/app/components/ui/Badge";
 import { Icon } from "@/app/components/ui/Icon";
+import { HistoryDeleteButton } from "@/app/components/ui/HistoryDeleteButton";
 import { formatHours } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -105,9 +106,17 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
                   <p className="text-sm font-medium text-surface-800">{session.activity || "Sesi fokus"}</p>
                   <p className="mt-1 text-xs text-surface-500">{formatDate(session.startedAt)}</p>
                 </div>
-                <span className="font-mono text-sm text-surface-600">
-                  {session.durationMinutes === null ? "Aktif" : `${session.durationMinutes}mnt`}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-sm text-surface-600">
+                    {session.durationMinutes === null ? "Aktif" : `${session.durationMinutes}mnt`}
+                  </span>
+                  <HistoryDeleteButton
+                    path={`/api/sessions/${session.id}`}
+                    message="Hapus sesi ini dari riwayat?"
+                    toastMessage="Sesi dihapus."
+                    aria-label="Hapus sesi"
+                  />
+                </div>
               </div>
             ))}
           </div>

@@ -38,6 +38,7 @@ export type DashboardActivity = {
   detail: string;
   timestamp: Date;
   kind: "session" | "task" | "capture";
+  entityId: string;
 };
 
 export type DashboardData = {
@@ -180,6 +181,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
       label: capture.content.slice(0, 60) + (capture.content.length > 60 ? "…" : ""),
       detail: "Catat cepat",
       timestamp: capture.createdAt,
+      entityId: capture.id,
     })),
     ...sessions.map((session) => ({
       id: `session-${session.id}`,
@@ -193,6 +195,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
           ),
       ),
       timestamp: session.endedAt ?? session.startedAt,
+      entityId: session.id,
     })),
     ...tasks
       .filter((task) => task.status === "COMPLETED" && task.startedAt)
@@ -203,6 +206,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
         label: task.name,
         detail: `${task.goalName} - ${task.stageName}`,
         timestamp: task.startedAt ?? task.createdAt,
+        entityId: task.id,
       })),
   ]
     .sort((left, right) => right.timestamp.getTime() - left.timestamp.getTime())

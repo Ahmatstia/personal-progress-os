@@ -87,6 +87,25 @@ export function SessionFocusMode({
     }
   }
 
+  async function cancel() {
+    if (!session) return;
+    if (!window.confirm(`Batalkan sesi untuk "${taskName}"? Sesi ini akan dihapus dari riwayat dan tidak menambah waktu belajar.`)) return;
+    setIsLoading(true);
+    setError("");
+    try {
+      const response = await fetch(`/api/sessions/${session.id}`, { method: "DELETE" });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error?.message ?? "Gagal membatalkan sesi.");
+      setSession(null);
+      setEnding(false);
+      router.refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Gagal membatalkan sesi.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   // Idle state — a calm prompt to begin
   if (!session) {
     return (
@@ -135,7 +154,7 @@ export function SessionFocusMode({
         <p className="mt-2 text-xs text-surface-400">waktu berlalu</p>
       </div>
 
-      <div className="mt-6 flex justify-center">
+      <div className="mt-6 flex flex-col items-center">
         {!ending ? (
           <Button variant="ai" icon="stop" size="lg" onClick={() => setEnding(true)}>
             Selesaikan sesi
@@ -144,6 +163,19 @@ export function SessionFocusMode({
           <Button variant="secondary" size="lg" onClick={() => setEnding(false)}>
             Lanjutkan
           </Button>
+        )}
+        {!ending && (
+          <>
+            <button
+              type="button"
+              onClick={cancel}
+              disabled={isLoading}
+              className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-surface-500 transition hover:text-danger-600 disabled:opacity-50"
+            >
+              <Icon name="trash" size={14} /> Batalkan sesi
+            </button>
+            {error && <p className="mt-3 text-sm text-danger-600">{error}</p>}
+          </>
         )}
       </div>
 

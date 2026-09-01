@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
-import { SessionServiceError, getSession } from "@/services/session.service";
+import { SessionServiceError, deleteSession, getSession } from "@/services/session.service";
 import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
+
+export async function DELETE(
+  _request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  try {
+    const user = await requireCurrentUser(_request);
+    return NextResponse.json({ success: true, data: await deleteSession((await context.params).id, user.id) });
+  } catch (error) { return handleSessionError(error); }
+}
 
 export async function GET(
   _request: Request,

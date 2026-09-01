@@ -10,6 +10,7 @@ import {
   markTaskInProgress,
   sumCompletedSessionMinutes,
   updateTaskActualHours as updateTaskActualHoursRecord,
+  deleteSessionById,
 } from "@/repositories/session.repository";
 import type { EndSessionInput } from "@/schemas/session.schema";
 import { requireUserId } from "../lib/ownership";
@@ -102,4 +103,16 @@ export async function endSession(sessionId: string, data: EndSessionInput, userI
 
   await updateTaskActualHours(session.taskId, owner);
   return completedSession;
+}
+
+export async function deleteSession(sessionId: string, userId?: string) {
+  const owner = requireUserId(userId);
+  const session = await findSessionById(sessionId, owner);
+  if (!session) {
+    throw new SessionServiceError("Session tidak ditemukan.", "SESSION_NOT_FOUND");
+  }
+  const wasCompleted = !!session.endedAt;
+  await deleteSessionById(sessionId);
+  if (wasCompleted) await updateTaskActualHours(session.taskId, owner);
+  return session;
 }

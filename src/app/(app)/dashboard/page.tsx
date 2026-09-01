@@ -9,6 +9,7 @@ import { getDashboardData } from "@/services/dashboard.service";
 import { requireCurrentUser } from "@/lib/auth";
 import { PageHeader } from "@/app/components/ui/PageHeader";
 import { Icon } from "@/app/components/ui/Icon";
+import { HistoryDeleteButton } from "@/app/components/ui/HistoryDeleteButton";
 import { formatDuration } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -131,6 +132,14 @@ export default async function AnalyticsPage({
                     <p className="truncate text-xs text-surface-500">{activity.detail}</p>
                   </div>
                   <span className="shrink-0 text-xs text-surface-400">{formatActivityTime(activity.timestamp)}</span>
+                  {activity.kind !== "task" && (
+                    <HistoryDeleteButton
+                      path={activity.kind === "session" ? `/api/sessions/${activity.entityId}` : `/api/captures/${activity.entityId}`}
+                      message={activity.kind === "session" ? "Hapus sesi ini dari riwayat?" : "Hapus catatan ini?"}
+                      toastMessage={activity.kind === "session" ? "Sesi dihapus." : "Catatan dihapus."}
+                      aria-label="Hapus dari riwayat"
+                    />
+                  )}
                 </li>
               ))}
             </ol>
@@ -147,14 +156,22 @@ export default async function AnalyticsPage({
           ) : (
             <ul className="mt-3 divide-y divide-surface-150">
               {dashboard.recentSessions.slice(0, 5).map((session) => (
-                <li key={session.id} className="py-2.5">
-                  <Link href={`/tasks/${session.task.id}`} className="block text-sm font-medium text-surface-800 hover:text-primary-700">
-                    {session.task.name}
-                  </Link>
-                  <p className="mt-0.5 text-xs text-surface-500">
-                    {session.task.stage.goal.name} ·{" "}
-                    {session.durationMinutes === null ? "Aktif" : formatDuration(session.durationMinutes)}
-                  </p>
+                <li key={session.id} className="flex items-start justify-between gap-3 py-2.5">
+                  <div className="min-w-0 flex-1">
+                    <Link href={`/tasks/${session.task.id}`} className="block text-sm font-medium text-surface-800 hover:text-primary-700">
+                      {session.task.name}
+                    </Link>
+                    <p className="mt-0.5 text-xs text-surface-500">
+                      {session.task.stage.goal.name} ·{" "}
+                      {session.durationMinutes === null ? "Aktif" : formatDuration(session.durationMinutes)}
+                    </p>
+                  </div>
+                  <HistoryDeleteButton
+                    path={`/api/sessions/${session.id}`}
+                    message="Hapus sesi ini dari riwayat?"
+                    toastMessage="Sesi dihapus."
+                    aria-label="Hapus sesi"
+                  />
                 </li>
               ))}
             </ul>

@@ -77,6 +77,10 @@ export function updateTaskActualHours(userId: string, taskId: string, actualHour
   });
 }
 
+export function deleteSessionById(id: string) {
+  return prisma.session.delete({ where: { id } });
+}
+
 export function findTaskForSession(taskId: string, userId: string) {
   return prisma.task.findFirst({ where: { id: taskId, ...(userId ? { userId } : {}) } });
 }

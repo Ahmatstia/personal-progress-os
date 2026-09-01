@@ -8,6 +8,7 @@ import { getRecentCaptures } from "@/services/capture.service";
 import { requireCurrentUser } from "@/lib/auth";
 import { Icon } from "@/app/components/ui/Icon";
 import { PageHeader } from "@/app/components/ui/PageHeader";
+import { HistoryDeleteButton } from "@/app/components/ui/HistoryDeleteButton";
 import { formatDuration } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -116,9 +117,17 @@ export default async function TodayPage() {
             ) : (
               <ul className="mt-3 divide-y divide-surface-150">
                 {recentCaptures.map((capture) => (
-                  <li key={capture.id} className="py-2.5">
-                    <p className="text-sm leading-relaxed text-surface-800">{capture.content}</p>
-                    <p className="mt-0.5 text-xs text-surface-400">{formatCaptureTime(capture.createdAt)}</p>
+                  <li key={capture.id} className="flex items-start justify-between gap-3 py-2.5">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm leading-relaxed text-surface-800">{capture.content}</p>
+                      <p className="mt-0.5 text-xs text-surface-400">{formatCaptureTime(capture.createdAt)}</p>
+                    </div>
+                    <HistoryDeleteButton
+                      path={`/api/captures/${capture.id}`}
+                      message="Hapus catatan ini?"
+                      toastMessage="Catatan dihapus."
+                      aria-label="Hapus catatan"
+                    />
                   </li>
                 ))}
               </ul>
