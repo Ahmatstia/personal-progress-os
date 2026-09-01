@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import NewGoalButton from "./components/NewGoalButton";
 
 export default async function Home() {
   const goals = await prisma.goal.findMany({
@@ -34,9 +35,7 @@ export default async function Home() {
           <div className="mb-5 flex items-center justify-between">
             <h2 className="text-xl font-semibold">Active Goals</h2>
 
-            <button className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-slate-200">
-              + New Goal
-            </button>
+            <NewGoalButton />
           </div>
 
           {goals.length === 0 ? (
