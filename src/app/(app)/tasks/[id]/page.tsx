@@ -10,7 +10,7 @@ import { Icon } from "@/app/components/ui/Icon";
 export const dynamic = "force-dynamic";
 
 function formatDate(value: Date) {
-  return new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(value);
+  return new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short" }).format(value);
 }
 
 export default async function TaskPage({ params }: { params: Promise<{ id: string }> }) {
@@ -28,7 +28,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
           href={`/goals/${task.stage.goalId}`}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-surface-500 transition hover:text-primary-700"
         >
-          <Icon name="arrowLeft" size={15} /> Back to {task.stage.goal.name}
+          <Icon name="arrowLeft" size={15} /> Kembali ke {task.stage.goal.name}
         </Link>
       </div>
 
@@ -57,10 +57,10 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            { label: "Priority", value: task.priority },
-            { label: "Estimated", value: `${task.estimatedHours}h` },
-            { label: "Actual", value: `${task.actualHours.toFixed(1)}h` },
-            { label: "Sessions", value: String(task.sessions.length) },
+            { label: "Prioritas", value: task.priority },
+            { label: "Estimasi", value: `${task.estimatedHours}j` },
+            { label: "Aktual", value: `${task.actualHours.toFixed(1)}j` },
+            { label: "Sesi", value: String(task.sessions.length) },
           ].map((stat) => (
             <div key={stat.label} className="rounded-2xl border border-surface-200 bg-surface-50 p-4">
               <p className="text-xs text-surface-500">{stat.label}</p>
@@ -75,7 +75,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-ai-100 text-ai-600">
             <Icon name="clock" size={16} />
           </span>
-          <h2 className="text-base font-semibold text-surface-900">Focus session</h2>
+          <h2 className="text-base font-semibold text-surface-900">Sesi fokus</h2>
         </div>
         <SessionFocusMode
           taskId={task.id}
@@ -83,15 +83,15 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
           goalName={task.stage.goal.name}
           stageName={task.stage.name}
           activeSession={activeSession ? { id: activeSession.id, startedAt: activeSession.startedAt.toISOString() } : null}
-          idleCta="Start focus session"
+          idleCta="Mulai sesi fokus"
         />
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-surface-900">Recent sessions</h2>
+        <h2 className="text-lg font-semibold text-surface-900">Sesi terbaru</h2>
         {task.sessions.length === 0 ? (
           <p className="mt-3 rounded-xl border border-dashed border-surface-300 p-5 text-sm text-surface-500">
-            No focus sessions yet.
+            Belum ada sesi fokus.
           </p>
         ) : (
           <div className="mt-3 space-y-2">
@@ -101,11 +101,11 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
                 className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-surface-200 bg-surface-0 p-4 shadow-soft"
               >
                 <div>
-                  <p className="text-sm font-medium text-surface-800">{session.activity || "Focus session"}</p>
+                  <p className="text-sm font-medium text-surface-800">{session.activity || "Sesi fokus"}</p>
                   <p className="mt-1 text-xs text-surface-500">{formatDate(session.startedAt)}</p>
                 </div>
                 <span className="font-mono text-sm text-surface-600">
-                  {session.durationMinutes === null ? "Active" : `${session.durationMinutes}m`}
+                  {session.durationMinutes === null ? "Aktif" : `${session.durationMinutes}mnt`}
                 </span>
               </div>
             ))}

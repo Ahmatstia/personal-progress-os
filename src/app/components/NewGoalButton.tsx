@@ -21,7 +21,7 @@ export default function NewGoalButton() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!name.trim()) {
-      toast("Give your goal a name.", "error");
+      toast("Beri nama untuk goal Anda.", "error");
       return;
     }
     setLoading(true);
@@ -32,15 +32,15 @@ export default function NewGoalButton() {
         body: JSON.stringify({ name, type, description }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message ?? data.error ?? "Couldn't create the goal.");
+      if (!response.ok) throw new Error(data.error?.message ?? data.error ?? "Gagal membuat goal.");
       setName("");
       setDescription("");
       setType("LEARNING");
       setOpen(false);
-      toast("Goal created.", "success");
+      toast("Goal dibuat.", "success");
       router.refresh();
     } catch (error) {
-      toast(error instanceof Error ? error.message : "Couldn't create the goal.", "error");
+      toast(error instanceof Error ? error.message : "Gagal membuat goal.", "error");
     } finally {
       setLoading(false);
     }
@@ -49,29 +49,29 @@ export default function NewGoalButton() {
   return (
     <>
       <Button icon="plus" onClick={() => setOpen(true)}>
-        New goal
+        Goal baru
       </Button>
 
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
-        title="Create a new goal"
-        description="Turn something important into a clear path forward."
+        title="Buat goal baru"
+        description="Ubah hal penting menjadi jalur yang jelas."
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-surface-700">Goal name</span>
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Nama goal</span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Learn Spanish, Build a portfolio, Run a 10k"
+              placeholder="mis. Belajar Spanyol, Buat portofolio, Lari 10k"
               required
               className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
             />
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-surface-700">Type</span>
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Tipe</span>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
@@ -86,11 +86,11 @@ export default function NewGoalButton() {
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-surface-700">Description</span>
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Deskripsi</span>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="What do you want to achieve?"
+              placeholder="Apa yang ingin Anda capai?"
               rows={4}
               className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
             />
@@ -98,10 +98,10 @@ export default function NewGoalButton() {
 
           <div className="flex justify-end gap-2 pt-1">
             <Button variant="secondary" onClick={() => setOpen(false)} type="button">
-              Cancel
+              Batal
             </Button>
             <Button type="submit" icon="check" loading={loading}>
-              Create goal
+              Buat goal
             </Button>
           </div>
         </form>

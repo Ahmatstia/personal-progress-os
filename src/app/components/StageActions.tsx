@@ -33,17 +33,17 @@ export default function StageActions({
       body: JSON.stringify(body),
     });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error?.message ?? "Couldn't update the stage.");
+    if (!response.ok) throw new Error(result.error?.message ?? "Gagal memperbarui stage.");
     router.refresh();
   }
 
-  async function run(body: object, success = "Stage updated.") {
+  async function run(body: object, success = "Stage diperbarui.") {
     try {
       await patchRequest(body);
       setEditing(false);
       toast(success, "success");
     } catch (value) {
-      setError(value instanceof Error ? value.message : "Couldn't update the stage.");
+      setError(value instanceof Error ? value.message : "Gagal memperbarui stage.");
     }
   }
 
@@ -51,11 +51,11 @@ export default function StageActions({
     try {
       const response = await fetch(`/api/stages/${id}`, { method: "DELETE" });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error?.message ?? "Couldn't delete the stage.");
-      toast("Stage deleted.", "info");
+      if (!response.ok) throw new Error(result.error?.message ?? "Gagal menghapus stage.");
+      toast("Stage dihapus.", "info");
       router.refresh();
     } catch (value) {
-      setError(value instanceof Error ? value.message : "Couldn't delete the stage.");
+      setError(value instanceof Error ? value.message : "Gagal menghapus stage.");
     }
   }
 
@@ -78,13 +78,13 @@ export default function StageActions({
             onClick={() => run({ name: stageName, description: stageDescription })}
             className="rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-700"
           >
-            Save
+            Simpan
           </button>
           <button
             onClick={() => setEditing(false)}
             className="rounded-lg border border-surface-200 px-3 py-1.5 text-xs text-surface-600 hover:bg-surface-100"
           >
-            Cancel
+            Batal
           </button>
         </div>
         {error && <p className="text-xs text-danger-600">{error}</p>}
@@ -97,7 +97,7 @@ export default function StageActions({
       <button
         disabled={!canMoveUp}
         onClick={() => run({ order: "up" })}
-        aria-label="Move stage up"
+        aria-label="Naikkan stage"
         className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-surface-100 disabled:opacity-30"
       >
         <Icon name="chevronUp" size={15} />
@@ -105,7 +105,7 @@ export default function StageActions({
       <button
         disabled={!canMoveDown}
         onClick={() => run({ order: "down" })}
-        aria-label="Move stage down"
+        aria-label="Turunkan stage"
         className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-surface-100 disabled:opacity-30"
       >
         <Icon name="chevronDown" size={15} />
@@ -119,9 +119,9 @@ export default function StageActions({
       </button>
       <button
         onClick={() => {
-          if (window.confirm(`Delete stage "${name}"? This will not delete its tasks.`)) remove();
+          if (window.confirm(`Hapus stage "${name}"? Ini tidak menghapus task-nya.`)) remove();
         }}
-        aria-label="Delete stage"
+        aria-label="Hapus stage"
         className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-danger-50 hover:text-danger-600"
       >
         <Icon name="trash" size={14} />

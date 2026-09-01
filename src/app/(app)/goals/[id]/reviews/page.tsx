@@ -11,7 +11,7 @@ import { Icon } from "@/app/components/ui/Icon";
 export const dynamic = "force-dynamic";
 
 function formatDate(value: Date) {
-  return new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" }).format(value);
+  return new Intl.DateTimeFormat("id-ID", { month: "long", day: "numeric" }).format(value);
 }
 
 export default async function ReviewsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -33,13 +33,13 @@ export default async function ReviewsPage({ params }: { params: Promise<{ id: st
           href={`/goals/${goal.id}`}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-surface-500 transition hover:text-primary-700"
         >
-          <Icon name="arrowLeft" size={15} /> Back to {goal.name}
+          <Icon name="arrowLeft" size={15} /> Kembali ke {goal.name}
         </Link>
       </div>
 
       <section className="rounded-3xl border border-surface-200 bg-surface-0 p-6 shadow-soft md:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary-500">Weekly review</p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-surface-900 md:text-4xl">Reflect and reset</h1>
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary-500">Review mingguan</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-surface-900 md:text-4xl">Renungkan dan mulai lagi</h1>
         <p className="mt-2 text-surface-600">
           {formatDate(period.periodStart)} – {formatDate(period.periodEnd)}
         </p>
@@ -50,7 +50,7 @@ export default async function ReviewsPage({ params }: { params: Promise<{ id: st
           </div>
           <span className="text-lg font-bold text-primary-700">{progress}%</span>
         </div>
-        <p className="mt-1.5 text-xs text-surface-500">Goal progress across stages and tasks</p>
+        <p className="mt-1.5 text-xs text-surface-500">Progres goal di seluruh stage dan task</p>
       </section>
 
       <div className="mt-6">
@@ -67,7 +67,7 @@ export default async function ReviewsPage({ params }: { params: Promise<{ id: st
         <section className="rounded-2xl border border-ai-200 bg-ai-50 p-5">
           <div className="flex items-center gap-2 text-ai-700">
             <Icon name="sparkles" size={16} />
-            <h2 className="font-semibold">Insights</h2>
+            <h2 className="font-semibold">Insight</h2>
           </div>
           <ul className="mt-3 space-y-2 text-sm text-surface-700">
             {insights.map((insight) => (
@@ -81,10 +81,10 @@ export default async function ReviewsPage({ params }: { params: Promise<{ id: st
       )}
 
       <section>
-        <h2 className="text-lg font-semibold text-surface-900">Review history</h2>
+        <h2 className="text-lg font-semibold text-surface-900">Riwayat review</h2>
         {reviews.length === 0 ? (
           <p className="mt-3 rounded-xl border border-dashed border-surface-300 p-5 text-sm text-surface-500">
-            No reviews yet. Weekly reviews help you understand what is working and what should change.
+            Belum ada review. Review mingguan membantu Anda memahami apa yang berjalan baik dan apa yang harus diubah.
           </p>
         ) : (
           <div className="mt-3 space-y-2">
@@ -95,14 +95,14 @@ export default async function ReviewsPage({ params }: { params: Promise<{ id: st
                     {formatDate(item.periodStart)} – {formatDate(item.periodEnd)}
                   </span>
                   <span className="text-sm text-surface-500">
-                    {item.learningHours.toFixed(1)}h · {item.tasksCompleted} tasks
+                    {item.learningHours.toFixed(1)}j · {item.tasksCompleted} task
                   </span>
                 </div>
                 {item.understanding !== null && (
-                  <p className="mt-2 text-xs text-surface-500">Understanding {item.understanding.toFixed(1)} / 5</p>
+                  <p className="mt-2 text-xs text-surface-500">Pemahaman {item.understanding.toFixed(1)} / 5</p>
                 )}
                 {item.nextFocus && (
-                  <p className="mt-2 text-sm font-medium text-ai-700">Next focus: {item.nextFocus}</p>
+                  <p className="mt-2 text-sm font-medium text-ai-700">Fokus berikutnya: {item.nextFocus}</p>
                 )}
               </div>
             ))}

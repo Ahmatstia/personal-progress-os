@@ -16,6 +16,12 @@ const severityTone: Record<Bottleneck["severity"], "warning" | "danger" | "neutr
   LOW: "neutral",
 };
 
+const severityLabel: Record<Bottleneck["severity"], string> = {
+  HIGH: "Tinggi",
+  MEDIUM: "Sedang",
+  LOW: "Rendah",
+};
+
 export function BottleneckInsight({
   bottlenecks,
   className = "",
@@ -32,10 +38,10 @@ export function BottleneckInsight({
           </span>
           <div>
             <h3 className="text-sm font-semibold text-success-800">
-              No bottlenecks detected
+              Tidak ada hambatan terdeteksi
             </h3>
             <p className="mt-1 text-sm text-success-700">
-              Your active work is progressing normally. Keep going.
+              Pekerjaan aktif Anda berjalan normal. Teruskan.
             </p>
           </div>
         </div>
@@ -54,16 +60,16 @@ export function BottleneckInsight({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-sm font-semibold text-surface-900">
-              What’s slowing you down
+              Apa yang memperlambat Anda
             </h3>
-            <Badge tone={severityTone[item.severity]}>{item.severity}</Badge>
+            <Badge tone={severityTone[item.severity]}>{severityLabel[item.severity]}</Badge>
           </div>
           <p className="mt-1 text-sm font-medium text-surface-800">{item.taskName}</p>
           <p className="mt-0.5 text-sm text-surface-600">{item.reason}</p>
           <div className="mt-3">
             <Link href={`/tasks/${item.taskId}`}>
               <Button size="sm" variant="secondary" iconRight="arrowRight">
-                View task
+                Lihat task
               </Button>
             </Link>
           </div>

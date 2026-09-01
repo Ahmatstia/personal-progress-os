@@ -12,7 +12,7 @@ import { Icon } from "@/app/components/ui/Icon";
 export const dynamic = "force-dynamic";
 
 function formatRange(start: Date, end: Date) {
-  const fmt = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" });
+  const fmt = new Intl.DateTimeFormat("id-ID", { month: "short", day: "numeric" });
   return `${fmt.format(start)} – ${fmt.format(end)}`;
 }
 
@@ -53,23 +53,23 @@ export default async function ReviewPage() {
     <div className="space-y-8">
       <PageHeader
         eyebrow="Review"
-        title="Pause and reflect"
-        description="A calm weekly ritual: understand what works, what doesn&apos;t, and where to point your energy next."
+        title="Berhenti dan renungkan"
+        description="Ritual mingguan yang tenang: pahami apa yang berhasil, apa yang tidak, dan ke mana harus mengarahkan energi Anda berikutnya."
       />
 
       <section className="rounded-3xl border border-ai-200 bg-gradient-to-br from-ai-50 via-surface-0 to-surface-0 p-6 shadow-soft md:p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ai-600">This week</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ai-600">Minggu ini</p>
             <h2 className="mt-1.5 text-2xl font-bold text-surface-900">{formatRange(period.periodStart, period.periodEnd)}</h2>
             <p className="mt-1 text-sm text-surface-500">
               {rows.length === 0
-                ? "No active goals to review yet."
-                : `${reviewed.size} of ${rows.length} goals reviewed this week`}
+                ? "Belum ada goals aktif untuk direview."
+                : `${reviewed.size} dari ${rows.length} goals sudah direview minggu ini`}
             </p>
           </div>
           <span className="rounded-full bg-ai-100 px-3 py-1 text-xs font-semibold text-ai-700">
-            {reviewed.size}/{rows.length} complete
+            {reviewed.size}/{rows.length} selesai
           </span>
         </div>
       </section>
@@ -78,8 +78,8 @@ export default async function ReviewPage() {
         <div className="rounded-2xl border border-surface-200 bg-surface-0 shadow-soft">
           <EmptyState
             icon="sparkles"
-            title="Nothing to review yet"
-            description="Once you have an active goal, you'll be able to reflect on your week here."
+            title="Belum ada yang direview"
+            description="Setelah Anda memiliki goal aktif, Anda bisa merefleksikan minggu Anda di sini."
           />
         </div>
       ) : (
@@ -100,9 +100,9 @@ export default async function ReviewPage() {
                       {goal.name}
                     </Link>
                     <div className="mt-2 flex items-center gap-2 text-xs text-surface-500">
-                      <span>{metrics.learningHours.toFixed(1)}h focused</span>
+                      <span>{metrics.learningHours.toFixed(1)}j fokus</span>
                       <span className="text-surface-300">·</span>
-                      <span>{metrics.tasksCompleted} tasks</span>
+                      <span>{metrics.tasksCompleted} task selesai</span>
                     </div>
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-2">
@@ -112,7 +112,7 @@ export default async function ReviewPage() {
                     </div>
                     <Link href={`/goals/${goal.id}/reviews`}>
                       <Button size="sm" variant={done ? "secondary" : "ai"} icon={done ? "check" : "sparkles"}>
-                        {done ? "Edit review" : "Write review"}
+                        {done ? "Sunting review" : "Tulis review"}
                       </Button>
                     </Link>
                   </div>
@@ -126,11 +126,12 @@ export default async function ReviewPage() {
       <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
         <div className="flex items-center gap-2 text-primary-600">
           <Icon name="info" size={16} />
-          <h2 className="font-semibold text-surface-900">Why review weekly?</h2>
+          <h2 className="font-semibold text-surface-900">Mengapa review mingguan?</h2>
         </div>
         <p className="mt-3 text-sm leading-6 text-surface-600">
-          A review isn&apos;t a scorecard. It&apos;s a chance to see what actually moved, name what held you back, and
-          choose one clear focus for the week ahead — so progress compounds instead of drifting.
+          Review bukanlah rapor. Ini adalah kesempatan untuk melihat apa yang benar-benar bergerak, menyebut apa yang
+          menghambat Anda, dan memilih satu fokus yang jelas untuk minggu ke depan — sehingga progres terus bertambah,
+          bukan sekadar mengalir begitu saja.
         </p>
       </section>
     </div>

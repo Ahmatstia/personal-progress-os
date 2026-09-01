@@ -45,10 +45,10 @@ function calculateBottlenecks(tasks: Task[], now: Date): Bottleneck[] {
     const finishedSessions = task.sessions.filter((session) => session.endedAt);
     const averageUnderstanding = finishedSessions.filter((session) => session.understanding !== null).reduce((sum, session) => sum + (session.understanding ?? 0), 0) / (finishedSessions.filter((session) => session.understanding !== null).length || 1);
     const daysSinceActivity = Math.floor((now.getTime() - task.updatedAt.getTime()) / 86400000);
-    if (task.estimatedHours > 0 && task.actualHours / task.estimatedHours >= 2) return [{ taskId: task.id, taskName: task.name, reason: "High time spent relative to estimate.", severity: "HIGH" as const }];
-    if (finishedSessions.length >= 3) return [{ taskId: task.id, taskName: task.name, reason: "Many sessions but task remains incomplete.", severity: "MEDIUM" as const }];
-    if (averageUnderstanding <= 2 && finishedSessions.some((session) => session.understanding !== null)) return [{ taskId: task.id, taskName: task.name, reason: "Reported understanding is low.", severity: "MEDIUM" as const }];
-    if (daysSinceActivity >= 14) return [{ taskId: task.id, taskName: task.name, reason: "No recent activity.", severity: "LOW" as const }];
+    if (task.estimatedHours > 0 && task.actualHours / task.estimatedHours >= 2) return [{ taskId: task.id, taskName: task.name, reason: "Waktu yang dihabiskan jauh melebihi estimasi.", severity: "HIGH" as const }];
+    if (finishedSessions.length >= 3) return [{ taskId: task.id, taskName: task.name, reason: "Banyak sesi namun task masih belum selesai.", severity: "MEDIUM" as const }];
+    if (averageUnderstanding <= 2 && finishedSessions.some((session) => session.understanding !== null)) return [{ taskId: task.id, taskName: task.name, reason: "Pemahaman yang dilaporkan rendah.", severity: "MEDIUM" as const }];
+    if (daysSinceActivity >= 14) return [{ taskId: task.id, taskName: task.name, reason: "Tidak ada aktivitas baru-baru ini.", severity: "LOW" as const }];
     return [];
   });
 }

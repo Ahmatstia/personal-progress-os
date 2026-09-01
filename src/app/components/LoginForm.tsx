@@ -19,7 +19,7 @@ export default function LoginForm() {
     });
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
-      setError(body.error ?? "Sign-in failed.");
+      setError(body.error ?? "Gagal masuk.");
       setBusy(false);
       return;
     }
@@ -36,27 +36,27 @@ export default function LoginForm() {
         <input name="email" type="email" required defaultValue="dev@example.com" placeholder="you@example.com" className={inputClass} />
       </label>
       <label className="block">
-        <span className="mb-1.5 block text-sm font-medium text-surface-700">Name (optional)</span>
-        <input name="name" placeholder="What should we call you?" className={inputClass} />
+        <span className="mb-1.5 block text-sm font-medium text-surface-700">Nama (opsional)</span>
+        <input name="name" placeholder="Siapa nama Anda?" className={inputClass} />
       </label>
       <label className="block">
-        <span className="mb-1.5 block text-sm font-medium text-surface-700">Access code</span>
+        <span className="mb-1.5 block text-sm font-medium text-surface-700">Kode akses</span>
         <div className="relative">
           <input
             name="accessCode"
             type={showCode ? "text" : "password"}
             required
             defaultValue="development-access-code"
-            placeholder="Access code"
+            placeholder="Kode akses"
             className={`${inputClass} pr-16`}
           />
           <button
             type="button"
             onClick={() => setShowCode(!showCode)}
-            aria-label={showCode ? "Hide access code" : "Show access code"}
+            aria-label={showCode ? "Sembunyikan kode akses" : "Tampilkan kode akses"}
             className="absolute inset-y-0 right-0 flex w-14 items-center justify-center text-xs font-medium text-surface-500 hover:text-primary-700"
           >
-            {showCode ? "Hide" : "Show"}
+            {showCode ? "Sembunyikan" : "Tampilkan"}
           </button>
         </div>
       </label>
@@ -65,7 +65,7 @@ export default function LoginForm() {
         disabled={busy}
         className="w-full rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary-700 disabled:opacity-50"
       >
-        {busy ? "Signing in…" : "Sign in"}
+        {busy ? "Masuk…" : "Masuk"}
       </button>
     </form>
   );

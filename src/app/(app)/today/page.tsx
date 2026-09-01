@@ -13,13 +13,13 @@ export const dynamic = "force-dynamic";
 function formatMinutes(minutes: number) {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
-  if (h === 0) return `${m} min`;
-  if (m === 0) return `${h} h`;
-  return `${h} h ${m} min`;
+  if (h === 0) return `${m} mnt`;
+  if (m === 0) return `${h} jam`;
+  return `${h} jam ${m} mnt`;
 }
 
 function formatDate(value: Date) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("id-ID", {
     weekday: "long",
     month: "long",
     day: "numeric",
@@ -61,9 +61,9 @@ export default async function TodayPage() {
   return (
     <div className="space-y-8">
       <PageHeader
-        eyebrow="Today"
+        eyebrow="Hari Ini"
         title={formatDate(today.date)}
-        description="A clear, focused plan for the work you chose today."
+        description="Rencana yang jelas dan fokus untuk pekerjaan yang Anda pilih hari ini."
       />
 
       <NextActionCard nextAction={nextActionCard} />
@@ -78,11 +78,11 @@ export default async function TodayPage() {
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-ai-100 text-ai-600">
                 <Icon name="clock" size={16} />
               </span>
-              <h2 className="text-base font-semibold text-surface-900">Focus session</h2>
+              <h2 className="text-base font-semibold text-surface-900">Sesi fokus</h2>
             </div>
             <SessionFocusMode
               taskId={sessionTask?.id ?? ""}
-              taskName={sessionTask?.name ?? "your next task"}
+              taskName={sessionTask?.name ?? "task berikutnya Anda"}
               goalName={sessionTask?.goalName}
               stageName={sessionTask?.stageName}
               activeSession={
@@ -103,10 +103,10 @@ export default async function TodayPage() {
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-success-50">
                 <Icon name="check" size={16} />
               </span>
-              <h2 className="text-base font-semibold text-surface-900">Completed today</h2>
+              <h2 className="text-base font-semibold text-surface-900">Selesai hari ini</h2>
             </div>
             {today.completedTasks.length === 0 ? (
-              <p className="mt-4 text-sm text-surface-500">Nothing completed yet — momentum starts with one finished task.</p>
+              <p className="mt-4 text-sm text-surface-500">Belum ada yang selesai — momentum dimulai dari satu task yang selesai.</p>
             ) : (
               <ul className="mt-3 divide-y divide-surface-150">
                 {today.completedTasks.map((task) => (
@@ -123,9 +123,9 @@ export default async function TodayPage() {
 
           <section className="grid grid-cols-3 gap-2">
             {[
-              { label: "Studied", value: formatMinutes(today.stats.totalMinutes) },
-              { label: "Focus done", value: `${today.focusCompleted}/${today.focusTotal}` },
-              { label: "Tasks done", value: String(today.stats.completedTasks) },
+              { label: "Belajar", value: formatMinutes(today.stats.totalMinutes) },
+              { label: "Fokus selesai", value: `${today.focusCompleted}/${today.focusTotal}` },
+              { label: "Task selesai", value: String(today.stats.completedTasks) },
             ].map((stat) => (
               <div key={stat.label} className="rounded-2xl border border-surface-200 bg-surface-0 p-3 text-center shadow-soft">
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-surface-400">{stat.label}</p>

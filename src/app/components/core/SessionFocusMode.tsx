@@ -18,7 +18,7 @@ export function SessionFocusMode({
   goalName,
   stageName,
   activeSession,
-  idleCta = "Start session",
+  idleCta = "Mulai sesi",
   compact = false,
 }: {
   taskId: string;
@@ -54,11 +54,11 @@ export function SessionFocusMode({
     try {
       const response = await fetch(`/api/tasks/${taskId}/sessions`, { method: "POST" });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error?.message ?? "Couldn't start a session.");
+      if (!response.ok) throw new Error(result.error?.message ?? "Gagal memulai sesi.");
       setSession({ id: result.data.id, startedAt: result.data.startedAt });
       router.refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Couldn't start a session.");
+      setError(e instanceof Error ? e.message : "Gagal memulai sesi.");
     } finally {
       setIsLoading(false);
     }
@@ -75,12 +75,12 @@ export function SessionFocusMode({
         body: JSON.stringify({ activity, understanding, obstacle, nextAction }),
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error?.message ?? "Couldn't finish the session.");
+      if (!response.ok) throw new Error(result.error?.message ?? "Gagal menyelesaikan sesi.");
       setSession(null);
       setEnding(false);
       router.refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Couldn't finish the session.");
+      setError(e instanceof Error ? e.message : "Gagal menyelesaikan sesi.");
     } finally {
       setIsLoading(false);
     }
@@ -92,11 +92,11 @@ export function SessionFocusMode({
       <div className={`rounded-2xl border border-dashed border-surface-300 bg-surface-0 p-6 ${compact ? "" : ""}`}>
         <div className="flex items-center gap-2 text-surface-400">
           <Icon name="clock" size={16} />
-          <span className="text-xs font-semibold uppercase tracking-[0.16em]">Session</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.16em]">Sesi</span>
         </div>
-        <p className="mt-3 text-lg font-semibold text-surface-800">Ready when you are.</p>
+        <p className="mt-3 text-lg font-semibold text-surface-800">Siap saat Anda siap.</p>
         <p className="mt-1 text-sm text-surface-500">
-          Clear your head and focus on one thing: <span className="font-medium text-surface-700">{taskName}</span>.
+          Kosongkan pikiran dan fokus pada satu hal: <span className="font-medium text-surface-700">{taskName}</span>.
         </p>
         <div className="mt-4">
           <Button icon="play" onClick={start} loading={isLoading}>
@@ -113,11 +113,11 @@ export function SessionFocusMode({
     <section className="overflow-hidden rounded-2xl border border-ai-200 bg-gradient-to-br from-ai-50 via-surface-0 to-surface-0 p-6 shadow-soft">
       <div className="flex items-center gap-2 text-ai-700">
         <span className="h-2 w-2 animate-pulse rounded-full bg-ai-500" aria-hidden="true" />
-        <span className="text-xs font-semibold uppercase tracking-[0.16em]">Focus mode — in session</span>
+        <span className="text-xs font-semibold uppercase tracking-[0.16em]">Mode fokus — sedang sesi</span>
       </div>
 
       <div className="mt-5 text-center">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">What am I working on?</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">Apa yang sedang saya kerjakan?</p>
         <h2 className="mx-auto mt-1.5 max-w-md text-xl font-bold leading-snug text-surface-900">{taskName}</h2>
         {(goalName || stageName) && (
           <p className="mt-1 text-sm text-surface-500">
@@ -131,44 +131,44 @@ export function SessionFocusMode({
         <p className="font-mono text-6xl font-bold tabular-nums tracking-tight text-ai-700 sm:text-7xl">
           {formatElapsed(elapsed)}
         </p>
-        <p className="mt-2 text-xs text-surface-400">elapsed time</p>
+        <p className="mt-2 text-xs text-surface-400">waktu berlalu</p>
       </div>
 
       <div className="mt-6 flex justify-center">
         {!ending ? (
           <Button variant="ai" icon="stop" size="lg" onClick={() => setEnding(true)}>
-            Finish session
+            Selesaikan sesi
           </Button>
         ) : (
           <Button variant="secondary" size="lg" onClick={() => setEnding(false)}>
-            Keep going
+            Lanjutkan
           </Button>
         )}
       </div>
 
       {ending && (
         <div className="animate-in-soft mt-6 rounded-2xl border border-surface-200 bg-surface-0 p-5">
-          <h3 className="font-semibold text-surface-900">How was this session?</h3>
+          <h3 className="font-semibold text-surface-900">Bagaimana sesi ini?</h3>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium text-surface-600">Activity</span>
-              <textarea value={activity} onChange={(e) => setActivity(e.target.value)} placeholder="What did you do?" rows={2}
+              <span className="mb-1.5 block text-xs font-medium text-surface-600">Aktivitas</span>
+              <textarea value={activity} onChange={(e) => setActivity(e.target.value)} placeholder="Apa yang Anda lakukan?" rows={2}
                 className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 p-3 text-sm text-surface-900 placeholder:text-surface-400 focus:border-ai-400 focus:ring-2 focus:ring-ai-100" />
             </label>
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium text-surface-600">What was difficult?</span>
-              <textarea value={obstacle} onChange={(e) => setObstacle(e.target.value)} placeholder="Any obstacles?" rows={2}
+              <span className="mb-1.5 block text-xs font-medium text-surface-600">Apa yang sulit?</span>
+              <textarea value={obstacle} onChange={(e) => setObstacle(e.target.value)} placeholder="Ada kendala?" rows={2}
                 className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 p-3 text-sm text-surface-900 placeholder:text-surface-400 focus:border-ai-400 focus:ring-2 focus:ring-ai-100" />
             </label>
             <label className="block sm:col-span-2">
-              <span className="mb-1.5 block text-xs font-medium text-surface-600">Next action</span>
-              <textarea value={nextAction} onChange={(e) => setNextAction(e.target.value)} placeholder="What should you do next?" rows={2}
+              <span className="mb-1.5 block text-xs font-medium text-surface-600">Aksi berikutnya</span>
+              <textarea value={nextAction} onChange={(e) => setNextAction(e.target.value)} placeholder="Apa yang harus Anda lakukan berikutnya?" rows={2}
                 className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 p-3 text-sm text-surface-900 placeholder:text-surface-400 focus:border-ai-400 focus:ring-2 focus:ring-ai-100" />
             </label>
           </div>
 
           <div className="mt-4">
-            <p className="mb-1.5 text-xs font-medium text-surface-600">Understanding</p>
+            <p className="mb-1.5 text-xs font-medium text-surface-600">Pemahaman</p>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((value) => (
                 <button
@@ -176,7 +176,7 @@ export function SessionFocusMode({
                   type="button"
                   onClick={() => setUnderstanding(value)}
                   aria-pressed={understanding === value}
-                  aria-label={`Understanding ${value} of 5`}
+                  aria-label={`Pemahaman ${value} dari 5`}
                   className={`h-10 flex-1 rounded-lg border text-sm font-semibold transition ${
                     understanding === value
                       ? "border-ai-500 bg-ai-600 text-white"
@@ -193,10 +193,10 @@ export function SessionFocusMode({
 
           <div className="mt-5 flex justify-end gap-2">
             <Button variant="secondary" onClick={() => setEnding(false)} disabled={isLoading}>
-              Cancel
+              Batal
             </Button>
             <Button variant="ai" icon="check" onClick={complete} loading={isLoading}>
-              Complete session
+              Selesaikan sesi
             </Button>
           </div>
         </div>

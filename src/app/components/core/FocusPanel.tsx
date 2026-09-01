@@ -22,7 +22,7 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
       body: body ? JSON.stringify(body) : undefined,
     });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error?.message ?? "Couldn't update focus.");
+    if (!response.ok) throw new Error(result.error?.message ?? "Gagal memperbarui fokus.");
     router.refresh();
   }
 
@@ -31,9 +31,9 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
     try {
       await request("/api/today/focus", "POST", { taskId: selected });
       setSelected("");
-      toast("Added to today’s focus.", "success");
+      toast("Ditambahkan ke fokus hari ini.", "success");
     } catch {
-      toast("Couldn't add that task.", "error");
+      toast("Gagal menambahkan task itu.", "error");
     }
   }
 
@@ -41,16 +41,16 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
     try {
       await request(`/api/today/focus/${id}`, "PATCH", { direction });
     } catch {
-      toast("Couldn't reorder.", "error");
+      toast("Gagal mengubah urutan.", "error");
     }
   }
 
   async function remove(id: string) {
     try {
       await request(`/api/today/focus/${id}`, "DELETE");
-      toast("Removed from focus.", "info");
+      toast("Dihapus dari fokus.", "info");
     } catch {
-      toast("Couldn't remove.", "error");
+      toast("Gagal menghapus.", "error");
     }
   }
 
@@ -58,11 +58,11 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
     <section className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">Today’s focus</p>
-          <h2 className="mt-1 text-lg font-bold text-surface-900">What matters right now</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">Fokus hari ini</p>
+          <h2 className="mt-1 text-lg font-bold text-surface-900">Yang penting sekarang</h2>
         </div>
         <span className="shrink-0 rounded-full bg-surface-100 px-3 py-1 text-xs font-medium text-surface-600">
-          {focus.length} task{focus.length === 1 ? "" : "s"}
+          {focus.length} task
         </span>
       </div>
 
@@ -70,8 +70,8 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
         <div className="rounded-2xl border border-dashed border-surface-300 bg-surface-0">
           <EmptyState
             icon="target"
-            title="Choose what matters today"
-            description="Add a few tasks below to keep today intentional and focused."
+            title="Pilih yang penting hari ini"
+            description="Tambahkan beberapa task di bawah untuk menjaga hari ini tetap fokus."
           />
         </div>
       ) : (
@@ -96,7 +96,7 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
                 <button
                   onClick={() => change(item.id, "up")}
                   disabled={index === 0}
-                  aria-label="Move up"
+                  aria-label="Naik"
                   className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-400 hover:bg-surface-100 disabled:opacity-25"
                 >
                   <Icon name="chevronUp" size={16} />
@@ -104,14 +104,14 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
                 <button
                   onClick={() => change(item.id, "down")}
                   disabled={index === focus.length - 1}
-                  aria-label="Move down"
+                  aria-label="Turun"
                   className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-400 hover:bg-surface-100 disabled:opacity-25"
                 >
                   <Icon name="chevronDown" size={16} />
                 </button>
                 <button
                   onClick={() => remove(item.id)}
-                  aria-label={`Remove ${item.task.name}`}
+                  aria-label={`Hapus ${item.task.name}`}
                   className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-400 hover:bg-danger-50 hover:text-danger-600"
                 >
                   <Icon name="x" size={16} />
@@ -126,10 +126,10 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
         <select
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
-          aria-label="Add a task to today's focus"
+          aria-label="Tambahkan task ke fokus hari ini"
           className="min-w-0 flex-1 rounded-xl border border-surface-200 bg-surface-0 px-3 py-2.5 text-sm text-surface-800 focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
         >
-          <option value="">Add a task to focus…</option>
+          <option value="">Tambahkan task ke fokus…</option>
           {available
             .filter((task) => !focus.some((item) => item.taskId === task.id))
             .map((task) => (
@@ -143,7 +143,7 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
           disabled={!selected}
           className="inline-flex h-11 items-center justify-center gap-1.5 rounded-xl bg-primary-600 px-4 text-sm font-semibold text-white transition hover:bg-primary-700 disabled:opacity-40"
         >
-          <Icon name="plus" size={16} /> Add
+          <Icon name="plus" size={16} /> Tambah
         </button>
       </div>
     </section>

@@ -36,15 +36,15 @@ export default function AIInput({ onSubmit, disabled, placeholder, autoFocus = f
           value={value}
           onChange={(e) => setValue(e.target.value)}
           disabled={disabled}
-          placeholder={placeholder ?? "Ask or command your system…"}
-          aria-label="AI command input"
+          placeholder={placeholder ?? "Tanya atau perintahkan sistem…"}
+          aria-label="Masukan perintah AI"
           className="h-11 w-full rounded-xl border border-surface-200 bg-surface-0 pl-10 pr-3.5 text-sm text-surface-900 outline-none transition placeholder:text-surface-400 focus:border-ai-400 focus:ring-2 focus:ring-ai-100 disabled:opacity-50"
         />
       </div>
       <button
         type="submit"
         disabled={disabled || !value.trim()}
-        aria-label="Submit command"
+        aria-label="Kirim perintah"
         className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl bg-ai-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-ai-700 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {disabled ? (
@@ -52,7 +52,7 @@ export default function AIInput({ onSubmit, disabled, placeholder, autoFocus = f
         ) : (
           <Icon name="arrowRight" size={16} />
         )}
-        <span className="hidden sm:inline">{disabled ? "Working" : "Go"}</span>
+        <span className="hidden sm:inline">{disabled ? "Memproses" : "Kirim"}</span>
       </button>
     </form>
   );

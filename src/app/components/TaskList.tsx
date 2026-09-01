@@ -20,16 +20,16 @@ export default function TaskList({ tasks }: { tasks: Task[] }) {
   const filtered = tasks.filter((task) => (status === "ALL" || task.status === status) && (priority === "ALL" || task.priority === priority));
 
   const statusTabs: [string, string][] = [
-    ["ALL", "All"],
-    ["NOT_STARTED", "To do"],
-    ["IN_PROGRESS", "Doing"],
-    ["COMPLETED", "Done"],
+    ["ALL", "Semua"],
+    ["NOT_STARTED", "Akan dilakukan"],
+    ["IN_PROGRESS", "Sedang"],
+    ["COMPLETED", "Selesai"],
   ];
   const priorityTabs: [string, string][] = [
-    ["ALL", "Any"],
-    ["HIGH", "High"],
-    ["MEDIUM", "Medium"],
-    ["LOW", "Low"],
+    ["ALL", "Semua"],
+    ["HIGH", "Tinggi"],
+    ["MEDIUM", "Sedang"],
+    ["LOW", "Rendah"],
   ];
 
   return (
@@ -69,7 +69,7 @@ export default function TaskList({ tasks }: { tasks: Task[] }) {
       </div>
       {filtered.length === 0 ? (
         <p className="rounded-xl border border-dashed border-surface-300 p-5 text-center text-xs text-surface-500">
-          No tasks match these filters.
+          Tidak ada task yang cocok dengan filter ini.
         </p>
       ) : (
         <div className="space-y-2">{filtered.map((task) => <TaskItem key={task.id} {...task} />)}</div>

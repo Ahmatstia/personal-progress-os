@@ -23,7 +23,7 @@ export default function StageForm({ goalId, nextOrder }: StageFormProps) {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!name.trim()) {
-      toast("Stage name is required.", "error");
+      toast("Nama stage wajib diisi.", "error");
       return;
     }
     setSubmitting(true);
@@ -34,14 +34,14 @@ export default function StageForm({ goalId, nextOrder }: StageFormProps) {
         body: JSON.stringify({ goalId, name, description, order: nextOrder }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Couldn't create the stage.");
+      if (!response.ok) throw new Error(data.error || "Gagal membuat stage.");
       setName("");
       setDescription("");
       setOpen(false);
-      toast("Stage added.", "success");
+      toast("Stage ditambahkan.", "success");
       router.refresh();
     } catch (error) {
-      toast(error instanceof Error ? error.message : "Couldn't create the stage.", "error");
+      toast(error instanceof Error ? error.message : "Gagal membuat stage.", "error");
     } finally {
       setSubmitting(false);
     }
@@ -50,42 +50,42 @@ export default function StageForm({ goalId, nextOrder }: StageFormProps) {
   return (
     <>
       <Button variant="secondary" icon="plus" size="sm" onClick={() => setOpen(true)}>
-        Add stage
+        Tambah stage
       </Button>
 
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
-        title="Add a new stage"
-        description="A stage is a meaningful chunk of the goal's journey."
+        title="Tambah stage baru"
+        description="Stage adalah bagian bermakna dari perjalanan goal."
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-surface-700">Stage name</span>
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Nama stage</span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Foundations, Build, Polish"
+              placeholder="mis. Fondasi, Pembuatan, Penyempurnaan"
               required
               className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
             />
           </label>
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-surface-700">Description</span>
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Deskripsi</span>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="What happens during this stage?"
+              placeholder="Apa yang terjadi selama stage ini?"
               rows={3}
               className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
             />
           </label>
           <div className="flex justify-end gap-2 pt-1">
             <Button variant="secondary" onClick={() => setOpen(false)} type="button">
-              Cancel
+              Batal
             </Button>
             <Button type="submit" icon="check" loading={submitting}>
-              Add stage
+              Tambah stage
             </Button>
           </div>
         </form>

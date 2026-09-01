@@ -11,11 +11,11 @@ type NavItem = {
 };
 
 const primaryNav: NavItem[] = [
-  { href: "/", label: "Home", icon: "sparkles" },
-  { href: "/today", label: "Today", icon: "sun" },
+  { href: "/", label: "Beranda", icon: "sparkles" },
+  { href: "/today", label: "Hari Ini", icon: "sun" },
   { href: "/goals", label: "Goals", icon: "flag" },
   { href: "/dashboard", label: "Dashboard", icon: "chart" },
-  { href: "/review", label: "Review", icon: "compass" },
+  { href: "/review", label: "Refleksi", icon: "compass" },
 ];
 
 export function isActive(href: string, pathname: string): boolean {
@@ -52,9 +52,9 @@ export function Sidebar({
       </Link>
 
       {/* Primary nav */}
-      <nav aria-label="Primary" className="mt-7 flex-1 space-y-1">
+      <nav aria-label="Navigasi utama" className="mt-7 flex-1 space-y-1">
         <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-surface-400">
-          Navigate
+          Navigasi
         </p>
         {primaryNav.map((item) => {
           const active = isActive(item.href, pathname);
@@ -90,7 +90,7 @@ export function Sidebar({
           }`}
         >
           <Icon name="settings" size={18} className="text-surface-400" />
-          Settings
+          Pengaturan
         </Link>
         <div className="flex items-center justify-between rounded-xl bg-surface-100 px-3 py-2.5">
           <div className="flex min-w-0 items-center gap-2.5">
@@ -98,13 +98,13 @@ export function Sidebar({
               {(user.name || "U").charAt(0).toUpperCase()}
             </span>
             <span className="min-w-0 truncate text-sm font-medium text-surface-800">
-              {user.name || "Account"}
+              {user.name || "Akun"}
             </span>
           </div>
           <button
             onClick={logout}
-            aria-label="Log out"
-            title="Log out"
+            aria-label="Keluar"
+            title="Keluar"
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-surface-500 transition hover:bg-surface-200 hover:text-danger-600"
           >
             <Icon name="logout" size={16} />

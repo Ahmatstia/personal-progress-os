@@ -23,7 +23,7 @@ export function GlobalAIDrawer({ open, onClose, context }: GlobalAIDrawerProps) 
       }}
       role="dialog"
       aria-modal="true"
-      aria-label="AI Assistant"
+      aria-label="Asisten AI"
     >
       <div className="animate-in-soft w-full max-w-xl rounded-3xl border border-surface-200 bg-surface-0 p-5 shadow-pop">
         <div className="mb-3 flex items-center justify-between">
@@ -31,11 +31,11 @@ export function GlobalAIDrawer({ open, onClose, context }: GlobalAIDrawerProps) 
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-ai-100">
               <Icon name="sparkles" size={16} />
             </span>
-            <span className="text-sm font-bold">Assistant</span>
+            <span className="text-sm font-bold">Asisten</span>
           </div>
           <button
             onClick={onClose}
-            aria-label="Close assistant"
+            aria-label="Tutup asisten"
             className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-surface-100"
           >
             <Icon name="x" size={18} />
@@ -48,8 +48,8 @@ export function GlobalAIDrawer({ open, onClose, context }: GlobalAIDrawerProps) 
 }
 
 const mobileNav: { href: string; label: string; icon: IconName }[] = [
-  { href: "/", label: "Home", icon: "sparkles" },
-  { href: "/today", label: "Today", icon: "sun" },
+  { href: "/", label: "Beranda", icon: "sparkles" },
+  { href: "/today", label: "Hari Ini", icon: "sun" },
   { href: "/goals", label: "Goals", icon: "flag" },
   { href: "/dashboard", label: "Dashboard", icon: "chart" },
 ];
@@ -98,7 +98,7 @@ export function AppShell({
             <button
               onClick={() => setSidebarOpen(true)}
               className="flex h-10 w-10 items-center justify-center rounded-xl text-surface-500 hover:bg-surface-100 lg:hidden"
-              aria-label="Open menu"
+              aria-label="Buka menu"
             >
               <Icon name="menu" size={20} />
             </button>
@@ -121,7 +121,7 @@ export function AppShell({
             >
               <Icon name="sparkles" size={16} />
               <span className={showSearchCta ? "" : "hidden lg:inline text-ai-600/80"}>
-                Ask anything…
+                Tanya apa saja…
               </span>
               {!showSearchCta && (
                 <span className="ml-auto hidden rounded border border-ai-200 px-1.5 py-0.5 text-[10px] text-ai-500 lg:inline">
@@ -134,8 +134,8 @@ export function AppShell({
             <Link
               href="/today"
               className="hidden h-10 w-10 items-center justify-center rounded-xl text-surface-500 hover:bg-surface-100 lg:flex"
-              aria-label="Quick capture"
-              title="Quick capture"
+              aria-label="Catat cepat"
+              title="Catat cepat"
             >
               <Icon name="capture" size={18} />
             </Link>
@@ -146,7 +146,7 @@ export function AppShell({
                   ? "bg-surface-150 text-surface-800"
                   : "text-surface-500 hover:bg-surface-100"
               }`}
-              aria-label="Settings"
+              aria-label="Pengaturan"
             >
               <Icon name="settings" size={18} />
             </Link>
@@ -161,7 +161,7 @@ export function AppShell({
       {/* Mobile bottom nav */}
       <nav
         className="fixed inset-x-0 bottom-0 z-40 border-t border-surface-200 bg-surface-0/95 backdrop-blur lg:hidden"
-        aria-label="Primary"
+        aria-label="Navigasi utama"
       >
         <div className="mx-auto flex max-w-lg items-center justify-around px-2 py-1.5">
           {mobileNav.map((item) => {
@@ -185,7 +185,7 @@ export function AppShell({
             className="flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-lg px-1 py-1.5 text-[11px] font-medium text-ai-700"
           >
             <Icon name="sparkles" size={21} />
-            Assistant
+            Asisten
           </button>
         </div>
       </nav>

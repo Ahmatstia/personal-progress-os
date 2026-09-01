@@ -44,11 +44,11 @@ export function Badge({
 
 /* Status badge — maps raw status strings to a tone + readable label */
 const statusMap: Record<string, { tone: Tone; label: string }> = {
-  ACTIVE: { tone: "primary", label: "Active" },
-  PAUSED: { tone: "warning", label: "Paused" },
-  COMPLETED: { tone: "success", label: "Completed" },
-  NOT_STARTED: { tone: "neutral", label: "Not started" },
-  IN_PROGRESS: { tone: "primary", label: "In progress" },
+  ACTIVE: { tone: "primary", label: "Aktif" },
+  PAUSED: { tone: "warning", label: "Dijeda" },
+  COMPLETED: { tone: "success", label: "Selesai" },
+  NOT_STARTED: { tone: "neutral", label: "Belum dimulai" },
+  IN_PROGRESS: { tone: "primary", label: "Sedang dikerjakan" },
 };
 
 export function StatusBadge({ status }: { status: string }) {
@@ -59,17 +59,13 @@ export function StatusBadge({ status }: { status: string }) {
   return <Badge tone={mapped.tone} dot>{mapped.label}</Badge>;
 }
 
-const priorityMap: Record<string, { tone: Tone }> = {
-  HIGH: { tone: "danger" },
-  MEDIUM: { tone: "warning" },
-  LOW: { tone: "neutral" },
+const priorityMap: Record<string, { tone: Tone; label: string }> = {
+  HIGH: { tone: "danger", label: "Tinggi" },
+  MEDIUM: { tone: "warning", label: "Sedang" },
+  LOW: { tone: "neutral", label: "Rendah" },
 };
 
 export function PriorityBadge({ priority }: { priority: string }) {
-  const tone = priorityMap[priority]?.tone ?? "neutral";
-  return (
-    <Badge tone={tone}>
-      {priority.charAt(0) + priority.slice(1).toLowerCase()}
-    </Badge>
-  );
+  const { tone, label } = priorityMap[priority] ?? { tone: "neutral" as Tone, label: priority };
+  return <Badge tone={tone}>{label}</Badge>;
 }

@@ -31,7 +31,7 @@ export default function TaskActions({ id, status, name, description, priority, e
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function patch(body: object, success = "Task updated.") {
+  async function patch(body: object, success = "Task diperbarui.") {
     setLoading(true);
     setError("");
     try {
@@ -41,12 +41,12 @@ export default function TaskActions({ id, status, name, description, priority, e
         body: JSON.stringify(body),
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error?.message ?? "Couldn't update the task.");
+      if (!response.ok) throw new Error(result.error?.message ?? "Gagal memperbarui task.");
       setEditing(false);
       toast(success, "success");
       router.refresh();
     } catch (value) {
-      setError(value instanceof Error ? value.message : "Couldn't update the task.");
+      setError(value instanceof Error ? value.message : "Gagal memperbarui task.");
     } finally {
       setLoading(false);
     }
@@ -54,28 +54,28 @@ export default function TaskActions({ id, status, name, description, priority, e
 
   const primaryAction =
     status === "COMPLETED" ? (
-      <Button variant="secondary" onClick={() => patch({ status: "IN_PROGRESS" }, "Task reopened.")} disabled={loading}>
-        Reopen
+      <Button variant="secondary" onClick={() => patch({ status: "IN_PROGRESS" }, "Task dibuka kembali.")} disabled={loading}>
+        Buka kembali
       </Button>
     ) : status === "IN_PROGRESS" ? (
       <Button
         variant="success"
         icon="check"
         onClick={() => {
-          if (window.confirm(`Complete task "${name}"?`)) patch({ status: "COMPLETED" }, "Task completed. Nice!");
+          if (window.confirm(`Selesaikan task "${name}"?`)) patch({ status: "COMPLETED" }, "Task selesai. Bagus!");
         }}
         disabled={loading}
       >
-        Complete task
+        Selesaikan task
       </Button>
     ) : (
       <Button
         variant="primary"
         icon="play"
-        onClick={() => patch({ status: "IN_PROGRESS" }, "Task started.")}
+        onClick={() => patch({ status: "IN_PROGRESS" }, "Task dimulai.")}
         disabled={loading}
       >
-        Start working
+        Mulai kerjakan
       </Button>
     );
 
@@ -92,14 +92,14 @@ export default function TaskActions({ id, status, name, description, priority, e
         open={editing}
         onClose={() => setEditing(false)}
         title="Edit task"
-        description="Update the details of this task."
+        description="Perbarui detail task ini."
       >
         <div className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <input
               value={values.name}
               onChange={(e) => setValues({ ...values, name: e.target.value })}
-              placeholder="Task name"
+              placeholder="Nama task"
               className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
             />
             <select
@@ -107,22 +107,22 @@ export default function TaskActions({ id, status, name, description, priority, e
               onChange={(e) => setValues({ ...values, priority: e.target.value })}
               className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
             >
-              <option value="LOW">Low</option>
-              <option value="MEDIUM">Medium</option>
-              <option value="HIGH">High</option>
+              <option value="LOW">Rendah</option>
+              <option value="MEDIUM">Sedang</option>
+              <option value="HIGH">Tinggi</option>
             </select>
           </div>
           <textarea
             value={values.description}
             onChange={(e) => setValues({ ...values, description: e.target.value })}
-            placeholder="Description"
+            placeholder="Deskripsi"
             rows={3}
             className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
           />
           <textarea
             value={values.notes}
             onChange={(e) => setValues({ ...values, notes: e.target.value })}
-            placeholder="Notes"
+            placeholder="Catatan"
             rows={2}
             className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
           />
@@ -132,16 +132,16 @@ export default function TaskActions({ id, status, name, description, priority, e
             step="0.5"
             value={values.estimatedHours}
             onChange={(e) => setValues({ ...values, estimatedHours: e.target.value })}
-            placeholder="Estimated hours"
+            placeholder="Estimasi jam"
             className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
           />
           {error && <p className="text-sm text-danger-600">{error}</p>}
           <div className="flex justify-end gap-2">
             <Button variant="secondary" onClick={() => setEditing(false)} type="button">
-              Cancel
+              Batal
             </Button>
             <Button loading={loading} disabled={!values.name.trim()} onClick={() => patch({ ...values, estimatedHours: Number(values.estimatedHours) })}>
-              Save changes
+              Simpan perubahan
             </Button>
           </div>
         </div>

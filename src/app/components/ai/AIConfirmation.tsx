@@ -59,7 +59,7 @@ export default function AIConfirmation({ response, onConfirm, onCancel, loading 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone="warning" icon="alert">
-              Confirmation required
+              Perlu konfirmasi
             </Badge>
             <Badge tone="ai">{intentToReadable(interpretation.intent)}</Badge>
           </div>
@@ -67,17 +67,17 @@ export default function AIConfirmation({ response, onConfirm, onCancel, loading 
           {data !== undefined && data !== null && (
             <div className="mt-3">
               <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-surface-500">
-                This will change
+                Ini akan mengubah
               </p>
               <Preview data={data} />
             </div>
           )}
           <div className="mt-4 flex flex-wrap gap-2">
             <Button variant="success" icon="check" onClick={onConfirm} loading={loading}>
-              Confirm
+              Konfirmasi
             </Button>
             <Button variant="secondary" onClick={onCancel} disabled={loading}>
-              Cancel
+              Batal
             </Button>
           </div>
         </div>

@@ -9,7 +9,7 @@ type SnapshotItem = {
 
 export function ProgressSnapshot({
   items,
-  title = "Progress snapshot",
+  title = "Ringkasan progres",
   className = "",
 }: {
   items: SnapshotItem[];

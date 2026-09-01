@@ -47,12 +47,12 @@ export function StartSessionButton({
         icon={icon}
         onClick={start}
         loading={loading}
-        aria-label={taskName ? `Start a focus session for ${taskName}` : undefined}
+        aria-label={taskName ? `Mulai sesi fokus untuk ${taskName}` : undefined}
       >
-        {children ?? "Start session"}
+        {children ?? "Mulai sesi"}
       </Button>
       {error && (
-        <span className="text-xs text-danger-600">Couldn’t start a session. Try again.</span>
+        <span className="text-xs text-danger-600">Gagal memulai sesi. Coba lagi.</span>
       )}
     </div>
   );

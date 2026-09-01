@@ -11,15 +11,15 @@ export default function LogoutButton() {
   const [loading, setLoading] = useState(false);
 
   async function logout() {
-    if (!window.confirm("Sign out of your account?")) return;
+    if (!window.confirm("Keluar dari akun Anda?")) return;
     setLoading(true);
     try {
       const response = await fetch("/api/auth/logout", { method: "POST" });
       if (!response.ok) throw new Error();
-      toast("Signed out.", "success");
+      toast("Berhasil keluar.", "success");
       router.refresh();
     } catch {
-      toast("Couldn't sign out.", "error");
+      toast("Gagal keluar.", "error");
     } finally {
       setLoading(false);
     }
@@ -27,7 +27,7 @@ export default function LogoutButton() {
 
   return (
     <Button variant="danger" icon="logout" onClick={logout} loading={loading}>
-      Sign out
+      Keluar
     </Button>
   );
 }

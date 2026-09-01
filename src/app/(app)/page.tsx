@@ -17,13 +17,13 @@ export const dynamic = "force-dynamic";
 function formatMinutes(totalMinutes: number) {
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
-  if (hours === 0) return `${minutes} min`;
-  if (minutes === 0) return `${hours} h`;
-  return `${hours} h ${minutes} min`;
+  if (hours === 0) return `${minutes} mnt`;
+  if (minutes === 0) return `${hours} jam`;
+  return `${hours} jam ${minutes} mnt`;
 }
 
 function formatDate(value: Date) {
-  return new Intl.DateTimeFormat("en-US", { day: "numeric", month: "short" }).format(value);
+  return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short" }).format(value);
 }
 
 export default async function Home() {
@@ -39,9 +39,9 @@ export default async function Home() {
             </span>
             <span className="text-lg font-bold tracking-tight text-surface-900">Personal Progress OS</span>
           </div>
-          <h1 className="mt-6 text-2xl font-bold text-surface-900">Welcome back</h1>
+          <h1 className="mt-6 text-2xl font-bold text-surface-900">Selamat datang kembali</h1>
           <p className="mt-2 text-sm leading-relaxed text-surface-500">
-            Sign in to keep your goals, progress, and reflections private to you.
+            Masuk agar goals, progres, dan refleksi Anda tetap pribadi.
           </p>
           <LoginForm />
         </section>
@@ -60,20 +60,20 @@ export default async function Home() {
   return (
     <div className="space-y-8">
       <PageHeader
-        eyebrow="Overview"
+        eyebrow="Ringkasan"
         title={
           <span>
-            Welcome back, {user.name?.split(" ")[0] || "friend"}.
+            Selamat datang kembali, {user.name?.split(" ")[0] || "teman"}.
           </span>
         }
-        description="Here’s what’s happening across your progress right now."
+        description="Berikut ringkasan progres Anda saat ini."
         actions={
           <>
             <Link href="/today">
-              <Button variant="primary" icon="sun">Go to Today</Button>
+              <Button variant="primary" icon="sun">Ke Hari Ini</Button>
             </Link>
             <Link href="/goals">
-              <Button variant="secondary" icon="flag">All goals</Button>
+              <Button variant="secondary" icon="flag">Semua goals</Button>
             </Link>
           </>
         }
@@ -87,22 +87,22 @@ export default async function Home() {
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100">
               <Icon name="sun" size={16} />
             </span>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em]">Today</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em]">Hari Ini</p>
           </div>
           <p className="mt-4 text-2xl font-bold text-surface-900">
             {today.currentSession
-              ? `Working on ${today.currentSession.task.name}`
+              ? `Mengerjakan ${today.currentSession.task.name}`
               : today.focusTasks.length > 0
-                ? `${today.focusTasks.length} focus task${today.focusTasks.length > 1 ? "s" : ""}`
-                : "No focus chosen yet"}
+                ? `${today.focusTasks.length} task fokus`
+                : "Belum ada fokus dipilih"}
           </p>
           <p className="mt-1.5 text-sm text-surface-500">
-            {formatMinutes(today.stats.totalMinutes)} studied · {today.stats.completedTasks} tasks completed
+            {formatMinutes(today.stats.totalMinutes)} belajar · {today.stats.completedTasks} task selesai
           </p>
           <div className="mt-5">
             <Link href="/today">
               <Button variant="secondary" iconRight="arrowRight" size="sm">
-                Open Today
+                Buka Hari Ini
               </Button>
             </Link>
           </div>
@@ -112,10 +112,10 @@ export default async function Home() {
       {/* Progress snapshot */}
       <ProgressSnapshot
         items={[
-          { label: "Active goals", value: String(goalCount), icon: "flag", hint: "in motion" },
-          { label: "Tasks complete", value: `${dashboard.completedTaskCount}/${dashboard.totalTaskCount}`, icon: "check", hint: `${completionPct}% done` },
-          { label: "Studied today", value: formatMinutes(dashboard.studyMinutesToday), icon: "clock", hint: "session time" },
-          { label: "Overall progress", value: `${dashboard.totalProgress}%`, icon: "gauge", hint: "across goals" },
+          { label: "Goals aktif", value: String(goalCount), icon: "flag", hint: "sedang berjalan" },
+          { label: "Task selesai", value: `${dashboard.completedTaskCount}/${dashboard.totalTaskCount}`, icon: "check", hint: `${completionPct}% selesai` },
+          { label: "Belajar hari ini", value: formatMinutes(dashboard.studyMinutesToday), icon: "clock", hint: "waktu sesi" },
+          { label: "Progres keseluruhan", value: `${dashboard.totalProgress}%`, icon: "gauge", hint: "di seluruh goals" },
         ]}
       />
 
@@ -139,22 +139,22 @@ export default async function Home() {
               </span>
               <div>
                 <h2 className="text-base font-semibold text-surface-900">
-                  {dashboard.reviewSummary.review ? "This week’s review is complete" : "Time for a weekly review"}
+                  {dashboard.reviewSummary.review ? "Review minggu ini selesai" : "Waktunya review mingguan"}
                 </h2>
                 <p className="mt-1 text-sm text-surface-600">
-                  {dashboard.reviewSummary.metrics.learningHours.toFixed(1)}h learning ·{" "}
-                  {dashboard.reviewSummary.metrics.tasksCompleted} tasks completed
+                  {dashboard.reviewSummary.metrics.learningHours.toFixed(1)} jam belajar ·{" "}
+                  {dashboard.reviewSummary.metrics.tasksCompleted} task selesai
                 </p>
                 {dashboard.reviewSummary.review?.nextFocus && (
                   <p className="mt-1.5 text-sm text-surface-700">
-                    <span className="font-medium">Next focus:</span> {dashboard.reviewSummary.review.nextFocus}
+                    <span className="font-medium">Fokus berikutnya:</span> {dashboard.reviewSummary.review.nextFocus}
                   </p>
                 )}
               </div>
             </div>
             <Link href={`/goals/${dashboard.reviewSummary.goalId}/reviews`}>
               <Button variant={dashboard.reviewSummary.review ? "secondary" : "primary"} icon="arrowRight">
-                {dashboard.reviewSummary.review ? "View review" : "Complete review"}
+                {dashboard.reviewSummary.review ? "Lihat review" : "Lengkapi review"}
               </Button>
             </Link>
           </div>
@@ -166,10 +166,10 @@ export default async function Home() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">Goals</p>
-            <h2 className="mt-1 text-xl font-bold text-surface-900">Active goals</h2>
+            <h2 className="mt-1 text-xl font-bold text-surface-900">Goals aktif</h2>
           </div>
           <Link href="/goals" className="inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-700">
-            View all <Icon name="arrowRight" size={15} />
+            Lihat semua <Icon name="arrowRight" size={15} />
           </Link>
         </div>
 
@@ -177,9 +177,9 @@ export default async function Home() {
           <div className="rounded-2xl border border-surface-200 bg-surface-0 shadow-soft">
             <EmptyState
               icon="flag"
-              title="No active goals yet"
-              description="Turn something important into a clear path forward. Your first goal will appear here."
-              action={<Link href="/goals"><Button variant="primary" icon="plus">Create a goal</Button></Link>}
+              title="Belum ada goals aktif"
+              description="Ubah hal penting menjadi jalur yang jelas. Goals pertama Anda akan muncul di sini."
+              action={<Link href="/goals"><Button variant="primary" icon="plus">Buat goal</Button></Link>}
             />
           </div>
         ) : (
@@ -207,8 +207,8 @@ export default async function Home() {
                     <ProgressBar value={progress} size="sm" />
                   </div>
                   <div className="mt-3 flex items-center justify-between text-xs text-surface-500">
-                    <span>{completed} / {tasks.length} tasks</span>
-                    <span>{goal.stages.length} stage{goal.stages.length === 1 ? "" : "s"}</span>
+                    <span>{completed} / {tasks.length} task</span>
+                    <span>{goal.stages.length} stage</span>
                   </div>
                 </Link>
               );
@@ -223,11 +223,11 @@ export default async function Home() {
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-100 text-surface-500">
             <Icon name="clock" size={16} />
           </span>
-          <h2 className="text-base font-semibold text-surface-900">Recent activity</h2>
+          <h2 className="text-base font-semibold text-surface-900">Aktivitas terbaru</h2>
         </div>
         {dashboard.recentActivity.length === 0 ? (
           <p className="mt-4 text-sm text-surface-500">
-            No sessions or task updates yet. Start your first session to build momentum.
+            Belum ada sesi atau pembaruan task. Mulai sesi pertama untuk membangun momentum.
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-surface-150">

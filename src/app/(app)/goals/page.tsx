@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 function formatDate(value: Date | null | undefined) {
   if (!value) return null;
-  return new Intl.DateTimeFormat("en-US", { day: "numeric", month: "short", year: "numeric" }).format(value);
+  return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" }).format(value);
 }
 
 export default async function GoalsPage() {
@@ -39,8 +39,8 @@ export default async function GoalsPage() {
     <div className="space-y-8">
       <PageHeader
         eyebrow="Goals"
-        title="Your goals, mapped out"
-        description="Plan each goal into stages, tasks, and focused sessions — then track them to completion."
+        title="Goals Anda, terpetakan dengan jelas"
+        description="Rencanakan setiap goal menjadi stage, task, dan sesi fokus — lalu pantau hingga selesai."
         actions={<NewGoalButton />}
       />
 
@@ -48,8 +48,8 @@ export default async function GoalsPage() {
         <div className="rounded-2xl border border-surface-200 bg-surface-0 shadow-soft">
           <EmptyState
             icon="flag"
-            title="Start with a meaningful goal"
-            description="Turn something you care about into a clear path forward. Create a goal, break it into stages, then into small tasks."
+            title="Mulai dengan goal yang bermakna"
+            description="Ubah hal yang Anda pedulikan menjadi jalur yang jelas. Buat goal, pecah menjadi stage, lalu menjadi task kecil."
             action={<NewGoalButton />}
           />
         </div>
@@ -57,11 +57,11 @@ export default async function GoalsPage() {
         <>
           <section className="space-y-3">
             <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">
-              Active · {activeGoals.length}
+              Aktif · {activeGoals.length}
             </h2>
             {activeGoals.length === 0 ? (
               <p className="rounded-2xl border border-dashed border-surface-300 bg-surface-0 p-6 text-sm text-surface-500">
-                No active goals right now.
+                Belum ada goals aktif saat ini.
               </p>
             ) : (
               <div className="grid gap-4 md:grid-cols-2">
@@ -100,13 +100,13 @@ export default async function GoalsPage() {
 
                       <div className="mt-4 flex items-center gap-1.5 text-xs text-surface-500">
                         <Icon name="layers" size={14} className="text-surface-400" />
-                        <span>{goal.stages.length} stages</span>
+                        <span>{goal.stages.length} stage</span>
                         <span className="text-surface-300">·</span>
-                        <span>{completed}/{tasks.length} tasks</span>
+                        <span>{completed}/{tasks.length} task</span>
                         {goal.targetDate && (
                           <>
                             <span className="text-surface-300">·</span>
-                            <span>by {formatDate(goal.targetDate)}</span>
+                            <span>hingga {formatDate(goal.targetDate)}</span>
                           </>
                         )}
                       </div>
@@ -118,17 +118,17 @@ export default async function GoalsPage() {
                           </span>
                           <div className="min-w-0">
                             <p className="text-[10px] font-semibold uppercase tracking-wider text-surface-400">
-                              {currentStage?.name ?? "Next"}
+                              {currentStage?.name ?? "Berikutnya"}
                             </p>
                             <p className="truncate text-sm font-medium text-surface-800">{nextTask.name}</p>
                           </div>
                         </div>
                       ) : progress === 100 ? (
                         <p className="mt-4 flex items-center gap-1.5 text-sm font-medium text-success-700">
-                          <Icon name="check" size={15} /> Goal complete
+                          <Icon name="check" size={15} /> Goal selesai
                         </p>
                       ) : (
-                        <p className="mt-4 text-sm text-surface-500">No tasks yet — break it down.</p>
+                        <p className="mt-4 text-sm text-surface-500">Belum ada task — uraikan dulu.</p>
                       )}
                     </Link>
                   );
@@ -140,7 +140,7 @@ export default async function GoalsPage() {
           {completedGoals.length > 0 && (
             <section className="space-y-3">
               <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">
-                Completed · {completedGoals.length}
+                Selesai · {completedGoals.length}
               </h2>
               <div className="grid gap-3 md:grid-cols-2">
                 {completedGoals.map((goal) => (
@@ -153,7 +153,7 @@ export default async function GoalsPage() {
                       <p className="text-[11px] font-semibold uppercase tracking-wider text-success-700">{goal.type}</p>
                       <h3 className="truncate font-semibold text-surface-800">{goal.name}</h3>
                     </div>
-                    <span className="shrink-0 text-sm font-bold text-success-700">Done</span>
+                    <span className="shrink-0 text-sm font-bold text-success-700">Selesai</span>
                   </Link>
                 ))}
               </div>

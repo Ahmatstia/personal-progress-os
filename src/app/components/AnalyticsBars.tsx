@@ -8,7 +8,7 @@ export default function AnalyticsBars({
   const hasData = trends.some((item) => item.learningHours > 0 || item.completedTasks > 0);
 
   if (!hasData) {
-    return <p className="py-4 text-sm text-surface-500">No activity data in this period yet.</p>;
+    return <p className="py-4 text-sm text-surface-500">Belum ada data aktivitas pada periode ini.</p>;
   }
 
   return (
@@ -21,19 +21,19 @@ export default function AnalyticsBars({
               <div
                 className="h-full rounded-full bg-ai-500"
                 style={{ width: `${(item.learningHours / maxHours) * 100}%` }}
-                title={`${item.learningHours}h focused`}
+                title={`${item.learningHours}j fokus`}
               />
             </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-surface-150">
               <div
                 className="h-full rounded-full bg-primary-500"
                 style={{ width: `${(item.completedTasks / maxTasks) * 100}%` }}
-                title={`${item.completedTasks} tasks completed`}
+                title={`${item.completedTasks} task selesai`}
               />
             </div>
           </div>
           <span className="text-right text-surface-500">
-            {item.learningHours}h · {item.completedTasks}
+            {item.learningHours}j · {item.completedTasks}
           </span>
         </div>
       ))}

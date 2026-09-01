@@ -28,32 +28,32 @@ export function NextActionCard({
           <Icon name="bolt" size={16} />
         </span>
         <p className="text-xs font-semibold uppercase tracking-[0.16em]">
-          Next action
+          Aksi berikutnya
         </p>
       </div>
 
       {!nextAction ? (
         <div className="mt-5">
           <h2 className="text-xl font-semibold text-surface-900">
-            Everything is clear
+            Semua sudah jelas
           </h2>
           <p className="mt-2 max-w-md text-sm text-surface-500">
-            You have no outstanding next action. Create a task or complete your
-            reviews to keep momentum.
+            Tidak ada aksi berikutnya yang harus dikerjakan. Buat task atau lengkapi
+            review untuk menjaga momentum.
           </p>
           <div className="mt-5 flex gap-2">
             <Link
               href="/today"
               className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary-600 px-4 text-sm font-semibold text-white hover:bg-primary-700"
             >
-              <Icon name="sun" size={16} /> Go to Today
+              <Icon name="sun" size={16} /> Ke Hari Ini
             </Link>
           </div>
         </div>
       ) : (
         <div className="mt-5">
           <p className="text-xs font-medium uppercase tracking-wider text-surface-400">
-            Do this next
+            Kerjakan ini berikutnya
           </p>
           <h2 className="mt-1.5 text-xl font-bold leading-snug text-surface-900">
             {nextAction.taskName}
@@ -70,7 +70,7 @@ export function NextActionCard({
               href={`/tasks/${nextAction.taskId}`}
               className="inline-flex h-10 items-center gap-2 rounded-xl border border-surface-200 bg-surface-0 px-4 text-sm font-semibold text-surface-700 hover:bg-surface-100"
             >
-              <Icon name="arrowRight" size={16} /> Open task
+              <Icon name="arrowRight" size={16} /> Buka task
             </Link>
           </div>
         </div>

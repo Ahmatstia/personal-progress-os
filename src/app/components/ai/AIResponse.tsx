@@ -10,7 +10,7 @@ import { StartSessionButton } from "../core/StartSessionButton";
 function ConfidenceBadge({ level }: { level: string }) {
   const tone: Tone =
     level === "HIGH" ? "success" : level === "MEDIUM" ? "warning" : "danger";
-  return <Badge tone={tone}>{level === "HIGH" ? "High" : level === "MEDIUM" ? "Medium" : "Low"} confidence</Badge>;
+  return <Badge tone={tone}>{level === "HIGH" ? "Keyakinan tinggi" : level === "MEDIUM" ? "Keyakinan sedang" : "Keyakinan rendah"}</Badge>;
 }
 
 function TaskDataView({ data }: { data: unknown }) {
@@ -18,7 +18,7 @@ function TaskDataView({ data }: { data: unknown }) {
 
   if (Array.isArray(data)) {
     if (data.length === 0)
-      return <p className="mt-2 text-sm text-surface-500">No data found.</p>;
+      return <p className="mt-2 text-sm text-surface-500">Tidak ada data ditemukan.</p>;
     return (
       <div className="mt-3 space-y-2">
         {data.map((item, i) => {
@@ -76,10 +76,10 @@ function TaskDataView({ data }: { data: unknown }) {
     const summary = obj.summary as Record<string, unknown>;
     return (
       <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {typeof summary.totalHours === "number" && <SummaryChip label="Total hours" value={`${summary.totalHours}h`} />}
-        {typeof summary.completedTasks === "number" && <SummaryChip label="Tasks done" value={`${summary.completedTasks}`} />}
-        {typeof summary.completionRate === "number" && <SummaryChip label="Completion" value={`${summary.completionRate}%`} />}
-        {typeof summary.currentStreak === "number" && <SummaryChip label="Streak" value={`${summary.currentStreak}d`} />}
+        {typeof summary.totalHours === "number" && <SummaryChip label="Total jam" value={`${summary.totalHours}h`} />}
+        {typeof summary.completedTasks === "number" && <SummaryChip label="Task selesai" value={`${summary.completedTasks}`} />}
+        {typeof summary.completionRate === "number" && <SummaryChip label="Penyelesaian" value={`${summary.completionRate}%`} />}
+        {typeof summary.currentStreak === "number" && <SummaryChip label="Rekor" value={`${summary.currentStreak}d`} />}
       </div>
     );
   }
@@ -93,11 +93,11 @@ function TaskDataView({ data }: { data: unknown }) {
         {typeof task.id === "string" && (
           <div className="mt-3 flex gap-2">
             <Link href={`/tasks/${task.id}`} className="inline-flex h-9 items-center gap-1 rounded-lg bg-primary-600 px-3 text-xs font-semibold text-white hover:bg-primary-700">
-              Open task <Icon name="arrowRight" size={13} />
+              Buka task <Icon name="arrowRight" size={13} />
             </Link>
             {typeof task.id === "string" && (
               <StartSessionButton taskId={task.id} taskName={String(task.name ?? "")} size="sm" variant="success" icon="play">
-                Start
+                Mulai
               </StartSessionButton>
             )}
           </div>
@@ -110,7 +110,7 @@ function TaskDataView({ data }: { data: unknown }) {
     const action = obj.nextAction as Record<string, unknown>;
     return (
       <div className="mt-3 rounded-xl border border-primary-100 bg-primary-50/50 p-4">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-primary-600">Next action</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-primary-600">Aksi berikutnya</p>
         <p className="mt-1 font-semibold text-surface-800">{String(action.taskName ?? "")}</p>
         <div className="mt-2 text-xs text-surface-500">
           {typeof action.goalName === "string" && <p>Goal: {action.goalName}</p>}
@@ -120,12 +120,12 @@ function TaskDataView({ data }: { data: unknown }) {
           <div className="mt-3 flex gap-2">
             {typeof action.taskId === "string" && (
               <StartSessionButton taskId={action.taskId} taskName={String(action.taskName ?? "")} size="sm" icon="play">
-                Start
+                Mulai
               </StartSessionButton>
             )}
             {typeof action.goalId === "string" && (
               <Link href={`/goals/${action.goalId}`} className="inline-flex h-9 items-center gap-1 rounded-lg border border-surface-200 bg-surface-0 px-3 text-xs font-semibold text-surface-700 hover:bg-surface-100">
-                View goal
+                Lihat goal
               </Link>
             )}
           </div>
@@ -143,7 +143,7 @@ function TaskDataView({ data }: { data: unknown }) {
         {typeof obj.status === "string" && <p className="mt-1 text-xs text-surface-500">Status: {obj.status}</p>}
         {id && typeof obj.goalId === "string" && (
           <Link href={`/goals/${obj.goalId}`} className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-700">
-            View <Icon name="arrowRight" size={12} />
+            Lihat <Icon name="arrowRight" size={12} />
           </Link>
         )}
       </div>

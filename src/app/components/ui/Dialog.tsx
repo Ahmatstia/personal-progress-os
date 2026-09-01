@@ -62,7 +62,7 @@ export function Dialog({
           {closeable && (
             <button
               onClick={onClose}
-              aria-label="Close dialog"
+              aria-label="Tutup dialog"
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-surface-500 hover:bg-surface-100 hover:text-surface-800"
             >
               <Icon name="x" size={18} />

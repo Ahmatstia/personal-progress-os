@@ -24,12 +24,12 @@ export default function AIAmbiguousSelector({ response, onSelect, loading }: AIA
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <Badge tone="ai" icon="search">
-          I found several matches
+          Saya menemukan beberapa hasil
         </Badge>
       </div>
       <p className="text-sm leading-relaxed text-surface-700">{response.message}</p>
 
-      <div className="space-y-2" role="listbox" aria-label="Select a task">
+      <div className="space-y-2" role="listbox" aria-label="Pilih task">
         {tasks.map((task, index) => (
           <button
             key={task.id}
@@ -64,7 +64,7 @@ export default function AIAmbiguousSelector({ response, onSelect, loading }: AIA
 
       {tasks.length === 0 && (
         <div className="rounded-xl border border-surface-200 bg-surface-0 p-4 text-sm text-surface-500">
-          No matching tasks are available to select.
+          Tidak ada task yang cocok untuk dipilih.
         </div>
       )}
     </div>

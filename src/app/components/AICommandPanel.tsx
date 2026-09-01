@@ -36,7 +36,7 @@ async function sendCommand(text: string, confirmed: boolean, context?: { taskId?
     return {
       success: false,
       code: "UNAUTHENTICATED",
-      message: "Your session has ended. Please sign in again.",
+      message: "Sesi Anda telah berakhir. Silakan masuk kembali.",
       interpretation: { input: text, normalizedText: text, intent: "UNKNOWN", confidence: 0, confidenceLevel: "LOW", entities: [], source: "baseline" },
     };
   }
@@ -44,7 +44,7 @@ async function sendCommand(text: string, confirmed: boolean, context?: { taskId?
     return {
       success: false,
       code: "INVALID_INPUT",
-      message: "That command isn't valid.",
+      message: "Perintah itu tidak valid.",
       interpretation: { input: text, normalizedText: text, intent: "UNKNOWN", confidence: 0, confidenceLevel: "LOW", entities: [], source: "baseline" },
     };
   }
@@ -52,7 +52,7 @@ async function sendCommand(text: string, confirmed: boolean, context?: { taskId?
     return {
       success: false,
       code: "INTERNAL_ERROR",
-      message: "Something went wrong. Please try again.",
+      message: "Terjadi kesalahan. Silakan coba lagi.",
       interpretation: { input: text, normalizedText: text, intent: "UNKNOWN", confidence: 0, confidenceLevel: "LOW", entities: [], source: "baseline" },
     };
   }
@@ -60,7 +60,7 @@ async function sendCommand(text: string, confirmed: boolean, context?: { taskId?
     return {
       success: false,
       code: json.error.code ?? "UNKNOWN_ERROR",
-      message: json.error.message ?? "Something went wrong.",
+      message: json.error.message ?? "Terjadi kesalahan.",
       interpretation: { input: text, normalizedText: text, intent: "UNKNOWN", confidence: 0, confidenceLevel: "LOW", entities: [], source: "baseline" },
     };
   }
@@ -100,14 +100,14 @@ export function AICommandPanel({ className = "", initialContext }: AICommandPane
       setPanelState(state);
       setHistory((prev) => [...prev, { id: crypto.randomUUID(), input: text, state, timestamp: new Date() }]);
       if (state === "success") {
-        toast("Done.", "success");
+        toast("Selesai.", "success");
         router.refresh();
       }
     } catch {
       const errorResponse: AICommandResponse = {
         success: false,
         code: "NETWORK_ERROR",
-        message: "Couldn't reach the server. Please try again.",
+        message: "Tidak dapat terhubung ke server. Silakan coba lagi.",
         interpretation: { input: text, normalizedText: text, intent: "UNKNOWN", confidence: 0, confidenceLevel: "LOW", entities: [], source: "baseline" },
       };
       setCurrentResponse(errorResponse);
@@ -186,7 +186,7 @@ export function AICommandPanel({ className = "", initialContext }: AICommandPane
         {panelState === "loading" && (
           <div className="mt-3 flex items-center gap-2 text-sm text-surface-500">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-ai-500 border-t-transparent" aria-hidden="true" />
-            Working on that…
+            Sedang memproses…
           </div>
         )}
 
@@ -211,11 +211,11 @@ export function AICommandPanel({ className = "", initialContext }: AICommandPane
               onClick={() => setShowExamples(true)}
               className="inline-flex items-center gap-1.5 text-xs font-medium text-ai-600 hover:text-ai-700"
             >
-              <Icon name="sparkles" size={13} /> Try an example
+              <Icon name="sparkles" size={13} /> Coba contoh
             </button>
             {initialContext && (
               <span className="rounded-full bg-ai-50 px-2 py-0.5 text-[11px] font-medium text-ai-600">
-                Working with this page
+                Bekerja dengan halaman ini
               </span>
             )}
           </div>
@@ -299,7 +299,7 @@ function AIPanelStateView({
         </div>
         <div className="flex gap-2">
           <Button size="sm" variant="secondary" onClick={onRetry} loading={loading}>
-            Try again
+            Coba lagi
           </Button>
         </div>
       </div>
@@ -319,10 +319,10 @@ function AIPanelStateView({
       </div>
       <div className="flex gap-2">
         <Button size="sm" variant="secondary" icon="sparkles" onClick={onShowExamples}>
-          Show examples
+          Lihat contoh
         </Button>
         <Button size="sm" variant="ghost" onClick={() => onCancel()}>
-          Dismiss
+          Tutup
         </Button>
       </div>
     </div>

@@ -21,7 +21,7 @@ type GoalPageProps = {
 
 function formatDate(value: Date | null) {
   if (!value) return null;
-  return new Intl.DateTimeFormat("en-US", { day: "numeric", month: "long", year: "numeric" }).format(value);
+  return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric" }).format(value);
 }
 
 export default async function GoalPage({ params }: GoalPageProps) {
@@ -70,7 +70,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
           </div>
           {goal.targetDate && (
             <div className="shrink-0 rounded-xl border border-surface-200 bg-surface-0 px-4 py-3">
-              <p className="text-xs text-surface-500">Target date</p>
+              <p className="text-xs text-surface-500">Target tanggal</p>
               <p className="mt-1 text-sm font-semibold text-surface-800">{formatDate(goal.targetDate)}</p>
             </div>
           )}
@@ -79,8 +79,8 @@ export default async function GoalPage({ params }: GoalPageProps) {
         <div className="mt-8 border-t border-surface-150 pt-6">
           <div className="mb-2.5 flex items-end justify-between">
             <div>
-              <p className="text-sm font-medium text-surface-700">Overall progress</p>
-              <p className="mt-0.5 text-xs text-surface-500">Across all stages and tasks</p>
+              <p className="text-sm font-medium text-surface-700">Progres keseluruhan</p>
+              <p className="mt-0.5 text-xs text-surface-500">Di seluruh stage dan task</p>
             </div>
             <span className="text-3xl font-bold text-primary-700">{progress}%</span>
           </div>
@@ -89,10 +89,10 @@ export default async function GoalPage({ params }: GoalPageProps) {
 
         <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
           {[
-            { label: "Stages", value: String(goal.stages.length) },
-            { label: "Stages done", value: String(completedStages) },
-            { label: "Tasks done", value: `${completedTasks}/${allTasks.length}` },
-            { label: "Est. effort", value: `${allTasks.reduce((s, t) => s + (t.estimatedHours || 0), 0).toFixed(1)}h` },
+            { label: "Stage", value: String(goal.stages.length) },
+            { label: "Stage selesai", value: String(completedStages) },
+            { label: "Task selesai", value: `${completedTasks}/${allTasks.length}` },
+            { label: "Estimasi usaha", value: `${allTasks.reduce((s, t) => s + (t.estimatedHours || 0), 0).toFixed(1)}j` },
           ].map((stat) => (
             <div key={stat.label} className="rounded-2xl border border-surface-200 bg-surface-0 p-4">
               <p className="text-xs text-surface-500">{stat.label}</p>
@@ -106,15 +106,15 @@ export default async function GoalPage({ params }: GoalPageProps) {
       <section>
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">Roadmap</p>
-            <h2 className="mt-1 text-2xl font-semibold text-surface-900">Your journey</h2>
-            <p className="mt-1.5 text-sm text-surface-500">Break the goal into stages, then tasks, then focused sessions.</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">Peta jalan</p>
+            <h2 className="mt-1 text-2xl font-semibold text-surface-900">Perjalanan Anda</h2>
+            <p className="mt-1.5 text-sm text-surface-500">Pecah goal menjadi stage, lalu task, lalu sesi fokus.</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <StageForm goalId={goal.id} nextOrder={goal.stages.length} />
             <Link href={`/goals/${goal.id}/reviews`}>
               <Button variant="secondary" icon="sparkles" size="sm">
-                Review progress
+                Review progres
               </Button>
             </Link>
             <Link href={`/dashboard?goalId=${goal.id}`}>
@@ -129,8 +129,8 @@ export default async function GoalPage({ params }: GoalPageProps) {
           <div className="rounded-2xl border border-dashed border-surface-300 bg-surface-0 p-10 text-center shadow-soft">
             <EmptyState
               icon="layers"
-              title="No stages yet"
-              description="Add the first stage to start shaping this goal into a clear path."
+              title="Belum ada stage"
+              description="Tambahkan stage pertama untuk mulai membentuk goal ini menjadi jalur yang jelas."
               action={<StageForm goalId={goal.id} nextOrder={0} />}
             />
           </div>
@@ -165,7 +165,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                       <div className="flex items-baseline gap-2">
                         <span className="text-xl font-bold text-surface-900">{stageProgress}%</span>
                         <span className="text-xs text-surface-500">
-                          {completed}/{total} tasks
+                          {completed}/{total} task
                         </span>
                       </div>
                       <div className="w-full md:w-40">
