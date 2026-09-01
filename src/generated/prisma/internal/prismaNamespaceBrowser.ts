@@ -55,7 +55,9 @@ export const ModelName = {
   Stage: 'Stage',
   Task: 'Task',
   Session: 'Session',
-  Review: 'Review'
+  Review: 'Review',
+  DailyFocus: 'DailyFocus',
+  Capture: 'Capture'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -150,6 +152,26 @@ export const ReviewScalarFieldEnum = {
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
+
+
+export const DailyFocusScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  taskId: 'taskId',
+  order: 'order',
+  createdAt: 'createdAt'
+} as const
+
+export type DailyFocusScalarFieldEnum = (typeof DailyFocusScalarFieldEnum)[keyof typeof DailyFocusScalarFieldEnum]
+
+
+export const CaptureScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type CaptureScalarFieldEnum = (typeof CaptureScalarFieldEnum)[keyof typeof CaptureScalarFieldEnum]
 
 
 export const SortOrder = {

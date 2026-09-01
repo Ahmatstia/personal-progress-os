@@ -2,6 +2,9 @@ import Link from "next/link";
 import NewGoalButton from "./components/NewGoalButton";
 import { getDashboardData } from "@/services/dashboard.service";
 import { calculateGoalProgress } from "@/services/progress.service";
+import { getToday } from "@/services/today.service";
+
+export const dynamic = "force-dynamic";
 
 function formatMinutes(totalMinutes: number) {
   const hours = Math.floor(totalMinutes / 60);
@@ -27,7 +30,7 @@ function formatDate(value: Date) {
 }
 
 export default async function Home() {
-  const dashboard = await getDashboardData();
+  const [dashboard, today] = await Promise.all([getDashboardData(), getToday()]);
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -49,6 +52,12 @@ export default async function Home() {
 
             <div className="flex flex-wrap gap-3">
               <NewGoalButton />
+              <Link
+                href="/today"
+                className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
+              >
+                Today
+              </Link>
               <Link
                 href="/dashboard"
                 className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
@@ -129,6 +138,17 @@ export default async function Home() {
             {dashboard.reviewSummary.review?.nextFocus && <p className="mt-4 text-sm text-emerald-200">Next focus: {dashboard.reviewSummary.review.nextFocus}</p>}
           </section>
         )}
+
+        <section className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Today&apos;s focus</p>
+              <h2 className="mt-2 text-xl font-semibold">{today.currentSession ? `Working on ${today.currentSession.task.name}` : `${today.focusTasks.length} focus tasks selected`}</h2>
+              <p className="mt-2 text-sm text-slate-400">{formatMinutes(today.stats.totalMinutes)} worked · {today.stats.completedTasks} tasks completed · {today.focusCompleted} / {today.focusTotal} focus complete</p>
+            </div>
+            <Link href="/today" className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950">Open Today</Link>
+          </div>
+        </section>
 
         <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
           <article className="rounded-3xl border border-slate-800 bg-slate-900 p-6">

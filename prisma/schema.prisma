@@ -60,6 +60,7 @@ model Task {
 
   stage          Stage     @relation(fields: [stageId], references: [id], onDelete: Cascade)
   sessions       Session[]
+  dailyFocuses   DailyFocus[]
 }
 
 model Session {
@@ -100,4 +101,23 @@ model Review {
   createdAt    DateTime @default(now())
 
   goal         Goal      @relation(fields: [goalId], references: [id], onDelete: Cascade)
+}
+
+model DailyFocus {
+  id        String   @id @default(cuid())
+  date      DateTime
+  taskId    String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([date, taskId])
+  @@index([date, order])
+}
+
+model Capture {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
 }

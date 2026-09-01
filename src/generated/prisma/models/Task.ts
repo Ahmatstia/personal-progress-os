@@ -294,6 +294,7 @@ export type TaskWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   stage?: Prisma.XOR<Prisma.StageScalarRelationFilter, Prisma.StageWhereInput>
   sessions?: Prisma.SessionListRelationFilter
+  dailyFocuses?: Prisma.DailyFocusListRelationFilter
 }
 
 export type TaskOrderByWithRelationInput = {
@@ -313,6 +314,7 @@ export type TaskOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   stage?: Prisma.StageOrderByWithRelationInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
+  dailyFocuses?: Prisma.DailyFocusOrderByRelationAggregateInput
 }
 
 export type TaskWhereUniqueInput = Prisma.AtLeast<{
@@ -335,6 +337,7 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   stage?: Prisma.XOR<Prisma.StageScalarRelationFilter, Prisma.StageWhereInput>
   sessions?: Prisma.SessionListRelationFilter
+  dailyFocuses?: Prisma.DailyFocusListRelationFilter
 }, "id">
 
 export type TaskOrderByWithAggregationInput = {
@@ -395,6 +398,7 @@ export type TaskCreateInput = {
   updatedAt?: Date | string
   stage: Prisma.StageCreateNestedOneWithoutTasksInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
 }
 
 export type TaskUncheckedCreateInput = {
@@ -413,6 +417,7 @@ export type TaskUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type TaskUpdateInput = {
@@ -431,6 +436,7 @@ export type TaskUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stage?: Prisma.StageUpdateOneRequiredWithoutTasksNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskUncheckedUpdateInput = {
@@ -449,6 +455,7 @@ export type TaskUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskCreateManyInput = {
@@ -641,6 +648,20 @@ export type TaskUpdateOneRequiredWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutSessionsInput, Prisma.TaskUpdateWithoutSessionsInput>, Prisma.TaskUncheckedUpdateWithoutSessionsInput>
 }
 
+export type TaskCreateNestedOneWithoutDailyFocusesInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutDailyFocusesInput
+  connect?: Prisma.TaskWhereUniqueInput
+}
+
+export type TaskUpdateOneRequiredWithoutDailyFocusesNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutDailyFocusesInput
+  upsert?: Prisma.TaskUpsertWithoutDailyFocusesInput
+  connect?: Prisma.TaskWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutDailyFocusesInput, Prisma.TaskUpdateWithoutDailyFocusesInput>, Prisma.TaskUncheckedUpdateWithoutDailyFocusesInput>
+}
+
 export type TaskCreateWithoutStageInput = {
   id?: string
   name: string
@@ -656,6 +677,7 @@ export type TaskCreateWithoutStageInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
 }
 
 export type TaskUncheckedCreateWithoutStageInput = {
@@ -673,6 +695,7 @@ export type TaskUncheckedCreateWithoutStageInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type TaskCreateOrConnectWithoutStageInput = {
@@ -735,6 +758,7 @@ export type TaskCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stage: Prisma.StageCreateNestedOneWithoutTasksInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
 }
 
 export type TaskUncheckedCreateWithoutSessionsInput = {
@@ -752,6 +776,7 @@ export type TaskUncheckedCreateWithoutSessionsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type TaskCreateOrConnectWithoutSessionsInput = {
@@ -785,6 +810,7 @@ export type TaskUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stage?: Prisma.StageUpdateOneRequiredWithoutTasksNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutSessionsInput = {
@@ -802,6 +828,95 @@ export type TaskUncheckedUpdateWithoutSessionsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskCreateWithoutDailyFocusesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  type?: string
+  priority?: string
+  status?: string
+  estimatedHours?: number
+  actualHours?: number
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  stage: Prisma.StageCreateNestedOneWithoutTasksInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+}
+
+export type TaskUncheckedCreateWithoutDailyFocusesInput = {
+  id?: string
+  stageId: string
+  name: string
+  description?: string | null
+  type?: string
+  priority?: string
+  status?: string
+  estimatedHours?: number
+  actualHours?: number
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type TaskCreateOrConnectWithoutDailyFocusesInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
+}
+
+export type TaskUpsertWithoutDailyFocusesInput = {
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutDailyFocusesInput, Prisma.TaskUncheckedUpdateWithoutDailyFocusesInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
+  where?: Prisma.TaskWhereInput
+}
+
+export type TaskUpdateToOneWithWhereWithoutDailyFocusesInput = {
+  where?: Prisma.TaskWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutDailyFocusesInput, Prisma.TaskUncheckedUpdateWithoutDailyFocusesInput>
+}
+
+export type TaskUpdateWithoutDailyFocusesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stage?: Prisma.StageUpdateOneRequiredWithoutTasksNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutDailyFocusesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  stageId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskCreateManyStageInput = {
@@ -835,6 +950,7 @@ export type TaskUpdateWithoutStageInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutStageInput = {
@@ -852,6 +968,7 @@ export type TaskUncheckedUpdateWithoutStageInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskUncheckedUpdateManyWithoutStageInput = {
@@ -877,10 +994,12 @@ export type TaskUncheckedUpdateManyWithoutStageInput = {
 
 export type TaskCountOutputType = {
   sessions: number
+  dailyFocuses: number
 }
 
 export type TaskCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | TaskCountOutputTypeCountSessionsArgs
+  dailyFocuses?: boolean | TaskCountOutputTypeCountDailyFocusesArgs
 }
 
 /**
@@ -898,6 +1017,13 @@ export type TaskCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  */
 export type TaskCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SessionWhereInput
+}
+
+/**
+ * TaskCountOutputType without action
+ */
+export type TaskCountOutputTypeCountDailyFocusesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DailyFocusWhereInput
 }
 
 
@@ -918,6 +1044,7 @@ export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   stage?: boolean | Prisma.StageDefaultArgs<ExtArgs>
   sessions?: boolean | Prisma.Task$sessionsArgs<ExtArgs>
+  dailyFocuses?: boolean | Prisma.Task$dailyFocusesArgs<ExtArgs>
   _count?: boolean | Prisma.TaskCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
 
@@ -978,6 +1105,7 @@ export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   stage?: boolean | Prisma.StageDefaultArgs<ExtArgs>
   sessions?: boolean | Prisma.Task$sessionsArgs<ExtArgs>
+  dailyFocuses?: boolean | Prisma.Task$dailyFocusesArgs<ExtArgs>
   _count?: boolean | Prisma.TaskCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TaskIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -992,6 +1120,7 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     stage: Prisma.$StagePayload<ExtArgs>
     sessions: Prisma.$SessionPayload<ExtArgs>[]
+    dailyFocuses: Prisma.$DailyFocusPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1404,6 +1533,7 @@ export interface Prisma__TaskClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   stage<T extends Prisma.StageDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StageDefaultArgs<ExtArgs>>): Prisma.Prisma__StageClient<runtime.Types.Result.GetResult<Prisma.$StagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sessions<T extends Prisma.Task$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dailyFocuses<T extends Prisma.Task$dailyFocusesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$dailyFocusesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyFocusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1867,6 +1997,30 @@ export type Task$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
+}
+
+/**
+ * Task.dailyFocuses
+ */
+export type Task$dailyFocusesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DailyFocus
+   */
+  select?: Prisma.DailyFocusSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DailyFocus
+   */
+  omit?: Prisma.DailyFocusOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DailyFocusInclude<ExtArgs> | null
+  where?: Prisma.DailyFocusWhereInput
+  orderBy?: Prisma.DailyFocusOrderByWithRelationInput | Prisma.DailyFocusOrderByWithRelationInput[]
+  cursor?: Prisma.DailyFocusWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DailyFocusScalarFieldEnum | Prisma.DailyFocusScalarFieldEnum[]
 }
 
 /**

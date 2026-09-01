@@ -401,7 +401,9 @@ export const ModelName = {
   Stage: 'Stage',
   Task: 'Task',
   Session: 'Session',
-  Review: 'Review'
+  Review: 'Review',
+  DailyFocus: 'DailyFocus',
+  Capture: 'Capture'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -417,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "goal" | "stage" | "task" | "session" | "review"
+    modelProps: "goal" | "stage" | "task" | "session" | "review" | "dailyFocus" | "capture"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -791,6 +793,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DailyFocus: {
+      payload: Prisma.$DailyFocusPayload<ExtArgs>
+      fields: Prisma.DailyFocusFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DailyFocusFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DailyFocusFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload>
+        }
+        findFirst: {
+          args: Prisma.DailyFocusFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DailyFocusFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload>
+        }
+        findMany: {
+          args: Prisma.DailyFocusFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload>[]
+        }
+        create: {
+          args: Prisma.DailyFocusCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload>
+        }
+        createMany: {
+          args: Prisma.DailyFocusCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DailyFocusCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload>[]
+        }
+        delete: {
+          args: Prisma.DailyFocusDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload>
+        }
+        update: {
+          args: Prisma.DailyFocusUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload>
+        }
+        deleteMany: {
+          args: Prisma.DailyFocusDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DailyFocusUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DailyFocusUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload>[]
+        }
+        upsert: {
+          args: Prisma.DailyFocusUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyFocusPayload>
+        }
+        aggregate: {
+          args: Prisma.DailyFocusAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDailyFocus>
+        }
+        groupBy: {
+          args: Prisma.DailyFocusGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyFocusGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DailyFocusCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyFocusCountAggregateOutputType> | number
+        }
+      }
+    }
+    Capture: {
+      payload: Prisma.$CapturePayload<ExtArgs>
+      fields: Prisma.CaptureFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CaptureFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CaptureFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload>
+        }
+        findFirst: {
+          args: Prisma.CaptureFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CaptureFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload>
+        }
+        findMany: {
+          args: Prisma.CaptureFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload>[]
+        }
+        create: {
+          args: Prisma.CaptureCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload>
+        }
+        createMany: {
+          args: Prisma.CaptureCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CaptureCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload>[]
+        }
+        delete: {
+          args: Prisma.CaptureDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload>
+        }
+        update: {
+          args: Prisma.CaptureUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload>
+        }
+        deleteMany: {
+          args: Prisma.CaptureDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CaptureUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CaptureUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload>[]
+        }
+        upsert: {
+          args: Prisma.CaptureUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CapturePayload>
+        }
+        aggregate: {
+          args: Prisma.CaptureAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCapture>
+        }
+        groupBy: {
+          args: Prisma.CaptureGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CaptureGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CaptureCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CaptureCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -906,6 +1056,26 @@ export const ReviewScalarFieldEnum = {
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
+
+
+export const DailyFocusScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  taskId: 'taskId',
+  order: 'order',
+  createdAt: 'createdAt'
+} as const
+
+export type DailyFocusScalarFieldEnum = (typeof DailyFocusScalarFieldEnum)[keyof typeof DailyFocusScalarFieldEnum]
+
+
+export const CaptureScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type CaptureScalarFieldEnum = (typeof CaptureScalarFieldEnum)[keyof typeof CaptureScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1113,6 +1283,8 @@ export type GlobalOmitConfig = {
   task?: Prisma.TaskOmit
   session?: Prisma.SessionOmit
   review?: Prisma.ReviewOmit
+  dailyFocus?: Prisma.DailyFocusOmit
+  capture?: Prisma.CaptureOmit
 }
 
 /* Types for Logging */

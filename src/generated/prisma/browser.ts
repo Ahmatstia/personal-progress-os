@@ -42,3 +42,13 @@ export type Session = Prisma.SessionModel
  * 
  */
 export type Review = Prisma.ReviewModel
+/**
+ * Model DailyFocus
+ * 
+ */
+export type DailyFocus = Prisma.DailyFocusModel
+/**
+ * Model Capture
+ * 
+ */
+export type Capture = Prisma.CaptureModel

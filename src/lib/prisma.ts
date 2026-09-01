@@ -9,11 +9,15 @@ const adapter = new PrismaBetterSqlite3({
   url: "./prisma/dev.db",
 });
 
+const cachedPrisma = globalForPrisma.prisma;
+const hasCurrentSchema = cachedPrisma && "dailyFocus" in cachedPrisma && "capture" in cachedPrisma;
+
 export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    adapter,
-  });
+  hasCurrentSchema
+    ? cachedPrisma
+    : new PrismaClient({
+        adapter,
+      });
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
