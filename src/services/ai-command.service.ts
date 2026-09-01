@@ -104,7 +104,7 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
     case "REVIEW":
     case "REFLECTION": {
       if (input.context?.goalId) {
-        const data = await getGoalReviewPageData(input.context.goalId);
+        const data = await getGoalReviewPageData(input.context.goalId, userId);
         return { success: true, code: "OK", message: data ? "Data review goal berhasil ditemukan." : "Goal tidak ditemukan.", interpretation, data };
       }
       return { success: true, code: "GUIDANCE", message: "Gunakan halaman Review untuk melihat atau menulis refleksi berbasis data sesi.", interpretation };

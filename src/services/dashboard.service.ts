@@ -165,7 +165,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
   const period = getWeekPeriod(now);
   const reviewGoal = goals[0];
   const reviewSummary = reviewGoal
-    ? { goalId: reviewGoal.id, ...period, review: await getPeriodReview(reviewGoal.id, period.periodStart, period.periodEnd), metrics: await getPeriodMetrics(reviewGoal.id, period.periodStart, period.periodEnd) }
+    ? { goalId: reviewGoal.id, ...period, review: await getPeriodReview(reviewGoal.id, period.periodStart, period.periodEnd, userId), metrics: await getPeriodMetrics(reviewGoal.id, period.periodStart, period.periodEnd, userId) }
     : null;
 
   const recentActivity: DashboardActivity[] = [

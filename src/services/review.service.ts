@@ -36,16 +36,16 @@ export async function createReview(goalId: string, input: ReviewInput, userId?: 
 
 export function getReview(id: string, userId?: string) { return findReviewById(requireUserId(userId), id); }
 export function getGoalReviews(goalId: string, userId?: string) { return findReviewsByGoalId(requireUserId(userId), goalId); }
-export async function getPeriodReview(goalId: string, periodStart: Date, periodEnd: Date) {
-  return findReviewByGoalAndPeriod(requireUserId(), goalId, periodStart, periodEnd);
+export function getPeriodReview(goalId: string, periodStart: Date, periodEnd: Date, userId?: string) {
+  return findReviewByGoalAndPeriod(requireUserId(userId), goalId, periodStart, periodEnd);
 }
 
-export async function getPeriodMetrics(goalId: string, periodStart: Date, periodEnd: Date) {
-  return derivedMetrics(requireUserId(), goalId, periodStart, periodEnd);
+export async function getPeriodMetrics(goalId: string, periodStart: Date, periodEnd: Date, userId?: string) {
+  return derivedMetrics(requireUserId(userId), goalId, periodStart, periodEnd);
 }
 
-export async function getGoalReviewPageData(goalId: string) {
-  const owner = requireUserId();
+export async function getGoalReviewPageData(goalId: string, userId?: string) {
+  const owner = requireUserId(userId);
   const [goal, reviews] = await Promise.all([findGoalReviewContext(owner, goalId), findReviewsByGoalId(owner, goalId)]);
   if (!goal) return null;
   const period = getWeekPeriod();

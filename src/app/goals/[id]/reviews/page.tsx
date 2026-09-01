@@ -4,11 +4,13 @@ import ReviewForm from "@/app/components/ReviewForm";
 import { getGoalReviewPageData } from "@/services/review.service";
 import { calculateGoalProgress } from "@/services/progress.service";
 import { buildInsights } from "@/services/insight.service";
+import { requireCurrentUser } from "@/lib/auth";
 
 function date(value: Date) { return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(value); }
 
 export default async function ReviewsPage({ params }: { params: Promise<{ id: string }> }) {
-  const data = await getGoalReviewPageData((await params).id);
+  const user = await requireCurrentUser();
+  const data = await getGoalReviewPageData((await params).id, user.id);
   if (!data) notFound();
   const { goal, reviews, period, review, metrics } = data;
   const previous = reviews.find((item) => item.periodEnd < period.periodStart);

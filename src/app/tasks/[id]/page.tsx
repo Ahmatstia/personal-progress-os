@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import SessionTimer from "@/app/components/SessionTimer";
 import TaskActions from "@/app/components/TaskActions";
 import { getTaskDetail } from "@/services/task.service";
+import { requireCurrentUser } from "@/lib/auth";
 
 function formatDate(value: Date) {
   return new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short" }).format(value);
@@ -10,7 +11,8 @@ function formatDate(value: Date) {
 
 export default async function TaskPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const detail = await getTaskDetail(id);
+  const user = await requireCurrentUser();
+  const detail = await getTaskDetail(id, user.id);
   if (!detail) notFound();
 
   const { task, activeSession } = detail;
