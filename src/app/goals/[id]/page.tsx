@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import StageForm from "@/app/components/StageForm";
 import TaskForm from "@/app/components/TaskForm";
-
+import TaskItem from "@/app/components/TaskItem";
 type GoalPageProps = {
   params: Promise<{
     id: string;
@@ -279,65 +279,16 @@ export default async function GoalPage({ params }: GoalPageProps) {
                         {/* TASK LIST */}
                         {stage.tasks.length > 0 && (
                           <div className="mt-5 space-y-2">
-                            {stage.tasks.map((task) => {
-                              const taskCompleted = task.status === "COMPLETED";
-
-                              return (
-                                <div
-                                  key={task.id}
-                                  className="flex items-center justify-between gap-4 rounded-xl border border-slate-800/70 bg-slate-950 px-4 py-3"
-                                >
-                                  <div className="flex min-w-0 items-center gap-3">
-                                    {/* TASK CHECK */}
-                                    <div
-                                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
-                                        taskCompleted
-                                          ? "border-emerald-400 bg-emerald-400 text-slate-950"
-                                          : "border-slate-700"
-                                      }`}
-                                    >
-                                      {taskCompleted && (
-                                        <span className="text-xs font-bold">
-                                          ✓
-                                        </span>
-                                      )}
-                                    </div>
-
-                                    {/* TASK INFO */}
-                                    <div className="min-w-0">
-                                      <p
-                                        className={`truncate text-sm ${
-                                          taskCompleted
-                                            ? "text-slate-600 line-through"
-                                            : "text-slate-300"
-                                        }`}
-                                      >
-                                        {task.name}
-                                      </p>
-
-                                      {task.description && (
-                                        <p className="mt-1 truncate text-xs text-slate-600">
-                                          {task.description}
-                                        </p>
-                                      )}
-                                    </div>
-                                  </div>
-
-                                  {/* PRIORITY */}
-                                  <span
-                                    className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider ${
-                                      task.priority === "HIGH"
-                                        ? "bg-red-500/10 text-red-400"
-                                        : task.priority === "LOW"
-                                          ? "bg-slate-800 text-slate-500"
-                                          : "bg-yellow-500/10 text-yellow-400"
-                                    }`}
-                                  >
-                                    {task.priority}
-                                  </span>
-                                </div>
-                              );
-                            })}
+                            {stage.tasks.map((task) => (
+                              <TaskItem
+                                key={task.id}
+                                id={task.id}
+                                name={task.name}
+                                description={task.description}
+                                priority={task.priority}
+                                status={task.status}
+                              />
+                            ))}
                           </div>
                         )}
 
