@@ -62,7 +62,7 @@ export default function TaskItem({
     <div
       className={`flex items-center justify-between gap-4 rounded-xl border px-4 py-3 transition ${
         completed
-          ? "border-emerald-500/10 bg-emerald-500/[0.03]"
+          ? "border-emerald-500/10 bg-emerald-500/3"
           : "border-slate-800/70 bg-slate-950"
       }`}
     >
