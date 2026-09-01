@@ -13,6 +13,10 @@ export function findTask(id: string) {
   return prisma.task.findUnique({ where: { id } });
 }
 
+export function findTasksForAI() {
+  return prisma.task.findMany({ include: { stage: { include: { goal: true } } }, orderBy: { createdAt: "asc" } });
+}
+
 export function updateTask(id: string, data: Prisma.TaskUpdateInput) {
   return prisma.task.update({ where: { id }, data });
 }

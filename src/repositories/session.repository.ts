@@ -25,6 +25,10 @@ export function findActiveSessionByTaskId(taskId: string) {
   });
 }
 
+export function findAnyActiveSession() {
+  return prisma.session.findFirst({ where: { endedAt: null }, orderBy: { startedAt: "desc" }, include: sessionInclude });
+}
+
 export function findSessionById(id: string) {
   return prisma.session.findUnique({
     where: { id },

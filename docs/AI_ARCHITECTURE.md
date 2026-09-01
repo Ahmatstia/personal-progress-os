@@ -14,7 +14,7 @@ High is at least 0.80, medium is 0.55-0.79, and low is below 0.55. Low-confidenc
 
 ## Entities and routing
 
-The current extractor handles simple goal, date, duration, priority, and status phrases. The router maps intents to domain handlers such as `today`, `progress`, `analytics`, `review`, `task`, `session`, and `focus`. It returns descriptors only; executing domain mutations is future work.
+The current extractor handles simple goal, task, date, duration, priority, and status phrases. The router maps intents to domain handlers such as `today`, `progress`, `analytics`, `review`, `task`, `session`, and `focus`. `POST /api/ai/command` now executes a guarded subset through existing services; interpretation remains available separately through `POST /api/ai/interpret`.
 
 ## Baseline evaluation
 

@@ -2,6 +2,7 @@ import {
   createSession,
   endSession as endSessionRecord,
   findActiveSessionByTaskId,
+  findAnyActiveSession,
   findSessionById,
   findSessionsByTaskId,
   findTaskForSession,
@@ -47,6 +48,10 @@ export async function startSession(taskId: string) {
 
 export function getActiveSession(taskId: string) {
   return findActiveSessionByTaskId(taskId);
+}
+
+export function getAnyActiveSession() {
+  return findAnyActiveSession();
 }
 
 export function getSession(sessionId: string) {

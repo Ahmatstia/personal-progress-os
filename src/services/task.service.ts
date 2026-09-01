@@ -4,6 +4,7 @@ import {
   findStageForTask,
   findTask,
   findTaskDetail,
+  findTasksForAI,
   updateTask as updateTaskRecord,
 } from "@/repositories/task.repository";
 import type { CreateTaskInput, UpdateTaskInput } from "@/schemas/task.schema";
@@ -61,3 +62,12 @@ export async function getTaskDetail(id: string) {
   const activeSession = task.sessions.find((session) => session.endedAt === null) ?? null;
   return { task, activeSession };
 }
+
+export async function findMatchingTasks(query: string) {
+  const normalizedQuery = query.trim().toLocaleLowerCase("id-ID");
+  const tasks = await findTasksForAI();
+  if (!normalizedQuery) return tasks;
+  return tasks.filter((task) => task.name.toLocaleLowerCase("id-ID").includes(normalizedQuery));
+}
+
+export { findTask };
