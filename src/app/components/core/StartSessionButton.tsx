@@ -25,6 +25,7 @@ export function StartSessionButton({
 
   async function start() {
     if (loading) return;
+    if (!window.confirm(taskName ? `Mulai sesi fokus untuk "${taskName}"?` : "Mulai sesi fokus?")) return;
     setLoading(true);
     setError(false);
     try {

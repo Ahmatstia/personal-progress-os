@@ -34,3 +34,7 @@ export function findTodaySessions(userId: string, start: Date, end: Date) {
 }
 
 export function createCapture(userId: string, content: string) { return prisma.capture.create({ data: { userId, content } }); }
+
+export function findRecentCaptures(userId: string, limit: number) {
+  return prisma.capture.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: limit });
+}

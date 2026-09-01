@@ -119,7 +119,7 @@ export default function StageActions({
       </button>
       <button
         onClick={() => {
-          if (window.confirm(`Hapus stage "${name}"? Ini tidak menghapus task-nya.`)) remove();
+          if (window.confirm(`Hapus stage "${name}"? Semua task di dalamnya ikut terhapus.`)) remove();
         }}
         aria-label="Hapus stage"
         className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-danger-50 hover:text-danger-600"

@@ -37,7 +37,7 @@ export type DashboardActivity = {
   label: string;
   detail: string;
   timestamp: Date;
-  kind: "session" | "task";
+  kind: "session" | "task" | "capture";
 };
 
 export type DashboardData = {
@@ -62,13 +62,13 @@ function isSameLocalDay(left: Date, right: Date) {
 }
 
 function formatMinutes(minutes: number) {
-  return `${minutes} min`;
+  return `${minutes} mnt`;
 }
 
 export async function getDashboardData(userId: string): Promise<DashboardData> {
   const now = new Date();
 
-  const [goals, sessions] = await Promise.all([
+  const [goals, sessions, recentCaptures] = await Promise.all([
     prisma.goal.findMany({
       where: {
         userId,
@@ -111,6 +111,11 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
           },
         },
       },
+    }),
+    prisma.capture.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: 10,
     }),
   ]);
 
@@ -169,6 +174,13 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
     : null;
 
   const recentActivity: DashboardActivity[] = [
+    ...recentCaptures.map((capture) => ({
+      id: `capture-${capture.id}`,
+      kind: "capture" as const,
+      label: capture.content.slice(0, 60) + (capture.content.length > 60 ? "…" : ""),
+      detail: "Catat cepat",
+      timestamp: capture.createdAt,
+    })),
     ...sessions.map((session) => ({
       id: `session-${session.id}`,
       kind: "session" as const,

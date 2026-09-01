@@ -52,6 +52,7 @@ const mobileNav: { href: string; label: string; icon: IconName }[] = [
   { href: "/today", label: "Hari Ini", icon: "sun" },
   { href: "/goals", label: "Goals", icon: "flag" },
   { href: "/dashboard", label: "Dashboard", icon: "chart" },
+  { href: "/review", label: "Refleksi", icon: "compass" },
 ];
 
 export function AppShell({

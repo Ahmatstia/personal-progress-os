@@ -49,6 +49,7 @@ export function SessionFocusMode({
   }, [session]);
 
   async function start() {
+    if (!window.confirm(`Mulai sesi untuk "${taskName}"?`)) return;
     setIsLoading(true);
     setError("");
     try {

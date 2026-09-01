@@ -227,7 +227,7 @@ export default async function Home() {
         </div>
         {dashboard.recentActivity.length === 0 ? (
           <p className="mt-4 text-sm text-surface-500">
-            Belum ada sesi atau pembaruan task. Mulai sesi pertama untuk membangun momentum.
+            Belum ada aktivitas. Mulai sesi pertama atau catat sesuatu untuk membangun momentum.
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-surface-150">
@@ -235,10 +235,14 @@ export default async function Home() {
               <li key={item.id} className="flex items-center gap-3 py-3">
                 <span
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
-                    item.kind === "session" ? "bg-ai-50 text-ai-600" : "bg-success-50 text-success-600"
+                    item.kind === "session"
+                      ? "bg-ai-50 text-ai-600"
+                      : item.kind === "capture"
+                        ? "bg-primary-50 text-primary-600"
+                        : "bg-success-50 text-success-600"
                   }`}
                 >
-                  <Icon name={item.kind === "session" ? "play" : "check"} size={15} />
+                  <Icon name={item.kind === "session" ? "play" : item.kind === "capture" ? "inbox" : "check"} size={15} />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-surface-800">{item.label}</p>

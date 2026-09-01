@@ -135,13 +135,13 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
     case "SESSION_START": {
       const matches = await resolveTask(input.context?.taskName ?? entityValue(interpretation, "TASK"), input.context?.taskId, userId);
       if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Pilih satu task untuk memulai session." : "Task untuk session tidak ditemukan.", interpretation, data: matches };
-      const data = await startSession(matches[0].id);
+      const data = await startSession(matches[0].id, userId);
       return { success: true, code: "STARTED", message: `Session untuk ${matches[0].name} dimulai.`, interpretation, data };
     }
     case "SESSION_END": {
-      const active = await getAnyActiveSession();
+      const active = await getAnyActiveSession(userId);
       if (!active) return { success: false, code: "NO_ACTIVE_SESSION", message: "Tidak ada session aktif.", interpretation };
-      const data = await endSession(active.id, { sessionId: active.id });
+      const data = await endSession(active.id, { sessionId: active.id }, userId);
       return { success: true, code: "ENDED", message: "Session aktif berhasil diakhiri.", interpretation, data };
     }
     default:

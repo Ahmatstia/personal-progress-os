@@ -117,10 +117,17 @@ export default async function AnalyticsPage({
                 <li key={activity.id} className="flex items-center gap-3 py-2.5">
                   <span
                     className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
-                      activity.kind === "session" ? "bg-ai-100 text-ai-600" : "bg-success-50 text-success-600"
+                      activity.kind === "session"
+                        ? "bg-ai-100 text-ai-600"
+                        : activity.kind === "capture"
+                          ? "bg-primary-100 text-primary-600"
+                          : "bg-success-50 text-success-600"
                     }`}
                   >
-                    <Icon name={activity.kind === "session" ? "clock" : "check"} size={14} />
+                    <Icon
+                      name={activity.kind === "session" ? "clock" : activity.kind === "capture" ? "inbox" : "check"}
+                      size={14}
+                    />
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-surface-800">{activity.label}</p>

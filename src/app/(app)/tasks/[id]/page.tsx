@@ -6,6 +6,7 @@ import { getTaskDetail } from "@/services/task.service";
 import { requireCurrentUser } from "@/lib/auth";
 import { StatusBadge } from "@/app/components/ui/Badge";
 import { Icon } from "@/app/components/ui/Icon";
+import { formatHours } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -58,8 +59,8 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
             { label: "Prioritas", value: task.priority },
-            { label: "Estimasi", value: `${task.estimatedHours}j` },
-            { label: "Aktual", value: `${task.actualHours.toFixed(1)}j` },
+            { label: "Estimasi", value: formatHours(task.estimatedHours) },
+            { label: "Aktual", value: formatHours(task.actualHours) },
             { label: "Sesi", value: String(task.sessions.length) },
           ].map((stat) => (
             <div key={stat.label} className="rounded-2xl border border-surface-200 bg-surface-50 p-4">

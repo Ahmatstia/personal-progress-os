@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Icon } from "./ui/Icon";
 import { PriorityBadge, StatusBadge } from "./ui/Badge";
 import { useToast } from "./ui/Toast";
+import { formatHours } from "@/lib/format";
 
 type TaskItemProps = {
   id: string;
@@ -208,7 +209,7 @@ export default function TaskItem({
           {completed ? <StatusBadge status="COMPLETED" /> : <PriorityBadge priority={priority} />}
         </div>
         <p className="mt-0.5 truncate text-xs text-surface-500">
-          {actualHours.toFixed(1)}j dipakai · {estimatedHours.toFixed(1)}j estimasi
+          {formatHours(actualHours)} dipakai · {formatHours(estimatedHours)} estimasi
         </p>
       </div>
 

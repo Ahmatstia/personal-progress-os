@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentUser } from "@/lib/auth";
 import StageForm from "@/app/components/StageForm";
+import GoalActions from "@/app/components/GoalActions";
 import NewTaskButton from "@/app/components/NewTaskButton";
 import TaskList from "@/app/components/TaskList";
 import StageActions from "@/app/components/StageActions";
@@ -122,6 +123,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 Analytics
               </Button>
             </Link>
+            <GoalActions goalId={goal.id} goalName={goal.name} />
           </div>
         </div>
 

@@ -43,6 +43,9 @@ export default function QuickCapture() {
         rows={3}
         className="mt-3 w-full resize-none rounded-xl border border-surface-200 bg-surface-50 p-3 text-sm text-surface-900 placeholder:text-surface-400 focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
       />
+      <p className="mt-2 text-xs text-surface-400">
+        Tersimpan otomatis ke akun Anda — muncul di daftar &quot;Catatan terbaru&quot; dan aktivitas di Beranda.
+      </p>
       <div className="mt-3 flex items-center justify-end">
         <button
           onClick={save}

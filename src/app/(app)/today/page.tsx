@@ -4,6 +4,7 @@ import { SessionFocusMode } from "@/app/components/core/SessionFocusMode";
 import { NextActionCard } from "@/app/components/core/NextActionCard";
 import QuickCapture from "@/app/components/QuickCapture";
 import { getToday } from "@/services/today.service";
+import { getRecentCaptures } from "@/services/capture.service";
 import { requireCurrentUser } from "@/lib/auth";
 import { Icon } from "@/app/components/ui/Icon";
 import { PageHeader } from "@/app/components/ui/PageHeader";
@@ -26,9 +27,19 @@ function formatDate(value: Date) {
   }).format(value);
 }
 
+function formatCaptureTime(value: Date) {
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(value);
+}
+
 export default async function TodayPage() {
   const user = await requireCurrentUser();
   const today = await getToday(new Date(), user.id);
+  const recentCaptures = await getRecentCaptures(user.id, 8);
 
   const primaryFocus = today.focusTasks[0]?.task;
   const firstAvailable = today.availableTasks[0] ?? null;
@@ -97,6 +108,29 @@ export default async function TodayPage() {
         {/* Right column: capture + completed */}
         <div className="space-y-6">
           <QuickCapture />
+
+          <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
+            <div className="flex items-center gap-2 text-primary-600">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100">
+                <Icon name="inbox" size={16} />
+              </span>
+              <h2 className="text-base font-semibold text-surface-900">Catatan terbaru</h2>
+            </div>
+            {recentCaptures.length === 0 ? (
+              <p className="mt-4 text-sm text-surface-500">
+                Belum ada catatan. Gunakan Catat cepat untuk merekam ide sebelum hilang.
+              </p>
+            ) : (
+              <ul className="mt-3 divide-y divide-surface-150">
+                {recentCaptures.map((capture) => (
+                  <li key={capture.id} className="py-2.5">
+                    <p className="text-sm leading-relaxed text-surface-800">{capture.content}</p>
+                    <p className="mt-0.5 text-xs text-surface-400">{formatCaptureTime(capture.createdAt)}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
 
           <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
             <div className="flex items-center gap-2 text-success-600">
