@@ -34,6 +34,21 @@ def load_corpus(path: Path = CORPUS_PATH) -> dict[str, Any]:
     return corpus
 
 
+def audit_corpus(corpus: dict[str, Any]) -> dict[str, Any]:
+    examples = corpus["examples"]
+    texts = [example["text"].strip() for example in examples]
+    counts = {intent: sum(example["intent"] == intent for example in examples) for intent in corpus["intents"]}
+    return {
+        "examples": len(examples),
+        "intents": len(corpus["intents"]),
+        "classDistribution": counts,
+        "duplicateExact": len(texts) - len(set(texts)),
+        "tooShort": sum(len(text.split()) < 3 for text in texts),
+        "emptyText": sum(not text for text in texts),
+        "invalidIntent": sorted({example["intent"] for example in examples} - set(corpus["intents"])),
+    }
+
+
 def build_models() -> dict[str, Pipeline]:
     vectorizer = TfidfVectorizer(ngram_range=(1, 2), sublinear_tf=True)
     return {
@@ -59,6 +74,7 @@ def evaluate(path: Path = CORPUS_PATH) -> dict[str, Any]:
     intents = sorted(set(labels))
     results: dict[str, Any] = {
         "corpus": {"version": corpus["version"], "language": corpus["language"], "examples": len(examples)},
+        "quality": audit_corpus(corpus),
         "split": {"train": len(train_texts), "test": len(test_texts), "testSize": TEST_SIZE, "randomState": RANDOM_STATE},
         "models": {},
     }
@@ -66,13 +82,21 @@ def evaluate(path: Path = CORPUS_PATH) -> dict[str, Any]:
         model.fit(train_texts, train_labels)
         predictions = model.predict(test_texts)
         report = classification_report(test_labels, predictions, labels=intents, output_dict=True, zero_division=0)
+        matrix = confusion_matrix(test_labels, predictions, labels=intents)
+        pairs = sorted(
+            ((int(matrix[row][column]), intents[row], intents[column]) for row in range(len(intents)) for column in range(len(intents)) if row != column and matrix[row][column]),
+            reverse=True,
+        )
         results["models"][name] = {
             "accuracy": round(float(accuracy_score(test_labels, predictions)), 4),
             "macroPrecision": round(float(precision_score(test_labels, predictions, labels=intents, average="macro", zero_division=0)), 4),
             "macroRecall": round(float(recall_score(test_labels, predictions, labels=intents, average="macro", zero_division=0)), 4),
             "macroF1": round(float(f1_score(test_labels, predictions, labels=intents, average="macro", zero_division=0)), 4),
+            "weightedF1": round(float(f1_score(test_labels, predictions, labels=intents, average="weighted", zero_division=0)), 4),
             "perIntent": {intent: {metric: round(float(report[intent][metric]), 4) for metric in ("precision", "recall", "f1-score", "support")} for intent in intents},
-            "confusionMatrix": confusion_matrix(test_labels, predictions, labels=intents).tolist(),
+            "confusionMatrix": matrix.tolist(),
+            "topConfusionPairs": [{"actual": actual, "predicted": predicted, "count": count} for count, actual, predicted in pairs[:10]],
+            "misclassifiedExamples": [{"actual": actual, "predicted": predicted, "text": text} for text, actual, predicted in zip(test_texts, test_labels, predictions) if actual != predicted],
             "intents": intents,
         }
     return results
@@ -87,13 +111,18 @@ def print_report(results: dict[str, Any]) -> None:
         print(f"  macro precision: {metrics['macroPrecision']:.4f}")
         print(f"  macro recall:    {metrics['macroRecall']:.4f}")
         print(f"  macro F1:        {metrics['macroF1']:.4f}")
+        print(f"  weighted F1:     {metrics['weightedF1']:.4f}")
+        if metrics["topConfusionPairs"]:
+            pair = metrics["topConfusionPairs"][0]
+            print(f"  top confusion:   {pair['actual']} -> {pair['predicted']} ({pair['count']})")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate TF-IDF baseline classifiers.")
     parser.add_argument("--json", action="store_true", help="Print the full machine-readable report.")
+    parser.add_argument("--corpus", type=Path, default=CORPUS_PATH, help="Corpus JSON path.")
     args = parser.parse_args()
-    report = evaluate()
+    report = evaluate(args.corpus)
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:

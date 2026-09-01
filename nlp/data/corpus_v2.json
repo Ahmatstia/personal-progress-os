@@ -1,0 +1,3633 @@
+{
+  "version": "2.0.0",
+  "language": "id",
+  "createdAt": "2026-09-01",
+  "intents": [
+    "TODAY",
+    "NEXT_ACTION",
+    "GOAL_STATUS",
+    "TASK_STATUS",
+    "TASK_SEARCH",
+    "PROGRESS",
+    "ANALYTICS",
+    "STREAK",
+    "TIME_SPENT",
+    "COMPLETION",
+    "BOTTLENECK",
+    "REVIEW",
+    "REFLECTION",
+    "GOAL_CREATE",
+    "TASK_CREATE",
+    "TASK_COMPLETE",
+    "TASK_REOPEN",
+    "SESSION_START",
+    "SESSION_END",
+    "FOCUS",
+    "OVERDUE",
+    "MOTIVATION",
+    "HELP",
+    "UNKNOWN"
+  ],
+  "examples": [
+    {
+      "id": "v1-today-1",
+      "text": "apa fokus saya hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-2",
+      "text": "hari ini saya harus mengerjakan apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-3",
+      "text": "fokus hari ini apa ya",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-4",
+      "text": "tugas saya sekarang apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-5",
+      "text": "apa rencana hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-6",
+      "text": "hari ini ada pekerjaan apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-7",
+      "text": "tampilkan kegiatan hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-8",
+      "text": "apa yang penting hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-9",
+      "text": "saya mulai dari mana hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-10",
+      "text": "apa prioritas saya sekarang",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-11",
+      "text": "boleh lihat agenda hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-12",
+      "text": "hari ini mau fokus apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-13",
+      "text": "tunjukkan fokus harian",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-14",
+      "text": "apa yang belum dikerjakan hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-15",
+      "text": "sekarang sebaiknya apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-16",
+      "text": "bantu lihat pekerjaan hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-17",
+      "text": "tugas hari ini apa saja",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-18",
+      "text": "apa target saya hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-19",
+      "text": "saya harus mulai apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-today-20",
+      "text": "ringkasan hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v1-next_action-1",
+      "text": "apa langkah berikutnya",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-2",
+      "text": "saya harus lanjut apa",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-3",
+      "text": "next action saya apa",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-4",
+      "text": "pekerjaan selanjutnya apa",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-5",
+      "text": "habis ini mengerjakan apa",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-6",
+      "text": "tugas berikut yang paling penting",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-7",
+      "text": "apa yang harus saya lakukan sekarang",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-8",
+      "text": "lanjut ke tugas mana",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-9",
+      "text": "rekomendasi langkah berikut",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-10",
+      "text": "pilih pekerjaan berikutnya",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-11",
+      "text": "apa aksi berikut saya",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-12",
+      "text": "sebaiknya lanjut apa",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-13",
+      "text": "urutan kerja berikutnya",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-14",
+      "text": "tunjukkan next action",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-15",
+      "text": "yang perlu saya lakukan setelah ini",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-16",
+      "text": "apa keputusan kerja berikut",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-17",
+      "text": "saya mulai dari task mana",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-18",
+      "text": "langkah saya berikutnya",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-19",
+      "text": "prioritas setelah ini",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-next_action-20",
+      "text": "beri saya satu aksi",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v1-goal_status-1",
+      "text": "bagaimana status goal saya",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-2",
+      "text": "lihat status tujuan",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-3",
+      "text": "progres goal saya bagaimana",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-4",
+      "text": "kondisi tujuan saya",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-5",
+      "text": "apakah goal saya berjalan",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-6",
+      "text": "status target saya",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-7",
+      "text": "ringkasan goal saya",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-8",
+      "text": "goal saya sudah sampai mana",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-9",
+      "text": "cek tujuan saya",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-10",
+      "text": "berapa kemajuan tujuan",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-11",
+      "text": "tampilkan kondisi goal",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-12",
+      "text": "perkembangan target saya",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-13",
+      "text": "goal ini aman atau tidak",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-14",
+      "text": "lihat detail tujuan",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-15",
+      "text": "saya ingin tahu status goal",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-16",
+      "text": "apa kabar tujuan saya",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-17",
+      "text": "status pencapaian saya",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-18",
+      "text": "tujuan saya bagaimana sekarang",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-19",
+      "text": "cek progres tujuan",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-goal_status-20",
+      "text": "laporan goal saya",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v1-task_status-1",
+      "text": "bagaimana status tugas ini",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-2",
+      "text": "status task saya",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-3",
+      "text": "tugas ini sedang apa",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-4",
+      "text": "cek keadaan task",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-5",
+      "text": "apakah tugas ini berjalan",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-6",
+      "text": "task ini selesai belum",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-7",
+      "text": "lihat status pekerjaan",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-8",
+      "text": "status pekerjaan saya",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-9",
+      "text": "tugas ini aktif atau tidak",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-10",
+      "text": "cek task tersebut",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-11",
+      "text": "bagaimana keadaan tugas",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-12",
+      "text": "tampilkan status task",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-13",
+      "text": "task saya sampai mana",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-14",
+      "text": "pekerjaan ini sudah selesai",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-15",
+      "text": "status item ini",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-16",
+      "text": "kondisi tugas sekarang",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-17",
+      "text": "apakah task masih terbuka",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-18",
+      "text": "status pekerjaan tertentu",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-19",
+      "text": "cek progres task",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_status-20",
+      "text": "lihat keadaan pekerjaan",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v1-task_search-1",
+      "text": "cari task",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-2",
+      "text": "cari tugas saya",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-3",
+      "text": "temukan pekerjaan",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-4",
+      "text": "ada tugas tentang ini",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-5",
+      "text": "tampilkan semua task",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-6",
+      "text": "di mana tugas saya",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-7",
+      "text": "carikan tugas aktif",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-8",
+      "text": "cari pekerjaan yang belum selesai",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-9",
+      "text": "saya mau mencari task",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-10",
+      "text": "tolong temukan tugas",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-11",
+      "text": "lihat daftar tugas",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-12",
+      "text": "filter task saya",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-13",
+      "text": "tugas apa yang cocok",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-14",
+      "text": "cari tugas prioritas tinggi",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-15",
+      "text": "temukan task pandas",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-16",
+      "text": "ada pekerjaan yang tertunda",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-17",
+      "text": "buka pencarian tugas",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-18",
+      "text": "saya lupa nama task",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-19",
+      "text": "cari pekerjaan tertentu",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-task_search-20",
+      "text": "tampilkan task",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v1-progress-1",
+      "text": "bagaimana progres saya",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-2",
+      "text": "berapa kemajuan saya",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-3",
+      "text": "lihat progress",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-4",
+      "text": "saya sudah sejauh apa",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-5",
+      "text": "perkembangan saya bagaimana",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-6",
+      "text": "tampilkan kemajuan",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-7",
+      "text": "berapa persen selesai",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-8",
+      "text": "cek perkembangan",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-9",
+      "text": "progress tujuan saya",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-10",
+      "text": "laporan kemajuan",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-11",
+      "text": "saya ingin lihat progres",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-12",
+      "text": "seberapa jauh target",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-13",
+      "text": "kemajuan pekerjaan saya",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-14",
+      "text": "berapa yang sudah dikerjakan",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-15",
+      "text": "tampilkan progress goal",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-16",
+      "text": "ukur perkembangan saya",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-17",
+      "text": "status kemajuan",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-18",
+      "text": "progres keseluruhan",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-19",
+      "text": "sudah sampai mana",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-progress-20",
+      "text": "ringkasan perkembangan",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v1-analytics-1",
+      "text": "tampilkan analytics",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-2",
+      "text": "lihat analitik saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-3",
+      "text": "berapa statistik aktivitas",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-4",
+      "text": "analisis pekerjaan saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-5",
+      "text": "buka dashboard analitik",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-6",
+      "text": "data aktivitas saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-7",
+      "text": "tren kerja saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-8",
+      "text": "lihat grafik progres",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-9",
+      "text": "statistik sesi saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-10",
+      "text": "analisis waktu kerja",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-11",
+      "text": "berapa jam dalam grafik",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-12",
+      "text": "lihat insight data",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-13",
+      "text": "rekap analitik",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-14",
+      "text": "buka analytics",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-15",
+      "text": "pola aktivitas saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-16",
+      "text": "periksa metrik saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-17",
+      "text": "laporan statistik",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-18",
+      "text": "analitik progress",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-19",
+      "text": "tampilkan data kerja",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-analytics-20",
+      "text": "ringkasan metrik",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v1-streak-1",
+      "text": "berapa streak saya",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-2",
+      "text": "berapa hari berturut saya aktif",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-3",
+      "text": "lihat konsistensi saya",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-4",
+      "text": "streak kerja saya",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-5",
+      "text": "berapa hari beruntun",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-6",
+      "text": "cek rentetan aktivitas",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-7",
+      "text": "rekor aktivitas saya",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-8",
+      "text": "berapa lama saya konsisten",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-9",
+      "text": "tampilkan streak",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-10",
+      "text": "hari aktif berturut turut",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-11",
+      "text": "berapa current streak",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-12",
+      "text": "konsistensi minggu ini",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-13",
+      "text": "streak belajar saya",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-14",
+      "text": "apakah saya aktif beruntun",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-15",
+      "text": "lihat rekor konsisten",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-16",
+      "text": "berapa hari tanpa putus",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-17",
+      "text": "cek streak aktivitas",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-18",
+      "text": "rentetan kerja saya",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-19",
+      "text": "streak saya sekarang",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-streak-20",
+      "text": "statistik konsistensi",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v1-time_spent-1",
+      "text": "berapa waktu yang saya habiskan",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-2",
+      "text": "berapa jam saya bekerja",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-3",
+      "text": "total waktu sesi saya",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-4",
+      "text": "berapa lama saya belajar",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-5",
+      "text": "waktu kerja minggu ini",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-6",
+      "text": "rekap durasi sesi",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-7",
+      "text": "berapa menit aktivitas",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-8",
+      "text": "total jam goal saya",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-9",
+      "text": "lihat waktu yang dipakai",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-10",
+      "text": "berapa lama task ini",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-11",
+      "text": "hitung jam kerja saya",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-12",
+      "text": "durasi belajar saya",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-13",
+      "text": "waktu yang sudah tercatat",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-14",
+      "text": "berapa waktu hari ini",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-15",
+      "text": "total durasi pekerjaan",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-16",
+      "text": "cek jam aktivitas",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-17",
+      "text": "berapa menit saya fokus",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-18",
+      "text": "waktu sesi terakhir",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-19",
+      "text": "rekap waktu kerja",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-time_spent-20",
+      "text": "berapa jam aktivitas saya",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v1-completion-1",
+      "text": "berapa tugas yang selesai",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-2",
+      "text": "tingkat completion saya",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-3",
+      "text": "berapa persen pekerjaan selesai",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-4",
+      "text": "jumlah task selesai",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-5",
+      "text": "lihat penyelesaian tugas",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-6",
+      "text": "berapa yang sudah beres",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-7",
+      "text": "completion rate saya",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-8",
+      "text": "berapa tugas yang telah selesai",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-9",
+      "text": "rekap tugas selesai",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-10",
+      "text": "pencapaian pekerjaan",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-11",
+      "text": "persentase penyelesaian",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-12",
+      "text": "tugas selesai berapa",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-13",
+      "text": "lihat rasio selesai",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-14",
+      "text": "berapa item beres",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-15",
+      "text": "status completion goal",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-16",
+      "text": "jumlah pekerjaan rampung",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-17",
+      "text": "berapa target tercapai",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-18",
+      "text": "ringkasan penyelesaian",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-19",
+      "text": "tugas yang sudah beres",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-completion-20",
+      "text": "ukur completion",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v1-bottleneck-1",
+      "text": "apa bottleneck saya",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-2",
+      "text": "hambatan utama saya apa",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-3",
+      "text": "bagian mana yang menghambat",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-4",
+      "text": "kenapa progres tersendat",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-5",
+      "text": "tugas yang jadi penghalang",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-6",
+      "text": "cari bottleneck",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-7",
+      "text": "apa yang membuat saya lambat",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-8",
+      "text": "lihat hambatan pekerjaan",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-9",
+      "text": "task yang sulit maju",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-10",
+      "text": "kendala terbesar saya",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-11",
+      "text": "bottleneck goal ini",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-12",
+      "text": "apa penyebab macet",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-13",
+      "text": "tampilkan hambatan",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-14",
+      "text": "pekerjaan mana yang tersendat",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-15",
+      "text": "ada tugas yang terlalu lama",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-16",
+      "text": "deteksi penghambat",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-17",
+      "text": "apa masalah utama task",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-18",
+      "text": "lihat potensi blocker",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-19",
+      "text": "bagian paling sulit",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-bottleneck-20",
+      "text": "analisis bottleneck",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v1-review-1",
+      "text": "buat review minggu ini",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-2",
+      "text": "lihat review saya",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-3",
+      "text": "saya mau meninjau minggu",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-4",
+      "text": "buka evaluasi mingguan",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-5",
+      "text": "tampilkan review goal",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-6",
+      "text": "isi review progres",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-7",
+      "text": "review pekerjaan saya",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-8",
+      "text": "apa hasil review",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-9",
+      "text": "tinjau aktivitas minggu lalu",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-10",
+      "text": "buka refleksi mingguan",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-11",
+      "text": "lihat riwayat review",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-12",
+      "text": "saya ingin evaluasi",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-13",
+      "text": "buat evaluasi minggu",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-14",
+      "text": "review terakhir saya",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-15",
+      "text": "cek ulasan progres",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-16",
+      "text": "tampilkan laporan review",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-17",
+      "text": "mulai weekly review",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-18",
+      "text": "periksa review",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-19",
+      "text": "evaluasi pencapaian",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-review-20",
+      "text": "tinjau kemajuan",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v1-reflection-1",
+      "text": "saya ingin refleksi",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-2",
+      "text": "apa yang berjalan baik",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-3",
+      "text": "apa yang sulit minggu ini",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-4",
+      "text": "catat refleksi saya",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-5",
+      "text": "tulis pelajaran hari ini",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-6",
+      "text": "apa yang harus diperbaiki",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-7",
+      "text": "bantu saya merenung",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-8",
+      "text": "catatan refleksi kerja",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-9",
+      "text": "saya mau mencatat kesulitan",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-10",
+      "text": "apa pelajaran dari sesi",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-11",
+      "text": "buat catatan pembelajaran",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-12",
+      "text": "refleksi aktivitas",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-13",
+      "text": "hal yang perlu ditingkatkan",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-14",
+      "text": "saya ingin menulis insight",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-15",
+      "text": "apa yang saya pelajari",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-16",
+      "text": "catat hambatan saya",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-17",
+      "text": "tinjau pengalaman kerja",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-18",
+      "text": "renungan minggu ini",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-19",
+      "text": "tulis evaluasi diri",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-reflection-20",
+      "text": "catatan apa yang penting",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v1-goal_create-1",
+      "text": "buat goal baru",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-2",
+      "text": "tambah tujuan",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-3",
+      "text": "saya ingin membuat target",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-4",
+      "text": "buat tujuan pribadi",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-5",
+      "text": "tambahkan goal",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-6",
+      "text": "mulai goal baru",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-7",
+      "text": "saya punya target baru",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-8",
+      "text": "catat tujuan baru",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-9",
+      "text": "bikin goal",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-10",
+      "text": "buat sasaran",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-11",
+      "text": "tambah proyek sebagai goal",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-12",
+      "text": "saya mau goal baru",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-13",
+      "text": "buat tujuan belajar",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-14",
+      "text": "buat target pekerjaan",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-15",
+      "text": "tambahkan tujuan hidup",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-16",
+      "text": "inisialisasi goal",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-17",
+      "text": "daftarkan goal baru",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-18",
+      "text": "buat outcome baru",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-19",
+      "text": "saya ingin menambah tujuan",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-goal_create-20",
+      "text": "goal baru untuk saya",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v1-task_create-1",
+      "text": "buat task baru",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-2",
+      "text": "tambah tugas",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-3",
+      "text": "saya ingin membuat pekerjaan",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-4",
+      "text": "buat tugas untuk goal",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-5",
+      "text": "tambahkan task",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-6",
+      "text": "catat pekerjaan baru",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-7",
+      "text": "bikin tugas",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-8",
+      "text": "saya punya task baru",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-9",
+      "text": "buat langkah kerja",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-10",
+      "text": "tambah item pekerjaan",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-11",
+      "text": "buat tugas prioritas",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-12",
+      "text": "masukkan task baru",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-13",
+      "text": "saya mau menambah tugas",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-14",
+      "text": "buat pekerjaan konkret",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-15",
+      "text": "tambahkan aktivitas",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-16",
+      "text": "inisialisasi tugas",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-17",
+      "text": "buat task untuk stage",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-18",
+      "text": "catat tugas baru",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-19",
+      "text": "tambah pekerjaan ke goal",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_create-20",
+      "text": "tugas baru untuk saya",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v1-task_complete-1",
+      "text": "selesaikan task ini",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-2",
+      "text": "tandai tugas selesai",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-3",
+      "text": "saya sudah selesai dengan task",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-4",
+      "text": "centang pekerjaan ini",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-5",
+      "text": "ubah task menjadi selesai",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-6",
+      "text": "tugas ini sudah beres",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-7",
+      "text": "complete task",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-8",
+      "text": "tutup tugas ini",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-9",
+      "text": "nyatakan pekerjaan selesai",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-10",
+      "text": "selesaikan pekerjaan",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-11",
+      "text": "task ini rampung",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-12",
+      "text": "tandai sebagai completed",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-13",
+      "text": "saya telah mengerjakannya",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-14",
+      "text": "bereskan task",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-15",
+      "text": "ubah status selesai",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-16",
+      "text": "konfirmasi tugas selesai",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-17",
+      "text": "tugas selesai sekarang",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-18",
+      "text": "set task completed",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-19",
+      "text": "pekerjaan sudah tuntas",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_complete-20",
+      "text": "tandai beres",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v1-task_reopen-1",
+      "text": "buka kembali task",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-2",
+      "text": "reopen tugas",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-3",
+      "text": "aktifkan tugas selesai",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-4",
+      "text": "saya ingin mengerjakan lagi",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-5",
+      "text": "ubah completed menjadi aktif",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-6",
+      "text": "buka pekerjaan ini lagi",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-7",
+      "text": "kembalikan task",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-8",
+      "text": "tugas ini belum benar benar selesai",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-9",
+      "text": "batalkan status selesai",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-10",
+      "text": "reopen pekerjaan",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-11",
+      "text": "jadikan task berjalan",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-12",
+      "text": "aktifkan kembali tugas",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-13",
+      "text": "saya perlu membuka ulang",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-14",
+      "text": "ubah status menjadi in progress",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-15",
+      "text": "tugas perlu dikerjakan lagi",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-16",
+      "text": "buka ulang task",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-17",
+      "text": "kembalikan pekerjaan",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-18",
+      "text": "tandai belum selesai",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-19",
+      "text": "task ini direvisi",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-task_reopen-20",
+      "text": "mulai lagi tugas",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v1-session_start-1",
+      "text": "mulai sesi",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-2",
+      "text": "start session",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-3",
+      "text": "saya mulai bekerja",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-4",
+      "text": "mulai belajar sekarang",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-5",
+      "text": "buka sesi kerja",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-6",
+      "text": "jalankan timer",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-7",
+      "text": "catat sesi baru",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-8",
+      "text": "mulai fokus",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-9",
+      "text": "saya mulai mengerjakan task",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-10",
+      "text": "aktifkan sesi",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-11",
+      "text": "mulai waktu kerja",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-12",
+      "text": "buat sesi sekarang",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-13",
+      "text": "saya ingin mulai sesi",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-14",
+      "text": "timer mulai",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-15",
+      "text": "mulai aktivitas",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-16",
+      "text": "catat saya mulai",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-17",
+      "text": "mulai pekerjaan ini",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-18",
+      "text": "start timer",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-19",
+      "text": "sesi kerja dimulai",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_start-20",
+      "text": "saya siap bekerja",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v1-session_end-1",
+      "text": "akhiri sesi",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-2",
+      "text": "selesaikan sesi",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-3",
+      "text": "stop session",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-4",
+      "text": "hentikan timer",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-5",
+      "text": "saya selesai bekerja",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-6",
+      "text": "tutup sesi",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-7",
+      "text": "catat sesi selesai",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-8",
+      "text": "berhenti belajar",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-9",
+      "text": "akhiri waktu kerja",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-10",
+      "text": "end session",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-11",
+      "text": "sesi ini sudah selesai",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-12",
+      "text": "stop timer sekarang",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-13",
+      "text": "saya sudah cukup",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-14",
+      "text": "tandai sesi berakhir",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-15",
+      "text": "tutup aktivitas",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-16",
+      "text": "berhenti mengerjakan",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-17",
+      "text": "akhiri pekerjaan sementara",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-18",
+      "text": "selesaikan timer",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-19",
+      "text": "saya selesai fokus",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-session_end-20",
+      "text": "end sesi",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v1-focus-1",
+      "text": "tambahkan ke fokus hari ini",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-2",
+      "text": "apa fokus saya",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-3",
+      "text": "atur prioritas hari ini",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-4",
+      "text": "masukkan task ke focus",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-5",
+      "text": "kelola fokus",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-6",
+      "text": "tugas fokus saya",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-7",
+      "text": "pilih pekerjaan hari ini",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-8",
+      "text": "tambah fokus",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-9",
+      "text": "hapus dari fokus",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-10",
+      "text": "urutkan fokus",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-11",
+      "text": "fokus harian saya",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-12",
+      "text": "jadikan prioritas",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-13",
+      "text": "task untuk hari ini",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-14",
+      "text": "lihat daily focus",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-15",
+      "text": "atur pekerjaan utama",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-16",
+      "text": "saya ingin fokus pada tugas",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-17",
+      "text": "buka daftar fokus",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-18",
+      "text": "pilih fokus kerja",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-19",
+      "text": "prioritas kerja saya",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-focus-20",
+      "text": "kelola daily focus",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v1-overdue-1",
+      "text": "apa tugas yang terlambat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-2",
+      "text": "lihat overdue",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-3",
+      "text": "tugas melewati deadline",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-4",
+      "text": "mana pekerjaan yang jatuh tempo",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-5",
+      "text": "cek tugas terlambat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-6",
+      "text": "ada pekerjaan yang overdue",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-7",
+      "text": "tampilkan deadline terlewat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-8",
+      "text": "task yang belum selesai dan terlambat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-9",
+      "text": "apa yang sudah lewat tenggat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-10",
+      "text": "daftar pekerjaan terlambat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-11",
+      "text": "cek keterlambatan",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-12",
+      "text": "tugas melewati target",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-13",
+      "text": "lihat overdue task",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-14",
+      "text": "pekerjaan yang harus segera",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-15",
+      "text": "ada deadline terlewat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-16",
+      "text": "tampilkan tugas jatuh tempo",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-17",
+      "text": "mana yang terlambat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-18",
+      "text": "status deadline saya",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-19",
+      "text": "cek pekerjaan lewat waktu",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-overdue-20",
+      "text": "daftar tugas overdue",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v1-motivation-1",
+      "text": "saya butuh motivasi",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-2",
+      "text": "beri saya semangat",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-3",
+      "text": "saya ingin menyerah",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-4",
+      "text": "dorong saya untuk lanjut",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-5",
+      "text": "kata kata penyemangat",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-6",
+      "text": "bantu saya tetap bergerak",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-7",
+      "text": "saya sedang kehilangan semangat",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-8",
+      "text": "beri dorongan",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-9",
+      "text": "saya perlu dukungan",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-10",
+      "text": "sulit untuk mulai",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-11",
+      "text": "bantu saya tidak berhenti",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-12",
+      "text": "semangat kerja saya turun",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-13",
+      "text": "saya butuh dorongan kecil",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-14",
+      "text": "beri saya motivasi kerja",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-15",
+      "text": "saya merasa malas",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-16",
+      "text": "buat saya mulai",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-17",
+      "text": "saya ingin tetap konsisten",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-18",
+      "text": "bantu saya menghadapi tugas",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-19",
+      "text": "saya hampir menyerah",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-motivation-20",
+      "text": "dorong saya lanjutkan",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v1-help-1",
+      "text": "apa yang bisa dilakukan aplikasi",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-2",
+      "text": "bantuan",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-3",
+      "text": "help",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-4",
+      "text": "cara memakai aplikasi",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-5",
+      "text": "fitur apa saja",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-6",
+      "text": "bagaimana cara memulai",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-7",
+      "text": "tolong jelaskan",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-8",
+      "text": "menu bantuan",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-9",
+      "text": "cara menggunakan goal",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-10",
+      "text": "bagaimana memulai sesi",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-11",
+      "text": "bantu saya memahami sistem",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-12",
+      "text": "perintah yang tersedia",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-13",
+      "text": "apa fungsi aplikasi ini",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-14",
+      "text": "saya butuh petunjuk",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-15",
+      "text": "cara membuat task",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-16",
+      "text": "jelaskan fitur",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-17",
+      "text": "bagaimana menambah fokus",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-18",
+      "text": "panduan penggunaan",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-19",
+      "text": "saya tidak tahu harus klik apa",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-help-20",
+      "text": "buka bantuan",
+      "intent": "HELP"
+    },
+    {
+      "id": "v1-unknown-1",
+      "text": "cuaca hari ini bagaimana",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-2",
+      "text": "ceritakan resep makanan",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-3",
+      "text": "siapa presiden",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-4",
+      "text": "putar musik",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-5",
+      "text": "terjemahkan kalimat ini",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-6",
+      "text": "berapa harga sepatu",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-7",
+      "text": "buat gambar",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-8",
+      "text": "apa berita terbaru",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-9",
+      "text": "pesan tiket",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-10",
+      "text": "hitung akar kuadrat",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-11",
+      "text": "jelaskan sejarah",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-12",
+      "text": "rekomendasi film",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-13",
+      "text": "kirim email",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-14",
+      "text": "buka media sosial",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-15",
+      "text": "apa warna favoritmu",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-16",
+      "text": "cerita lucu",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-17",
+      "text": "jadwal kereta",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-18",
+      "text": "cari restoran",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-19",
+      "text": "berita olahraga",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v1-unknown-20",
+      "text": "halo apa kabar",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v2-today-1",
+      "text": "hari ini saya mulai dari pekerjaan apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v2-today-2",
+      "text": "tugas utama saya untuk hari ini apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v2-today-3",
+      "text": "boleh tunjukkan rencana kerja hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v2-today-4",
+      "text": "yang harus saya selesaikan hari ini apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v2-today-5",
+      "text": "untuk hari ini saya fokus ke mana",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v2-today-6",
+      "text": "agenda kerja saya hari ini apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v2-today-7",
+      "text": "apa sasaran saya hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v2-today-8",
+      "text": "hari ini ada tugas yang belum beres apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v2-today-9",
+      "text": "saya perlu mengatur hari ini",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v2-today-10",
+      "text": "pagi ini sebaiknya mengerjakan apa",
+      "intent": "TODAY"
+    },
+    {
+      "id": "v2-next_action-1",
+      "text": "setelah tugas ini langkah saya apa",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v2-next_action-2",
+      "text": "aksi paling masuk akal berikutnya apa",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v2-next_action-3",
+      "text": "habis menyelesaikan ini saya lanjut ke mana",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v2-next_action-4",
+      "text": "tolong pilihkan langkah sesudah ini",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v2-next_action-5",
+      "text": "saya harus mengambil tindakan apa berikutnya",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v2-next_action-6",
+      "text": "urutan berikut yang perlu saya jalankan apa",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v2-next_action-7",
+      "text": "setelah ini saya mengerjakan task yang mana",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v2-next_action-8",
+      "text": "apa satu langkah konkret saya sekarang",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v2-next_action-9",
+      "text": "boleh tentukan pekerjaan lanjutan",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v2-next_action-10",
+      "text": "lanjutan dari pekerjaan ini apa",
+      "intent": "NEXT_ACTION"
+    },
+    {
+      "id": "v2-goal_status-1",
+      "text": "tujuan belajar saya sekarang statusnya apa",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v2-goal_status-2",
+      "text": "goal ini sudah berjalan berapa jauh",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v2-goal_status-3",
+      "text": "apakah target saya masih on track",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v2-goal_status-4",
+      "text": "tolong cek keadaan tujuan ini",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v2-goal_status-5",
+      "text": "status pencapaian goal saya saat ini",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v2-goal_status-6",
+      "text": "target ini sudah mendekati selesai belum",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v2-goal_status-7",
+      "text": "bagaimana kondisi tujuan yang saya buat",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v2-goal_status-8",
+      "text": "goal saya tertinggal atau sesuai rencana",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v2-goal_status-9",
+      "text": "lihat perkembangan satu goal saya",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v2-goal_status-10",
+      "text": "apakah tujuan ini masih aktif",
+      "intent": "GOAL_STATUS"
+    },
+    {
+      "id": "v2-task_status-1",
+      "text": "task ini statusnya sekarang apa",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v2-task_status-2",
+      "text": "pekerjaan ini sedang aktif atau selesai",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v2-task_status-3",
+      "text": "tolong cek status item tersebut",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v2-task_status-4",
+      "text": "tugas ini masih perlu dikerjakan tidak",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v2-task_status-5",
+      "text": "apakah task ini sudah ditutup",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v2-task_status-6",
+      "text": "lihat keadaan satu tugas ini",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v2-task_status-7",
+      "text": "status pekerjaan tertentu itu apa",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v2-task_status-8",
+      "text": "task ini tertunda atau berjalan",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v2-task_status-9",
+      "text": "saya ingin tahu kondisi tugas ini",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v2-task_status-10",
+      "text": "cek apakah tugas ini masih terbuka",
+      "intent": "TASK_STATUS"
+    },
+    {
+      "id": "v2-task_search-1",
+      "text": "temukan tugas dengan kata laporan",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v2-task_search-2",
+      "text": "cari semua task yang masih aktif",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v2-task_search-3",
+      "text": "saya ingin melihat task berdasarkan nama",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v2-task_search-4",
+      "text": "ada pekerjaan tentang riset data tidak",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v2-task_search-5",
+      "text": "tolong carikan tugas yang belum selesai",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v2-task_search-6",
+      "text": "buka daftar pekerjaan saya",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v2-task_search-7",
+      "text": "filter tugas yang prioritas tinggi",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v2-task_search-8",
+      "text": "saya lupa task untuk goal ini",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v2-task_search-9",
+      "text": "tampilkan task yang sesuai pencarian",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v2-task_search-10",
+      "text": "di mana pekerjaan yang saya buat kemarin",
+      "intent": "TASK_SEARCH"
+    },
+    {
+      "id": "v2-progress-1",
+      "text": "kemajuan saya secara keseluruhan berapa",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v2-progress-2",
+      "text": "sejauh mana pekerjaan saya berkembang",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v2-progress-3",
+      "text": "berapa bagian target yang sudah tercapai",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v2-progress-4",
+      "text": "lihat perkembangan semua pekerjaan saya",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v2-progress-5",
+      "text": "progress saya minggu ini bagaimana",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v2-progress-6",
+      "text": "saya ingin mengukur kemajuan umum",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v2-progress-7",
+      "text": "persentase perkembangan saya berapa",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v2-progress-8",
+      "text": "sudah berapa jauh saya menuju target",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v2-progress-9",
+      "text": "tolong rangkum progres saya",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v2-progress-10",
+      "text": "kemajuan kerja saya meningkat atau tidak",
+      "intent": "PROGRESS"
+    },
+    {
+      "id": "v2-analytics-1",
+      "text": "tampilkan pola aktivitas saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v2-analytics-2",
+      "text": "saya mau melihat statistik kerja",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v2-analytics-3",
+      "text": "buat analisis dari data sesi saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v2-analytics-4",
+      "text": "grafik aktivitas saya seperti apa",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v2-analytics-5",
+      "text": "lihat tren produktivitas saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v2-analytics-6",
+      "text": "berapa metrik kerja saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v2-analytics-7",
+      "text": "buka laporan analitik mingguan",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v2-analytics-8",
+      "text": "bandingkan data aktivitas saya",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v2-analytics-9",
+      "text": "insight dari riwayat kerja saya apa",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v2-analytics-10",
+      "text": "tampilkan ringkasan data produktivitas",
+      "intent": "ANALYTICS"
+    },
+    {
+      "id": "v2-streak-1",
+      "text": "sudah berapa hari saya aktif tanpa jeda",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v2-streak-2",
+      "text": "berapa panjang rentetan kerja saya",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v2-streak-3",
+      "text": "cek rekor hari aktif saya",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v2-streak-4",
+      "text": "streak produktivitas saya saat ini berapa",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v2-streak-5",
+      "text": "berapa hari berturut turut saya bekerja",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v2-streak-6",
+      "text": "apakah streak saya masih berjalan",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v2-streak-7",
+      "text": "lihat catatan konsistensi harian",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v2-streak-8",
+      "text": "berapa hari beruntun saya menyelesaikan aktivitas",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v2-streak-9",
+      "text": "rekor fokus tanpa putus saya berapa",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v2-streak-10",
+      "text": "hitung hari aktif berkesinambungan saya",
+      "intent": "STREAK"
+    },
+    {
+      "id": "v2-time_spent-1",
+      "text": "total durasi kerja saya minggu ini berapa",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v2-time_spent-2",
+      "text": "berapa jam yang tercatat dari sesi saya",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v2-time_spent-3",
+      "text": "saya menghabiskan waktu berapa lama",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v2-time_spent-4",
+      "text": "hitung durasi fokus saya hari ini",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v2-time_spent-5",
+      "text": "berapa menit saya bekerja pada task ini",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v2-time_spent-6",
+      "text": "rekap waktu belajar saya",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v2-time_spent-7",
+      "text": "lihat total waktu yang sudah dipakai",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v2-time_spent-8",
+      "text": "berapa lama sesi kerja terakhir",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v2-time_spent-9",
+      "text": "jumlah jam aktivitas saya berapa",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v2-time_spent-10",
+      "text": "durasi pekerjaan saya minggu ini apa",
+      "intent": "TIME_SPENT"
+    },
+    {
+      "id": "v2-completion-1",
+      "text": "berapa rasio task yang sudah selesai",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v2-completion-2",
+      "text": "tingkat penyelesaian pekerjaan saya apa",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v2-completion-3",
+      "text": "jumlah tugas rampung dibanding total berapa",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v2-completion-4",
+      "text": "berapa persen target yang tuntas",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v2-completion-5",
+      "text": "lihat statistik tugas selesai saya",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v2-completion-6",
+      "text": "berapa banyak pekerjaan yang sudah beres",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v2-completion-7",
+      "text": "hitung completion rate saya",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v2-completion-8",
+      "text": "rekap pencapaian task saya",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v2-completion-9",
+      "text": "seberapa tinggi tingkat penyelesaian saya",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v2-completion-10",
+      "text": "tampilkan jumlah item yang rampung",
+      "intent": "COMPLETION"
+    },
+    {
+      "id": "v2-bottleneck-1",
+      "text": "tugas mana yang paling menahan progres",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v2-bottleneck-2",
+      "text": "apa penyebab pekerjaan saya mandek",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v2-bottleneck-3",
+      "text": "bagian mana yang menjadi hambatan terbesar",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v2-bottleneck-4",
+      "text": "kenapa saya tidak bisa maju di goal ini",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v2-bottleneck-5",
+      "text": "deteksi pekerjaan yang membuat saya tersendat",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v2-bottleneck-6",
+      "text": "apa blocker utama saya sekarang",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v2-bottleneck-7",
+      "text": "tunjukkan titik macet dalam pekerjaan",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v2-bottleneck-8",
+      "text": "task mana yang lama tidak bergerak",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v2-bottleneck-9",
+      "text": "apa kendala yang paling menghambat target",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v2-bottleneck-10",
+      "text": "bantu cari sumber keterlambatan progres",
+      "intent": "BOTTLENECK"
+    },
+    {
+      "id": "v2-review-1",
+      "text": "buka tinjauan mingguan saya",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v2-review-2",
+      "text": "saya ingin melihat rangkuman review",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v2-review-3",
+      "text": "buat evaluasi target minggu ini",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v2-review-4",
+      "text": "tinjau hasil kerja saya minggu ini",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v2-review-5",
+      "text": "apa hasil peninjauan progres saya",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v2-review-6",
+      "text": "mulai proses review mingguan",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v2-review-7",
+      "text": "lihat penilaian pencapaian saya",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v2-review-8",
+      "text": "saya mau mengecek review terakhir",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v2-review-9",
+      "text": "rangkum evaluasi pekerjaan saya",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v2-review-10",
+      "text": "tolong tampilkan laporan tinjauan",
+      "intent": "REVIEW"
+    },
+    {
+      "id": "v2-reflection-1",
+      "text": "saya ingin menulis apa yang saya pelajari",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v2-reflection-2",
+      "text": "bantu saya mencatat pengalaman kerja",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v2-reflection-3",
+      "text": "apa pelajaran penting dari minggu ini",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v2-reflection-4",
+      "text": "saya mau merenungkan hambatan saya",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v2-reflection-5",
+      "text": "catat hal yang berjalan baik hari ini",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v2-reflection-6",
+      "text": "saya ingin menuliskan evaluasi diri",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v2-reflection-7",
+      "text": "apa yang perlu saya perbaiki dari pengalaman ini",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v2-reflection-8",
+      "text": "bantu membuat catatan refleksi",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v2-reflection-9",
+      "text": "saya ingin memahami kesulitan saya",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v2-reflection-10",
+      "text": "tuliskan ruang untuk refleksi kerja",
+      "intent": "REFLECTION"
+    },
+    {
+      "id": "v2-goal_create-1",
+      "text": "saya mau mendaftarkan tujuan baru",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v2-goal_create-2",
+      "text": "bikin target baru untuk belajar",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v2-goal_create-3",
+      "text": "tolong tambahkan goal pribadi",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v2-goal_create-4",
+      "text": "saya punya sasaran yang ingin dicatat",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v2-goal_create-5",
+      "text": "buatkan tujuan untuk proyek baru",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v2-goal_create-6",
+      "text": "mulai target baru di aplikasi",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v2-goal_create-7",
+      "text": "tambahkan outcome yang ingin saya capai",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v2-goal_create-8",
+      "text": "saya ingin membuat goal pekerjaan",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v2-goal_create-9",
+      "text": "catat tujuan baru saya",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v2-goal_create-10",
+      "text": "buat sasaran baru untuk bulan ini",
+      "intent": "GOAL_CREATE"
+    },
+    {
+      "id": "v2-task_create-1",
+      "text": "tambahkan pekerjaan baru ke daftar",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v2-task_create-2",
+      "text": "buat task untuk langkah berikutnya",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v2-task_create-3",
+      "text": "saya ingin mencatat tugas baru",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v2-task_create-4",
+      "text": "tolong bikin pekerjaan dari goal ini",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v2-task_create-5",
+      "text": "masukkan aktivitas baru",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v2-task_create-6",
+      "text": "buat tugas konkret untuk proyek saya",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v2-task_create-7",
+      "text": "saya punya pekerjaan yang perlu ditambahkan",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v2-task_create-8",
+      "text": "tambahkan task prioritas ke goal",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v2-task_create-9",
+      "text": "catat langkah kerja baru",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v2-task_create-10",
+      "text": "bikin item tugas untuk stage ini",
+      "intent": "TASK_CREATE"
+    },
+    {
+      "id": "v2-task_complete-1",
+      "text": "tandai task ini sudah tuntas",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v2-task_complete-2",
+      "text": "saya sudah merampungkan tugas ini",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v2-task_complete-3",
+      "text": "ubah pekerjaan ini menjadi selesai",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v2-task_complete-4",
+      "text": "centang task yang baru saya bereskan",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v2-task_complete-5",
+      "text": "tugas ini boleh ditutup",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v2-task_complete-6",
+      "text": "set pekerjaan ini ke completed",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v2-task_complete-7",
+      "text": "saya telah menyelesaikan task tersebut",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v2-task_complete-8",
+      "text": "konfirmasi bahwa tugas ini beres",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v2-task_complete-9",
+      "text": "tandai pekerjaan sebagai rampung",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v2-task_complete-10",
+      "text": "task ini sudah saya selesaikan",
+      "intent": "TASK_COMPLETE"
+    },
+    {
+      "id": "v2-task_reopen-1",
+      "text": "tugas yang selesai ini perlu dibuka lagi",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v2-task_reopen-2",
+      "text": "ubah task ini kembali menjadi aktif",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v2-task_reopen-3",
+      "text": "saya belum benar benar selesai, buka lagi",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v2-task_reopen-4",
+      "text": "aktifkan kembali pekerjaan tersebut",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v2-task_reopen-5",
+      "text": "tandai task ini sebagai belum selesai",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v2-task_reopen-6",
+      "text": "saya mau melanjutkan tugas yang ditutup",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v2-task_reopen-7",
+      "text": "reopen pekerjaan yang tadi selesai",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v2-task_reopen-8",
+      "text": "kembalikan status task ke berjalan",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v2-task_reopen-9",
+      "text": "task ini perlu dikerjakan ulang",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v2-task_reopen-10",
+      "text": "batalkan tanda selesai pada tugas ini",
+      "intent": "TASK_REOPEN"
+    },
+    {
+      "id": "v2-session_start-1",
+      "text": "saya siap memulai timer kerja",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v2-session_start-2",
+      "text": "catat waktu mulai saya sekarang",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v2-session_start-3",
+      "text": "buka sesi untuk pekerjaan ini",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v2-session_start-4",
+      "text": "mulai sesi fokus baru",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v2-session_start-5",
+      "text": "saya akan mulai bekerja",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v2-session_start-6",
+      "text": "aktifkan pencatatan sesi",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v2-session_start-7",
+      "text": "jalankan timer untuk belajar",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v2-session_start-8",
+      "text": "mulai hitung waktu kerja saya",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v2-session_start-9",
+      "text": "saya ingin membuka sesi baru",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v2-session_start-10",
+      "text": "mulai aktivitas kerja saya",
+      "intent": "SESSION_START"
+    },
+    {
+      "id": "v2-session_end-1",
+      "text": "saya ingin menghentikan timer sekarang",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v2-session_end-2",
+      "text": "catat waktu selesai sesi ini",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v2-session_end-3",
+      "text": "tutup sesi kerja yang sedang berjalan",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v2-session_end-4",
+      "text": "saya sudah selesai untuk sesi ini",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v2-session_end-5",
+      "text": "berhentikan pencatatan waktu",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v2-session_end-6",
+      "text": "akhiri sesi fokus saya",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v2-session_end-7",
+      "text": "timer kerja ini boleh dihentikan",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v2-session_end-8",
+      "text": "saya selesai belajar, tutup sesinya",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v2-session_end-9",
+      "text": "simpan sesi lalu berhenti",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v2-session_end-10",
+      "text": "tandai sesi ini sebagai berakhir",
+      "intent": "SESSION_END"
+    },
+    {
+      "id": "v2-focus-1",
+      "text": "jadikan task ini fokus utama hari ini",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v2-focus-2",
+      "text": "atur daftar pekerjaan yang saya prioritaskan",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v2-focus-3",
+      "text": "pilih tugas untuk daily focus",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v2-focus-4",
+      "text": "saya mau mengelola fokus harian",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v2-focus-5",
+      "text": "masukkan pekerjaan ini ke daftar fokus",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v2-focus-6",
+      "text": "mana task yang saya jadikan prioritas",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v2-focus-7",
+      "text": "hapus tugas dari fokus hari ini",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v2-focus-8",
+      "text": "susun urutan pekerjaan utama",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v2-focus-9",
+      "text": "tampilkan task yang sedang saya fokuskan",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v2-focus-10",
+      "text": "pilihkan pekerjaan untuk fokus hari ini",
+      "intent": "FOCUS"
+    },
+    {
+      "id": "v2-overdue-1",
+      "text": "tugas apa yang sudah melewati deadline",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v2-overdue-2",
+      "text": "tampilkan pekerjaan yang terlambat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v2-overdue-3",
+      "text": "mana task yang tenggatnya terlewat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v2-overdue-4",
+      "text": "cek daftar tugas lewat jatuh tempo",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v2-overdue-5",
+      "text": "ada pekerjaan yang belum selesai setelah deadline",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v2-overdue-6",
+      "text": "lihat semua overdue saya",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v2-overdue-7",
+      "text": "apa saja yang terlambat dikerjakan",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v2-overdue-8",
+      "text": "tunjukkan task yang melewati tanggal target",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v2-overdue-9",
+      "text": "pekerjaan mana yang harus segera dibereskan karena telat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v2-overdue-10",
+      "text": "cek tugas dengan deadline terlewat",
+      "intent": "OVERDUE"
+    },
+    {
+      "id": "v2-motivation-1",
+      "text": "saya kehilangan tenaga untuk melanjutkan",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v2-motivation-2",
+      "text": "tolong bantu saya mulai lagi",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v2-motivation-3",
+      "text": "saya butuh semangat mengerjakan tugas",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v2-motivation-4",
+      "text": "rasanya ingin berhenti, dorong saya",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v2-motivation-5",
+      "text": "beri saya dukungan untuk tetap konsisten",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v2-motivation-6",
+      "text": "saya sedang tidak bersemangat bekerja",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v2-motivation-7",
+      "text": "bantu saya melewati rasa malas",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v2-motivation-8",
+      "text": "saya perlu kalimat penyemangat",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v2-motivation-9",
+      "text": "dorong saya menyelesaikan satu hal kecil",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v2-motivation-10",
+      "text": "saya kesulitan menjaga motivasi",
+      "intent": "MOTIVATION"
+    },
+    {
+      "id": "v2-help-1",
+      "text": "jelaskan langkah pertama memakai aplikasi",
+      "intent": "HELP"
+    },
+    {
+      "id": "v2-help-2",
+      "text": "di mana saya bisa membuat goal",
+      "intent": "HELP"
+    },
+    {
+      "id": "v2-help-3",
+      "text": "saya butuh panduan fitur yang tersedia",
+      "intent": "HELP"
+    },
+    {
+      "id": "v2-help-4",
+      "text": "bagaimana cara mencatat sesi",
+      "intent": "HELP"
+    },
+    {
+      "id": "v2-help-5",
+      "text": "tolong tunjukkan cara mengelola task",
+      "intent": "HELP"
+    },
+    {
+      "id": "v2-help-6",
+      "text": "apa saja yang bisa saya lakukan di sini",
+      "intent": "HELP"
+    },
+    {
+      "id": "v2-help-7",
+      "text": "saya bingung menggunakan menu ini",
+      "intent": "HELP"
+    },
+    {
+      "id": "v2-help-8",
+      "text": "beri petunjuk membuat fokus harian",
+      "intent": "HELP"
+    },
+    {
+      "id": "v2-help-9",
+      "text": "bagaimana alur kerja aplikasi ini",
+      "intent": "HELP"
+    },
+    {
+      "id": "v2-help-10",
+      "text": "tolong bantu saya memahami perintah",
+      "intent": "HELP"
+    },
+    {
+      "id": "v2-unknown-1",
+      "text": "berapa suhu di luar sekarang",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v2-unknown-2",
+      "text": "tolong pesan makanan untuk saya",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v2-unknown-3",
+      "text": "siapa yang memenangkan pertandingan",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v2-unknown-4",
+      "text": "bisa carikan lagu untuk diputar",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v2-unknown-5",
+      "text": "berapa nilai tukar hari ini",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v2-unknown-6",
+      "text": "buatkan puisi tentang laut",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v2-unknown-7",
+      "text": "apa film yang sedang tayang",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v2-unknown-8",
+      "text": "tolong kirim pesan ke teman",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v2-unknown-9",
+      "text": "bagaimana cara memasak nasi goreng",
+      "intent": "UNKNOWN"
+    },
+    {
+      "id": "v2-unknown-10",
+      "text": "carikan jadwal penerbangan",
+      "intent": "UNKNOWN"
+    }
+  ]
+}
