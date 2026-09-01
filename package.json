@@ -14,6 +14,8 @@
     "nlp:export:v2": "tsx scripts/export-corpus.ts --v2",
     "nlp:evaluate": "python nlp/evaluate.py",
     "nlp:evaluate:v2": "python nlp/evaluate.py --corpus nlp/data/corpus_v2.json",
+    "nlp:evaluate:embedding": "python nlp/evaluate_embedding.py",
+    "nlp:benchmark:embedding": "python nlp/benchmark_embedding.py",
     "nlp:test": "python -m unittest discover -s nlp -p \"test_*.py\"",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
