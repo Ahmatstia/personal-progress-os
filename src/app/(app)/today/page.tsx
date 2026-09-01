@@ -8,16 +8,9 @@ import { getRecentCaptures } from "@/services/capture.service";
 import { requireCurrentUser } from "@/lib/auth";
 import { Icon } from "@/app/components/ui/Icon";
 import { PageHeader } from "@/app/components/ui/PageHeader";
+import { formatDuration } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
-
-function formatMinutes(minutes: number) {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  if (h === 0) return `${m} mnt`;
-  if (m === 0) return `${h} jam`;
-  return `${h} jam ${m} mnt`;
-}
 
 function formatDate(value: Date) {
   return new Intl.DateTimeFormat("id-ID", {
@@ -157,7 +150,7 @@ export default async function TodayPage() {
 
           <section className="grid grid-cols-3 gap-2">
             {[
-              { label: "Belajar", value: formatMinutes(today.stats.totalMinutes) },
+              { label: "Belajar", value: formatDuration(today.stats.totalMinutes) },
               { label: "Fokus selesai", value: `${today.focusCompleted}/${today.focusTotal}` },
               { label: "Task selesai", value: String(today.stats.completedTasks) },
             ].map((stat) => (

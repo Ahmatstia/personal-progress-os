@@ -6,6 +6,7 @@ import { intentToReadable } from "@/ai/command-types";
 import { Badge, type Tone } from "../ui/Badge";
 import { Icon } from "../ui/Icon";
 import { StartSessionButton } from "../core/StartSessionButton";
+import { formatDuration, formatHours } from "@/lib/format";
 
 function ConfidenceBadge({ level }: { level: string }) {
   const tone: Tone =
@@ -76,7 +77,7 @@ function TaskDataView({ data }: { data: unknown }) {
     const summary = obj.summary as Record<string, unknown>;
     return (
       <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {typeof summary.totalHours === "number" && <SummaryChip label="Total jam" value={`${summary.totalHours}h`} />}
+        {typeof summary.totalMinutes === "number" ? <SummaryChip label="Total jam" value={formatDuration(summary.totalMinutes)} /> : typeof summary.totalHours === "number" ? <SummaryChip label="Total jam" value={formatHours(summary.totalHours)} /> : null}
         {typeof summary.completedTasks === "number" && <SummaryChip label="Task selesai" value={`${summary.completedTasks}`} />}
         {typeof summary.completionRate === "number" && <SummaryChip label="Penyelesaian" value={`${summary.completionRate}%`} />}
         {typeof summary.currentStreak === "number" && <SummaryChip label="Rekor" value={`${summary.currentStreak}d`} />}

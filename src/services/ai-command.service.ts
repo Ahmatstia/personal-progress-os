@@ -8,6 +8,7 @@ import { interpretInput } from "@/services/ai.service";
 import { routeIntent } from "../ai/router";
 import { canRead, canWrite } from "../ai/safety";
 import { aiCommandSchema, type AICommandInput } from "../schemas/ai-command.schema";
+import { formatDuration } from "../lib/format";
 
 type CommandResult = {
   success: boolean;
@@ -71,7 +72,7 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
     case "COMPLETION":
     case "BOTTLENECK": {
       const data = await getDashboardAnalytics({ days: 30 }, userId);
-      return { success: true, code: "OK", message: `Ringkasan 30 hari: ${data.summary.totalHours} jam, ${data.summary.completedTasks} task selesai, streak ${data.summary.currentStreak} hari.`, interpretation, data };
+      return { success: true, code: "OK", message: `Ringkasan 30 hari: ${formatDuration(data.summary.totalMinutes)} fokus, ${data.summary.completedTasks} task selesai, streak ${data.summary.currentStreak} hari.`, interpretation, data };
     }
     case "TASK_STATUS": {
       if (input.context?.taskId) {

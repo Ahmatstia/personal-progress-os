@@ -1,11 +1,13 @@
+import { formatDuration } from "@/lib/format";
+
 export default function AnalyticsBars({
   trends,
 }: {
-  trends: { date: string; learningHours: number; completedTasks: number }[];
+  trends: { date: string; learningMinutes: number; learningHours: number; completedTasks: number }[];
 }) {
-  const maxHours = Math.max(...trends.map((item) => item.learningHours), 1);
+  const maxMinutes = Math.max(...trends.map((item) => item.learningMinutes), 1);
   const maxTasks = Math.max(...trends.map((item) => item.completedTasks), 1);
-  const hasData = trends.some((item) => item.learningHours > 0 || item.completedTasks > 0);
+  const hasData = trends.some((item) => item.learningMinutes > 0 || item.completedTasks > 0);
 
   if (!hasData) {
     return <p className="py-4 text-sm text-surface-500">Belum ada data aktivitas pada periode ini.</p>;
@@ -20,8 +22,8 @@ export default function AnalyticsBars({
             <div className="h-1.5 overflow-hidden rounded-full bg-surface-150">
               <div
                 className="h-full rounded-full bg-ai-500"
-                style={{ width: `${(item.learningHours / maxHours) * 100}%` }}
-                title={`${item.learningHours}j fokus`}
+                style={{ width: `${(item.learningMinutes / maxMinutes) * 100}%` }}
+                title={`${formatDuration(item.learningMinutes)} fokus`}
               />
             </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-surface-150">
@@ -33,7 +35,7 @@ export default function AnalyticsBars({
             </div>
           </div>
           <span className="text-right text-surface-500">
-            {item.learningHours}j · {item.completedTasks}
+            {formatDuration(item.learningMinutes)} · {item.completedTasks}
           </span>
         </div>
       ))}

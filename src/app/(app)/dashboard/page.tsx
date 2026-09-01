@@ -9,12 +9,9 @@ import { getDashboardData } from "@/services/dashboard.service";
 import { requireCurrentUser } from "@/lib/auth";
 import { PageHeader } from "@/app/components/ui/PageHeader";
 import { Icon } from "@/app/components/ui/Icon";
+import { formatDuration } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
-
-function formatMinutes(minutes: number) {
-  return `${Math.floor(minutes / 60)}j ${minutes % 60}mnt`;
-}
 
 function formatActivityTime(value: Date) {
   return new Intl.DateTimeFormat("id-ID", { month: "short", day: "numeric" }).format(value);
@@ -57,7 +54,7 @@ export default async function AnalyticsPage({
           className="h-full"
           title="Ringkasan"
           items={[
-            { label: "Fokus", value: `${summary.totalHours}j`, icon: "clock", hint: "30 hari terakhir" },
+            { label: "Fokus", value: formatDuration(summary.totalMinutes), icon: "clock", hint: "30 hari terakhir" },
             { label: "Task selesai", value: String(summary.completedTasks), icon: "check" },
             { label: "Penyelesaian", value: `${summary.completionRate}%`, icon: "gauge" },
             { label: "Konsistensi", value: `${summary.consistency}%`, icon: "trendingUp", hint: `${summary.activeDays}/${summary.daysInPeriod} hari` },
@@ -143,7 +140,7 @@ export default async function AnalyticsPage({
         <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-surface-900">Sesi terbaru</h2>
-            <span className="text-xs text-surface-400">{formatMinutes(dashboard.studyMinutesToday)} hari ini</span>
+            <span className="text-xs text-surface-400">{formatDuration(dashboard.studyMinutesToday)} hari ini</span>
           </div>
           {dashboard.recentSessions.length === 0 ? (
             <p className="mt-4 text-sm text-surface-500">Belum ada sesi fokus.</p>
@@ -156,7 +153,7 @@ export default async function AnalyticsPage({
                   </Link>
                   <p className="mt-0.5 text-xs text-surface-500">
                     {session.task.stage.goal.name} ·{" "}
-                    {session.durationMinutes === null ? "Aktif" : formatMinutes(session.durationMinutes)}
+                    {session.durationMinutes === null ? "Aktif" : formatDuration(session.durationMinutes)}
                   </p>
                 </li>
               ))}

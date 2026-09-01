@@ -7,6 +7,7 @@ import { buildInsights } from "@/services/insight.service";
 import { requireCurrentUser } from "@/lib/auth";
 import { ProgressBar } from "@/app/components/ui/Progress";
 import { Icon } from "@/app/components/ui/Icon";
+import { formatHours } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -95,7 +96,7 @@ export default async function ReviewsPage({ params }: { params: Promise<{ id: st
                     {formatDate(item.periodStart)} – {formatDate(item.periodEnd)}
                   </span>
                   <span className="text-sm text-surface-500">
-                    {item.learningHours.toFixed(1)}j · {item.tasksCompleted} task
+                    {formatHours(item.learningHours)} · {item.tasksCompleted} task
                   </span>
                 </div>
                 {item.understanding !== null && (

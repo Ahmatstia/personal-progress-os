@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/Button";
 import { useToast } from "./ui/Toast";
+import { formatDuration } from "@/lib/format";
 
 type Review = {
   id?: string;
@@ -20,7 +21,7 @@ type Props = {
   goalId: string;
   periodStart: string;
   periodEnd: string;
-  metrics: { learningHours: number; tasksCompleted: number; understanding: number | null };
+  metrics: { learningMinutes: number; learningHours: number; tasksCompleted: number; understanding: number | null };
   review: Review | null;
 };
 
@@ -75,7 +76,7 @@ export default function ReviewForm({ goalId, periodStart, periodEnd, metrics, re
       <div className="grid gap-3 sm:grid-cols-3">
         <div className="rounded-xl bg-surface-50 p-3">
           <p className="text-xs text-surface-500">Waktu belajar</p>
-          <p className="mt-1 text-xl font-bold text-surface-900">{metrics.learningHours.toFixed(1)}j</p>
+          <p className="mt-1 text-xl font-bold text-surface-900">{formatDuration(metrics.learningMinutes)}</p>
         </div>
         <div className="rounded-xl bg-surface-50 p-3">
           <p className="text-xs text-surface-500">Task selesai</p>

@@ -11,16 +11,9 @@ import { NextActionCard } from "@/app/components/core/NextActionCard";
 import { ProgressBar } from "@/app/components/ui/Progress";
 import { EmptyState } from "@/app/components/ui/EmptyState";
 import { Icon } from "@/app/components/ui/Icon";
+import { formatDuration } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
-
-function formatMinutes(totalMinutes: number) {
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-  if (hours === 0) return `${minutes} mnt`;
-  if (minutes === 0) return `${hours} jam`;
-  return `${hours} jam ${minutes} mnt`;
-}
 
 function formatDate(value: Date) {
   return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short" }).format(value);
@@ -97,7 +90,7 @@ export default async function Home() {
                 : "Belum ada fokus dipilih"}
           </p>
           <p className="mt-1.5 text-sm text-surface-500">
-            {formatMinutes(today.stats.totalMinutes)} belajar · {today.stats.completedTasks} task selesai
+            {formatDuration(today.stats.totalMinutes)} belajar · {today.stats.completedTasks} task selesai
           </p>
           <div className="mt-5">
             <Link href="/today">
@@ -114,7 +107,7 @@ export default async function Home() {
         items={[
           { label: "Goals aktif", value: String(goalCount), icon: "flag", hint: "sedang berjalan" },
           { label: "Task selesai", value: `${dashboard.completedTaskCount}/${dashboard.totalTaskCount}`, icon: "check", hint: `${completionPct}% selesai` },
-          { label: "Belajar hari ini", value: formatMinutes(dashboard.studyMinutesToday), icon: "clock", hint: "waktu sesi" },
+          { label: "Belajar hari ini", value: formatDuration(dashboard.studyMinutesToday), icon: "clock", hint: "waktu sesi" },
           { label: "Progres keseluruhan", value: `${dashboard.totalProgress}%`, icon: "gauge", hint: "di seluruh goals" },
         ]}
       />
@@ -142,7 +135,7 @@ export default async function Home() {
                   {dashboard.reviewSummary.review ? "Review minggu ini selesai" : "Waktunya review mingguan"}
                 </h2>
                 <p className="mt-1 text-sm text-surface-600">
-                  {dashboard.reviewSummary.metrics.learningHours.toFixed(1)} jam belajar ·{" "}
+                  {formatDuration(dashboard.reviewSummary.metrics.learningMinutes)} belajar ·{" "}
                   {dashboard.reviewSummary.metrics.tasksCompleted} task selesai
                 </p>
                 {dashboard.reviewSummary.review?.nextFocus && (

@@ -19,6 +19,7 @@ export class ReviewServiceError extends Error {
 async function derivedMetrics(userId: string, goalId: string, periodStart: Date, periodEnd: Date) {
   const [sessions, understanding, tasksCompleted] = await findReviewMetrics(userId, goalId, periodStart, periodEnd);
   return {
+    learningMinutes: sessions._sum.durationMinutes ?? 0,
     learningHours: (sessions._sum.durationMinutes ?? 0) / 60,
     tasksCompleted,
     understanding: understanding._avg.understanding,

@@ -6,10 +6,10 @@ type Session = { id: string; startedAt: Date; endedAt: Date | null; durationMinu
 type Task = { id: string; name: string; status: string; estimatedHours: number; actualHours: number; createdAt: Date; updatedAt: Date; completedAt: Date | null; sessions: Session[] };
 type Goal = { id: string; stages: { tasks: Task[] }[] };
 
-export type AnalyticsTrend = { date: string; learningHours: number; completedTasks: number };
+export type AnalyticsTrend = { date: string; learningMinutes: number; learningHours: number; completedTasks: number };
 export type Bottleneck = { taskId: string; taskName: string; reason: string; severity: "LOW" | "MEDIUM" | "HIGH" };
 export type AnalyticsSummary = {
-  totalHours: number; completedTasks: number; activeTasks: number; completionRate: number; sessions: number;
+  totalMinutes: number; totalHours: number; completedTasks: number; activeTasks: number; completionRate: number; sessions: number;
   averageSessionMinutes: number; averageUnderstanding: number | null; activeDays: number; daysInPeriod: number;
   consistency: number; currentStreak: number; longestStreak: number;
 };
@@ -66,12 +66,13 @@ export function buildAnalytics(goals: Goal[], start: Date, end: Date): Analytics
   while (day <= end) {
     const key = dateKey(day);
     const daySessions = sessions.filter((session) => dateKey(session.endedAt as Date) === key);
-    trends.push({ date: key, learningHours: round(daySessions.reduce((sum, session) => sum + (session.durationMinutes ?? 0), 0) / 60), completedTasks: tasks.filter((task) => task.completedAt && dateKey(task.completedAt) === key).length });
+    const dayMinutes = daySessions.reduce((sum, session) => sum + (session.durationMinutes ?? 0), 0);
+    trends.push({ date: key, learningMinutes: dayMinutes, learningHours: round(dayMinutes / 60), completedTasks: tasks.filter((task) => task.completedAt && dateKey(task.completedAt) === key).length });
     day.setDate(day.getDate() + 1);
   }
   const streaks = calculateStreaks(activeDates, end);
   return {
-    summary: { totalHours: round(totalMinutes / 60), completedTasks, activeTasks: tasks.filter((task) => task.status !== "COMPLETED").length, completionRate: totalTasks ? round((tasks.filter((task) => task.status === "COMPLETED").length / totalTasks) * 100) : 0, sessions: sessions.length, averageSessionMinutes: sessions.length ? round(totalMinutes / sessions.length) : 0, averageUnderstanding: understandings.length ? round(understandings.reduce((sum, value) => sum + value, 0) / understandings.length) : null, activeDays: activeDates.size, daysInPeriod: daysBetween(start, end), consistency: round((activeDates.size / daysBetween(start, end)) * 100), ...streaks },
+    summary: { totalMinutes, totalHours: round(totalMinutes / 60), completedTasks, activeTasks: tasks.filter((task) => task.status !== "COMPLETED").length, completionRate: totalTasks ? round((tasks.filter((task) => task.status === "COMPLETED").length / totalTasks) * 100) : 0, sessions: sessions.length, averageSessionMinutes: sessions.length ? round(totalMinutes / sessions.length) : 0, averageUnderstanding: understandings.length ? round(understandings.reduce((sum, value) => sum + value, 0) / understandings.length) : null, activeDays: activeDates.size, daysInPeriod: daysBetween(start, end), consistency: round((activeDates.size / daysBetween(start, end)) * 100), ...streaks },
     trends,
     bottlenecks: calculateBottlenecks(tasks, new Date()),
   };

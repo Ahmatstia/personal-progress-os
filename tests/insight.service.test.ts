@@ -8,9 +8,9 @@ describe("insight.service", () => {
 
   it("builds deterministic comparisons", () => {
     expect(buildInsights({ learningHours: 6, tasksCompleted: 4, understanding: 4.5 }, { learningHours: 4, tasksCompleted: 2, understanding: 4 })).toEqual([
-      "You studied 2h more than last week.",
-      "You completed 2 more tasks.",
-      "Your average understanding improved.",
+      "Belajar 2j lebih banyak dibanding minggu lalu.",
+      "Menyelesaikan 2 task lebih banyak dari minggu lalu.",
+      "Pemahaman rata-rata Anda meningkat.",
     ]);
   });
 });

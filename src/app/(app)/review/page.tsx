@@ -8,6 +8,7 @@ import { Button } from "@/app/components/ui/Button";
 import { ProgressBar } from "@/app/components/ui/Progress";
 import { EmptyState } from "@/app/components/ui/EmptyState";
 import { Icon } from "@/app/components/ui/Icon";
+import { formatDuration } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -100,7 +101,7 @@ export default async function ReviewPage() {
                       {goal.name}
                     </Link>
                     <div className="mt-2 flex items-center gap-2 text-xs text-surface-500">
-                      <span>{metrics.learningHours.toFixed(1)}j fokus</span>
+                      <span>{formatDuration(metrics.learningMinutes)} fokus</span>
                       <span className="text-surface-300">·</span>
                       <span>{metrics.tasksCompleted} task selesai</span>
                     </div>

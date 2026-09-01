@@ -12,6 +12,7 @@ import { Button } from "@/app/components/ui/Button";
 import { StatusBadge } from "@/app/components/ui/Badge";
 import { ProgressBar } from "@/app/components/ui/Progress";
 import { EmptyState } from "@/app/components/ui/EmptyState";
+import { formatHours } from "@/lib/format";
 import { Icon } from "@/app/components/ui/Icon";
 
 export const dynamic = "force-dynamic";
@@ -93,7 +94,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
             { label: "Stage", value: String(goal.stages.length) },
             { label: "Stage selesai", value: String(completedStages) },
             { label: "Task selesai", value: `${completedTasks}/${allTasks.length}` },
-            { label: "Estimasi usaha", value: `${allTasks.reduce((s, t) => s + (t.estimatedHours || 0), 0).toFixed(1)}j` },
+            { label: "Estimasi usaha", value: formatHours(allTasks.reduce((s, t) => s + (t.estimatedHours || 0), 0)) },
           ].map((stat) => (
             <div key={stat.label} className="rounded-2xl border border-surface-200 bg-surface-0 p-4">
               <p className="text-xs text-surface-500">{stat.label}</p>
