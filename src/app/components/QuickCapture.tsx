@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Icon } from "./ui/Icon";
 import { useToast } from "./ui/Toast";
 
@@ -8,6 +9,7 @@ export default function QuickCapture() {
   const [content, setContent] = useState("");
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   async function save() {
     if (!content.trim()) return;
@@ -20,6 +22,7 @@ export default function QuickCapture() {
       });
       if (!response.ok) throw new Error();
       setContent("");
+      router.refresh();
       toast("Tersimpan.", "success");
     } catch {
       toast("Gagal menyimpan catatan.", "error");

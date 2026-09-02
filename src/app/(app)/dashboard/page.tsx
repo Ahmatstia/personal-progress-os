@@ -15,7 +15,10 @@ import { formatDuration } from "@/lib/format";
 export const dynamic = "force-dynamic";
 
 function formatActivityTime(value: Date) {
-  return new Intl.DateTimeFormat("id-ID", { month: "short", day: "numeric" }).format(value);
+  return new Intl.DateTimeFormat("id-ID", {
+    month: "short",
+    day: "numeric",
+  }).format(value);
 }
 
 export default async function AnalyticsPage({
@@ -55,10 +58,28 @@ export default async function AnalyticsPage({
           className="h-full"
           title="Ringkasan"
           items={[
-            { label: "Fokus", value: formatDuration(summary.totalMinutes), icon: "clock", hint: "30 hari terakhir" },
-            { label: "Task selesai", value: String(summary.completedTasks), icon: "check" },
-            { label: "Penyelesaian", value: `${summary.completionRate}%`, icon: "gauge" },
-            { label: "Konsistensi", value: `${summary.consistency}%`, icon: "trendingUp", hint: `${summary.activeDays}/${summary.daysInPeriod} hari` },
+            {
+              label: "Fokus",
+              value: formatDuration(summary.totalMinutes),
+              icon: "clock",
+              hint: "30 hari terakhir",
+            },
+            {
+              label: "Task selesai",
+              value: String(summary.completedTasks),
+              icon: "check",
+            },
+            {
+              label: "Penyelesaian",
+              value: `${summary.completionRate}%`,
+              icon: "gauge",
+            },
+            {
+              label: "Konsistensi",
+              value: `${summary.consistency}%`,
+              icon: "trendingUp",
+              hint: `${summary.activeDays}/${summary.daysInPeriod} hari`,
+            },
           ]}
         />
       </div>
@@ -89,15 +110,38 @@ export default async function AnalyticsPage({
           <h2 className="font-semibold text-surface-900">Konsistensi</h2>
           <dl className="mt-4 space-y-3">
             {[
-              { label: "Hari aktif", value: `${summary.activeDays} / ${summary.daysInPeriod}` },
-              { label: "Rekor saat ini", value: `${summary.currentStreak} hari` },
-              { label: "Rekor terpanjang", value: `${summary.longestStreak} hari` },
-              { label: "Rata-rata sesi", value: `${summary.averageSessionMinutes} mnt` },
-              { label: "Pemahaman", value: summary.averageUnderstanding === null ? "Tidak ada data" : `${summary.averageUnderstanding} / 5` },
+              {
+                label: "Hari aktif",
+                value: `${summary.activeDays} / ${summary.daysInPeriod}`,
+              },
+              {
+                label: "Rekor saat ini",
+                value: `${summary.currentStreak} hari`,
+              },
+              {
+                label: "Rekor terpanjang",
+                value: `${summary.longestStreak} hari`,
+              },
+              {
+                label: "Rata-rata sesi",
+                value: `${summary.averageSessionMinutes} mnt`,
+              },
+              {
+                label: "Pemahaman",
+                value:
+                  summary.averageUnderstanding === null
+                    ? "Tidak ada data"
+                    : `${summary.averageUnderstanding} / 5`,
+              },
             ].map((row) => (
-              <div key={row.label} className="flex items-center justify-between gap-3 border-b border-surface-150 pb-3 last:border-0 last:pb-0">
+              <div
+                key={row.label}
+                className="flex items-center justify-between gap-3 border-b border-surface-150 pb-3 last:border-0 last:pb-0"
+              >
                 <dt className="text-sm text-surface-500">{row.label}</dt>
-                <dd className="text-sm font-semibold text-surface-800">{row.value}</dd>
+                <dd className="text-sm font-semibold text-surface-800">
+                  {row.value}
+                </dd>
               </div>
             ))}
           </dl>
@@ -108,11 +152,16 @@ export default async function AnalyticsPage({
         <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
           <h2 className="font-semibold text-surface-900">Aktivitas terbaru</h2>
           {dashboard.recentActivity.length === 0 ? (
-            <p className="mt-4 text-sm text-surface-500">Belum ada aktivitas tercatat.</p>
+            <p className="mt-4 text-sm text-surface-500">
+              Belum ada aktivitas tercatat.
+            </p>
           ) : (
             <ol className="mt-3 divide-y divide-surface-150">
               {dashboard.recentActivity.slice(0, 6).map((activity) => (
-                <li key={activity.id} className="flex items-center gap-3 py-2.5">
+                <li
+                  key={activity.id}
+                  className="flex items-center gap-3 py-2.5"
+                >
                   <span
                     className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
                       activity.kind === "session"
@@ -123,20 +172,44 @@ export default async function AnalyticsPage({
                     }`}
                   >
                     <Icon
-                      name={activity.kind === "session" ? "clock" : activity.kind === "capture" ? "inbox" : "check"}
+                      name={
+                        activity.kind === "session"
+                          ? "clock"
+                          : activity.kind === "capture"
+                            ? "inbox"
+                            : "check"
+                      }
                       size={14}
                     />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-surface-800">{activity.label}</p>
-                    <p className="truncate text-xs text-surface-500">{activity.detail}</p>
+                    <p className="truncate text-sm font-medium text-surface-800">
+                      {activity.label}
+                    </p>
+                    <p className="truncate text-xs text-surface-500">
+                      {activity.detail}
+                    </p>
                   </div>
-                  <span className="shrink-0 text-xs text-surface-400">{formatActivityTime(activity.timestamp)}</span>
+                  <span className="shrink-0 text-xs text-surface-400">
+                    {formatActivityTime(activity.timestamp)}
+                  </span>
                   {activity.kind !== "task" && (
                     <HistoryDeleteButton
-                      path={activity.kind === "session" ? `/api/sessions/${activity.entityId}` : `/api/captures/${activity.entityId}`}
-                      message={activity.kind === "session" ? "Hapus sesi ini dari riwayat?" : "Hapus catatan ini?"}
-                      toastMessage={activity.kind === "session" ? "Sesi dihapus." : "Catatan dihapus."}
+                      path={
+                        activity.kind === "session"
+                          ? `/api/sessions/${activity.entityId}`
+                          : `/api/captures/${activity.entityId}`
+                      }
+                      message={
+                        activity.kind === "session"
+                          ? "Hapus sesi ini dari riwayat?"
+                          : "Hapus catatan ini?"
+                      }
+                      toastMessage={
+                        activity.kind === "session"
+                          ? "Sesi dihapus."
+                          : "Catatan dihapus."
+                      }
                       aria-label="Hapus dari riwayat"
                     />
                   )}
@@ -149,21 +222,33 @@ export default async function AnalyticsPage({
         <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-surface-900">Sesi terbaru</h2>
-            <span className="text-xs text-surface-400">{formatDuration(dashboard.studyMinutesToday)} hari ini</span>
+            <span className="text-xs text-surface-400">
+              {formatDuration(dashboard.studyMinutesToday)} hari ini
+            </span>
           </div>
           {dashboard.recentSessions.length === 0 ? (
-            <p className="mt-4 text-sm text-surface-500">Belum ada sesi fokus.</p>
+            <p className="mt-4 text-sm text-surface-500">
+              Belum ada sesi fokus.
+            </p>
           ) : (
             <ul className="mt-3 divide-y divide-surface-150">
               {dashboard.recentSessions.slice(0, 5).map((session) => (
-                <li key={session.id} className="flex items-start justify-between gap-3 py-2.5">
+                <li
+                  key={session.id}
+                  className="flex items-start justify-between gap-3 py-2.5"
+                >
                   <div className="min-w-0 flex-1">
-                    <Link href={`/tasks/${session.task.id}`} className="block text-sm font-medium text-surface-800 hover:text-primary-700">
+                    <Link
+                      href={`/tasks/${session.task.id}`}
+                      className="block text-sm font-medium text-surface-800 hover:text-primary-700"
+                    >
                       {session.task.name}
                     </Link>
                     <p className="mt-0.5 text-xs text-surface-500">
                       {session.task.stage.goal.name} ·{" "}
-                      {session.durationMinutes === null ? "Aktif" : formatDuration(session.durationMinutes)}
+                      {session.durationMinutes === null
+                        ? "Aktif"
+                        : formatDuration(session.durationMinutes)}
                     </p>
                   </div>
                   <HistoryDeleteButton
