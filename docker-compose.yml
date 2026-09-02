@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    image: personal-progress-os:1.0.0
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      HOSTNAME: "0.0.0.0"
+      DATABASE_URL: "file:/app/data/app.db"
+    volumes:
+      - ppos-data:/app/data
+
+volumes:
+  ppos-data:

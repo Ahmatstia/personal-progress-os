@@ -55,8 +55,8 @@ async function resolveWriteTarget(intent: string, input: AICommandInput, interpr
   return tasks.filter((task) => task.status !== "COMPLETED");
 }
 
-function confirmation(input: AICommandInput, interpretation: ReturnType<typeof interpretInput>) {
-  const { token } = createConfirmationToken(interpretation.intent);
+function confirmation(input: AICommandInput, interpretation: ReturnType<typeof interpretInput>, userId?: string) {
+  const { token } = createConfirmationToken(interpretation.intent, userId);
   return { success: false, code: "CONFIRMATION_REQUIRED", message: `Saya memahami perintah ${interpretation.intent}. Anda bisa menjalankannya melalui tombol Konfirmasi.`, interpretation, requiresConfirmation: true, confirmationToken: token } satisfies CommandResult;
 }
 
@@ -67,8 +67,8 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
   const { intent, confidenceLevel } = interpretation;
   if (intent === "UNKNOWN" || !canRead(confidenceLevel)) return { success: false, code: "SAFE_FALLBACK", message: "Saya belum cukup yakin memahami perintah itu. Coba gunakan tujuan yang lebih spesifik.", interpretation };
   if (writeIntents.has(intent)) {
-    const approved = canWrite(confidenceLevel, input.confirmed) && verifyConfirmationToken(input.confirmationToken, intent);
-    if (!approved) return confirmation(input, interpretation);
+    const approved = canWrite(confidenceLevel, input.confirmed) && verifyConfirmationToken(input.confirmationToken, intent, userId);
+    if (!approved) return confirmation(input, interpretation, userId);
   }
 
   switch (intent) {
@@ -114,7 +114,7 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
     case "FOCUS": {
       if (input.confirmed) {
         const matches = await resolveWriteTarget("FOCUS", input, interpretation, userId);
-      if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Pilih satu task untuk fokus." : "Task fokus tidak ditemukan.", interpretation, data: matches, confirmationToken: createConfirmationToken("FOCUS").token };
+      if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Pilih satu task untuk fokus." : "Task fokus tidak ditemukan.", interpretation, data: matches, confirmationToken: createConfirmationToken("FOCUS", userId).token };
         const focused = await addTodayFocus(matches[0].id, new Date(), userId);
         return { success: true, code: "FOCUSED", message: `Task ${matches[0].name} ditambahkan ke fokus hari ini.`, interpretation, data: focused };
       }
@@ -148,13 +148,13 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
     case "TASK_COMPLETE":
     case "TASK_REOPEN": {
       const matches = await resolveWriteTarget(intent, input, interpretation, userId);
-      if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Saya menemukan beberapa task yang cocok. Pilih satu task terlebih dahulu." : "Task yang dimaksud tidak ditemukan.", interpretation, data: matches, confirmationToken: createConfirmationToken(intent).token };
+      if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Saya menemukan beberapa task yang cocok. Pilih satu task terlebih dahulu." : "Task yang dimaksud tidak ditemukan.", interpretation, data: matches, confirmationToken: createConfirmationToken(intent, userId).token };
       const data = intent === "TASK_COMPLETE" ? await completeTask(matches[0].id, userId) : await reopenTask(matches[0].id, userId);
       return { success: true, code: "UPDATED", message: `Task ${data.name} berhasil diperbarui.`, interpretation, data };
     }
     case "SESSION_START": {
       const matches = await resolveWriteTarget("SESSION_START", input, interpretation, userId);
-      if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Pilih satu task untuk memulai session." : "Task untuk session tidak ditemukan.", interpretation, data: matches, confirmationToken: createConfirmationToken("SESSION_START").token };
+      if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Pilih satu task untuk memulai session." : "Task untuk session tidak ditemukan.", interpretation, data: matches, confirmationToken: createConfirmationToken("SESSION_START", userId).token };
       const data = await startSession(matches[0].id, userId);
       return { success: true, code: "STARTED", message: `Session untuk ${matches[0].name} dimulai.`, interpretation, data };
     }

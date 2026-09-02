@@ -33,7 +33,14 @@ function verify(token: string) {
   if (parts.length !== 3) return null;
   const [userId, expires, received] = parts;
   if (!userId || Number(expires) < Math.floor(Date.now() / 1000)) return null;
-  const expected = signature(`${userId}.${expires}`);
+  let expected: string;
+  try {
+    expected = signature(`${userId}.${expires}`);
+  } catch {
+    // Kepentingan fail-closed: bila secret tidak tersedia (mis. AUTH_SECRET
+    // belum dikonfigurasi di production), setiap sesi dianggap tidak valid.
+    return null;
+  }
   const a = Buffer.from(received);
   const b = Buffer.from(expected);
   return a.length === b.length && timingSafeEqual(a, b) ? userId : null;

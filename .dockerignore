@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.env
+.env.*
+prisma/dev.db
+prisma/*.db*
+nlp
+tests
+.github
+akun.txt
+Dockerfile
+docker-compose.yml
+DEPLOY.md
+*.md
