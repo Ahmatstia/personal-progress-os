@@ -7,24 +7,26 @@ type Variant = "primary" | "secondary" | "ghost" | "danger" | "success" | "ai";
 type Size = "sm" | "md" | "lg" | "icon";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-45 active:scale-[0.98] select-none";
+  "relative inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.96] select-none overflow-hidden";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-primary-600 text-white shadow-sm hover:bg-primary-700 hover:shadow",
+    "bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-sm hover:from-primary-700 hover:to-ai-600 hover:shadow-[var(--shadow-interactive)] shine-parent",
   secondary:
-    "bg-surface-100 text-surface-800 border border-surface-200 hover:bg-surface-150 hover:border-surface-300",
+    "bg-white text-surface-700 border border-surface-200 hover:border-primary-200 hover:bg-primary-50 hover:text-primary-700 shadow-soft shine-parent",
   ghost: "text-surface-600 hover:bg-surface-100 hover:text-surface-900",
-  danger: "bg-danger-500 text-white hover:bg-danger-600",
-  success: "bg-success-600 text-white hover:bg-success-700",
-  ai: "bg-ai-600 text-white shadow-sm hover:bg-ai-700 hover:shadow",
+  danger:
+    "bg-danger-500 text-white hover:bg-danger-600 shadow-sm shine-parent",
+  success:
+    "bg-gradient-to-r from-success-500 to-success-600 text-white hover:from-success-600 hover:to-success-700 shadow-sm shine-parent",
+  ai: "bg-gradient-to-r from-ai-600 to-primary-600 text-white shadow-sm hover:from-ai-700 hover:to-primary-700 hover:shadow-[var(--shadow-interactive)] shine-parent",
 };
 
 const sizes: Record<Size, string> = {
   sm: "h-8 px-3 text-xs gap-1.5",
-  md: "h-10 px-4 text-sm",
-  lg: "h-12 px-6 text-base",
-  icon: "h-10 w-10",
+  md: "h-9 px-4 text-sm",
+  lg: "h-11 px-6 text-[15px]",
+  icon: "h-9 w-9",
 };
 
 type Props = {
@@ -59,15 +61,15 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       >
         {loading ? (
           <span
-            className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+            className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent"
             aria-hidden="true"
           />
         ) : icon ? (
-          <Icon name={icon} size={size === "sm" ? 14 : 16} />
+          <Icon name={icon} size={size === "sm" ? 13 : size === "lg" ? 17 : 15} />
         ) : null}
         {children}
         {iconRight && !loading ? (
-          <Icon name={iconRight} size={size === "sm" ? 14 : 16} />
+          <Icon name={iconRight} size={size === "sm" ? 13 : size === "lg" ? 17 : 15} />
         ) : null}
       </button>
     );

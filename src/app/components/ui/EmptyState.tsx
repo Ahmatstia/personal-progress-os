@@ -17,25 +17,22 @@ export function EmptyState({
 }) {
   return (
     <div
-      className={`flex flex-col items-center justify-center px-6 py-14 text-center ${
+      className={`flex flex-col items-center justify-center px-6 py-10 text-center ${
         variant === "dashed"
-          ? "rounded-2xl border-2 border-dashed border-surface-200 bg-surface-0"
+          ? "rounded-2xl border-2 border-dashed border-surface-200 bg-white"
           : ""
       }`}
     >
-      <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 text-primary-600">
-        <span aria-hidden="true" className="halo" />
-        <span className="relative">
-          <Icon name={icon} size={24} />
-        </span>
+      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-50 to-primary-100 text-primary-600 float-gentle">
+        <Icon name={icon} size={22} />
       </div>
-      <h3 className="mt-5 text-base font-semibold text-surface-900">{title}</h3>
+      <h3 className="mt-4 text-[14px] font-semibold text-surface-900">{title}</h3>
       {description && (
-        <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-surface-500">
+        <p className="mt-1 max-w-xs text-[13px] leading-relaxed text-surface-500">
           {description}
         </p>
       )}
-      {action && <div className="mt-6">{action}</div>}
+      {action && <div className="mt-5">{action}</div>}
     </div>
   );
 }

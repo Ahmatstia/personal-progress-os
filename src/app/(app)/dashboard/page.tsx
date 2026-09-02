@@ -36,38 +36,44 @@ export default async function AnalyticsPage({
   const { summary, bottlenecks } = analytics;
 
   return (
-    <div className="space-y-12">
-      <PageHeader
-        eyebrow="Dashboard"
-        title="Progres Anda, sekilas"
-        description="Pandangan yang tenang dan jujur tentang 30 hari terakhir kerja nyata."
-        actions={
-          goalId ? (
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-surface-500 hover:text-primary-700"
-            >
-              <Icon name="x" size={15} /> Hapus filter
-            </Link>
-          ) : undefined
-        }
-      />
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <PageHeader
+          eyebrow="Dashboard"
+          title="Progres Anda"
+          description="Pandangan jujur tentang 30 hari terakhir kerja nyata."
+        />
+        {goalId && (
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-1.5 text-[12px] font-medium text-surface-500 hover:text-primary-700 transition-colors"
+          >
+            <Icon name="x" size={13} /> Hapus filter
+          </Link>
+        )}
+      </div>
 
-      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-8">
-        {/* Alur utama — kisah progres */}
-        <div className="min-w-0 space-y-10">
-          <NextActionSpotlight nextAction={dashboard.nextAction} progress={dashboard.totalProgress} />
+      <div className="lg:grid lg:grid-cols-[1fr_260px] lg:items-start lg:gap-5">
+        {/* Main content */}
+        <div className="min-w-0 space-y-5">
+          <NextActionSpotlight
+            nextAction={dashboard.nextAction}
+            progress={dashboard.totalProgress}
+          />
 
           <BottleneckInsight bottlenecks={bottlenecks} />
 
-          <section className="border-t border-surface-150 pt-6">
-            <div className="flex flex-wrap items-end justify-between gap-3">
+          {/* Activity trend chart */}
+          <section className="rounded-2xl border border-surface-150 bg-white p-4 shadow-soft">
+            <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
               <div>
                 <p className="eyebrow text-surface-400">Visualisasi</p>
-                <h2 className="mt-1 text-xl font-bold text-surface-900">Tren aktivitas</h2>
-                <p className="mt-1 text-sm text-surface-500">Jam fokus dan task selesai dalam 30 hari terakhir.</p>
+                <p className="mt-0.5 text-[15px] font-bold text-surface-900">Tren aktivitas</p>
+                <p className="mt-0.5 text-[12px] text-surface-500">
+                  Jam fokus dan task selesai dalam 30 hari terakhir.
+                </p>
               </div>
-              <div className="flex items-center gap-3 text-xs text-surface-500">
+              <div className="flex items-center gap-3 text-[11px] text-surface-500">
                 <span className="inline-flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-ai-500" /> Jam fokus
                 </span>
@@ -76,29 +82,27 @@ export default async function AnalyticsPage({
                 </span>
               </div>
             </div>
-            <div className="mt-5">
-              <AnalyticsBars trends={analytics.trends} />
-            </div>
+            <AnalyticsBars trends={analytics.trends} />
           </section>
 
-          <section className="border-t border-surface-150 pt-6">
-            <div>
+          {/* Recent activity */}
+          <section className="rounded-2xl border border-surface-150 bg-white p-4 shadow-soft">
+            <div className="mb-3">
               <p className="eyebrow text-surface-400">Aktivitas</p>
-              <h2 className="mt-1 text-xl font-bold text-surface-900">Terbaru</h2>
-              <p className="mt-1 text-sm text-surface-500">Jejak sesi, catatan, dan task yang baru saja terjadi.</p>
+              <p className="mt-0.5 text-[15px] font-bold text-surface-900">Terbaru</p>
             </div>
             {dashboard.recentActivity.length === 0 ? (
-              <p className="mt-5 text-sm text-surface-500">Belum ada aktivitas tercatat.</p>
+              <p className="text-[13px] text-surface-400">Belum ada aktivitas tercatat.</p>
             ) : (
-              <ol className="mt-4 divide-y divide-surface-150">
+              <ol className="divide-y divide-surface-100">
                 {dashboard.recentActivity.slice(0, 6).map((activity) => (
-                  <li key={activity.id} className="flex items-center gap-3 py-3">
+                  <li key={activity.id} className="flex items-center gap-3 py-2.5">
                     <span
                       className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
                         activity.kind === "session"
-                          ? "bg-ai-100 text-ai-600"
+                          ? "bg-ai-50 text-ai-600"
                           : activity.kind === "capture"
-                            ? "bg-primary-100 text-primary-600"
+                            ? "bg-primary-50 text-primary-600"
                             : "bg-success-50 text-success-600"
                       }`}
                     >
@@ -110,14 +114,16 @@ export default async function AnalyticsPage({
                               ? "inbox"
                               : "check"
                         }
-                        size={14}
+                        size={13}
                       />
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-surface-800">{activity.label}</p>
-                      <p className="truncate text-xs text-surface-500">{activity.detail}</p>
+                      <p className="truncate text-[13px] font-medium text-surface-800">
+                        {activity.label}
+                      </p>
+                      <p className="truncate text-[11px] text-surface-400">{activity.detail}</p>
                     </div>
-                    <span className="shrink-0 text-xs text-surface-400">
+                    <span className="shrink-0 text-[11px] text-surface-400">
                       {formatActivityTime(activity.timestamp)}
                     </span>
                     {activity.kind !== "task" && (
@@ -129,7 +135,7 @@ export default async function AnalyticsPage({
                         }
                         message={
                           activity.kind === "session"
-                            ? "Hapus sesi ini dari riwayat?"
+                            ? "Hapus sesi ini?"
                             : "Hapus catatan ini?"
                         }
                         toastMessage={
@@ -146,58 +152,86 @@ export default async function AnalyticsPage({
             )}
           </section>
 
-          <section className="border-t border-surface-150 pt-6">
-            <div>
-              <p className="eyebrow text-ai-600">Asisten</p>
-              <h2 className="mt-1 text-xl font-bold text-surface-900">Kendalikan dengan bahasa</h2>
-              <p className="mt-1 text-sm text-surface-500">
-                Minta AI melakukan sesuatu pada data Anda — mulai sesi, selesaikan task, buka goal, atau catat.
-              </p>
+          {/* AI panel */}
+          <section className="rounded-2xl border border-ai-200/60 bg-gradient-to-br from-ai-50/40 to-primary-50/30 p-4">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-ai-600 to-primary-600 text-white">
+                <Icon name="sparkles" size={13} />
+              </span>
+              <div>
+                <p className="eyebrow text-ai-600">Asisten</p>
+                <p className="text-[14px] font-bold text-surface-900">Kendalikan dengan bahasa</p>
+              </div>
             </div>
-            <div className="mt-5">
-              <AICommandPanel initialContext={{ goalId }} />
-            </div>
+            <AICommandPanel initialContext={{ goalId }} />
           </section>
         </div>
 
-        {/* Konteks — angka penting yang tetap terlihat */}
-        <aside className="mt-10 space-y-8 lg:sticky lg:top-20 lg:mt-0">
-          <section className="rounded-3xl border border-surface-200 bg-surface-0 p-5 shadow-soft sm:p-6">
-            <div className="flex items-center justify-between gap-4">
+        {/* Sidebar */}
+        <aside className="mt-5 space-y-4 lg:sticky lg:top-16 lg:mt-0">
+          {/* 30-day summary */}
+          <section className="rounded-2xl border border-surface-150 bg-white p-4 shadow-soft">
+            <div className="flex items-center justify-between gap-4 mb-4">
               <div>
                 <p className="eyebrow text-surface-400">Ringkasan</p>
-                <h2 className="mt-1 text-lg font-bold text-surface-900">30 hari terakhir</h2>
-                <p className="mt-1 max-w-[220px] text-sm text-surface-500">
-                  {summary.completedTasks} task selesai, {formatDuration(summary.totalMinutes)} fokus tercatat.
+                <p className="mt-0.5 text-[15px] font-bold text-surface-900">30 hari terakhir</p>
+                <p className="mt-0.5 text-[11px] text-surface-400">
+                  {summary.completedTasks} task · {formatDuration(summary.totalMinutes)} fokus
                 </p>
               </div>
               <FocusOrb
                 value={summary.completionRate}
-                size={72}
-                stroke={6}
+                size={52}
+                stroke={5}
                 tone="success"
                 label={`Penyelesaian ${summary.completionRate} persen`}
               >
-                <span className="text-lg font-bold text-surface-900">{summary.completionRate}%</span>
-                <span className="mt-0.5 text-[9px] uppercase tracking-wider text-surface-400">selesai</span>
+                <span className="text-[13px] font-bold text-surface-900">
+                  {summary.completionRate}%
+                </span>
+                <span className="text-[8px] uppercase tracking-wider text-surface-400">
+                  selesai
+                </span>
               </FocusOrb>
             </div>
-            <dl className="mt-6 space-y-3 border-t border-surface-150 pt-4">
-              <StatRow icon="clock" label="Waktu fokus" value={formatDuration(summary.totalMinutes)} hint="dalam 30 hari" />
-              <StatRow icon="check" tone="success" label="Task selesai" value={String(summary.completedTasks)} />
-              <StatRow icon="trendingUp" tone="primary" label="Konsistensi" value={`${summary.consistency}%`} hint={`${summary.activeDays}/${summary.daysInPeriod} hari aktif`} />
-              <StatRow icon="gauge" tone="warning" label="Rata-rata sesi" value={`${summary.averageSessionMinutes} mnt`} />
+            <dl className="space-y-0 border-t border-surface-100 pt-3">
+              <StatRow
+                icon="clock"
+                label="Waktu fokus"
+                value={formatDuration(summary.totalMinutes)}
+                hint="dalam 30 hari"
+              />
+              <StatRow
+                icon="check"
+                tone="success"
+                label="Task selesai"
+                value={String(summary.completedTasks)}
+              />
+              <StatRow
+                icon="trendingUp"
+                tone="primary"
+                label="Konsistensi"
+                value={`${summary.consistency}%`}
+                hint={`${summary.activeDays}/${summary.daysInPeriod} hari aktif`}
+              />
+              <StatRow
+                icon="gauge"
+                tone="warning"
+                label="Rata-rata sesi"
+                value={`${summary.averageSessionMinutes} mnt`}
+              />
             </dl>
           </section>
 
-          <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
-            <div>
+          {/* Consistency card */}
+          <section className="rounded-2xl border border-surface-150 bg-white p-4 shadow-soft">
+            <div className="mb-3">
               <p className="eyebrow text-surface-400">Ritme</p>
-              <h2 className="mt-1 text-base font-semibold text-surface-900">Konsistensi</h2>
+              <p className="mt-0.5 text-[14px] font-bold text-surface-900">Konsistensi</p>
             </div>
-            <dl className="mt-4 space-y-3">
+            <dl className="space-y-0">
               {[
-                { label: "Hari aktif", value: `${summary.activeDays} / ${summary.daysInPeriod}` },
+                { label: "Hari aktif", value: `${summary.activeDays}/${summary.daysInPeriod}` },
                 { label: "Rekor saat ini", value: `${summary.currentStreak} hari` },
                 { label: "Rekor terpanjang", value: `${summary.longestStreak} hari` },
                 { label: "Rata-rata sesi", value: `${summary.averageSessionMinutes} mnt` },
@@ -205,43 +239,49 @@ export default async function AnalyticsPage({
                   label: "Pemahaman",
                   value:
                     summary.averageUnderstanding === null
-                      ? "Tidak ada data"
-                      : `${summary.averageUnderstanding} / 5`,
+                      ? "—"
+                      : `${summary.averageUnderstanding}/5`,
                 },
               ].map((row) => (
                 <div
                   key={row.label}
-                  className="flex items-center justify-between gap-3 border-b border-surface-150 pb-3 last:border-0 last:pb-0"
+                  className="flex items-center justify-between gap-3 border-b border-surface-100 py-2 last:border-0 last:pb-0 first:pt-0"
                 >
-                  <dt className="text-sm text-surface-500">{row.label}</dt>
-                  <dd className="text-sm font-semibold text-surface-800">{row.value}</dd>
+                  <dt className="text-[12.5px] text-surface-500">{row.label}</dt>
+                  <dd className="text-[12.5px] font-semibold text-surface-800">{row.value}</dd>
                 </div>
               ))}
             </dl>
           </section>
 
-          <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
-            <div className="flex items-center justify-between gap-3">
+          {/* Recent sessions */}
+          <section className="rounded-2xl border border-surface-150 bg-white p-4 shadow-soft">
+            <div className="flex items-center justify-between gap-3 mb-3">
               <div>
                 <p className="eyebrow text-surface-400">Sesi</p>
-                <h2 className="mt-1 text-base font-semibold text-surface-900">Terbaru</h2>
+                <p className="mt-0.5 text-[14px] font-bold text-surface-900">Terbaru</p>
               </div>
-              <span className="text-xs text-surface-400">{formatDuration(dashboard.studyMinutesToday)} hari ini</span>
+              <span className="text-[11px] text-surface-400">
+                {formatDuration(dashboard.studyMinutesToday)} hari ini
+              </span>
             </div>
             {dashboard.recentSessions.length === 0 ? (
-              <p className="mt-4 text-sm text-surface-500">Belum ada sesi fokus.</p>
+              <p className="text-[13px] text-surface-400">Belum ada sesi fokus.</p>
             ) : (
-              <ul className="mt-3 divide-y divide-surface-150">
+              <ul className="divide-y divide-surface-100">
                 {dashboard.recentSessions.slice(0, 5).map((session) => (
-                  <li key={session.id} className="flex items-start justify-between gap-3 py-2.5">
+                  <li
+                    key={session.id}
+                    className="flex items-start justify-between gap-3 py-2.5"
+                  >
                     <div className="min-w-0 flex-1">
                       <Link
                         href={`/tasks/${session.task.id}`}
-                        className="block truncate text-sm font-medium text-surface-800 hover:text-primary-700"
+                        className="block truncate text-[13px] font-medium text-surface-800 hover:text-primary-700 transition-colors"
                       >
                         {session.task.name}
                       </Link>
-                      <p className="mt-0.5 text-xs text-surface-500">
+                      <p className="mt-0.5 text-[11px] text-surface-400">
                         {session.task.stage.goal.name} ·{" "}
                         {session.durationMinutes === null
                           ? "Aktif"

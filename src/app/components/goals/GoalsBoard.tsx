@@ -7,6 +7,7 @@ import type { IconName } from "@/app/components/ui/Icon";
 import { Icon } from "@/app/components/ui/Icon";
 import { JourneyRoute } from "@/app/components/core/JourneyRoute";
 import { FocusOrb } from "@/app/components/core/FocusOrb";
+import { ProgressBar } from "@/app/components/ui/Progress";
 
 export type GoalCard = {
   id: string;
@@ -28,13 +29,22 @@ export type GoalCard = {
   }[];
 };
 
-const typeIcon: Record<string, IconName> = {
-  LEARNING: "sparkles",
-  PROJECT: "layers",
-  PERSONAL: "sun",
-  HEALTH: "bolt",
-  CAREER: "trendingUp",
-  OTHER: "target",
+const typeConfig: Record<string, { icon: IconName; bg: string; text: string; border: string }> = {
+  LEARNING: { icon: "sparkles", bg: "bg-ai-50", text: "text-ai-600", border: "border-ai-200" },
+  PROJECT:  { icon: "layers",   bg: "bg-primary-50", text: "text-primary-600", border: "border-primary-200" },
+  PERSONAL: { icon: "sun",      bg: "bg-warning-50", text: "text-warning-600", border: "border-warning-200" },
+  HEALTH:   { icon: "bolt",     bg: "bg-success-50", text: "text-success-600", border: "border-success-200" },
+  CAREER:   { icon: "trendingUp", bg: "bg-info-50", text: "text-info-600", border: "border-info-200" },
+  OTHER:    { icon: "target",   bg: "bg-surface-100", text: "text-surface-600", border: "border-surface-200" },
+};
+
+const accentGradient: Record<string, string> = {
+  LEARNING: "from-ai-500 to-primary-500",
+  PROJECT:  "from-primary-500 to-primary-700",
+  PERSONAL: "from-warning-400 to-warning-600",
+  HEALTH:   "from-success-500 to-success-700",
+  CAREER:   "from-info-400 to-info-600",
+  OTHER:    "from-surface-400 to-surface-600",
 };
 
 function StatStrip({
@@ -51,29 +61,23 @@ function StatStrip({
   const tasksDone = all.reduce((sum, g) => sum + g.completedTasks, 0);
   const tasksTotal = all.reduce((sum, g) => sum + g.totalTasks, 0);
 
-  const stats: { label: string; value: string | number; icon: IconName }[] = [
-    { label: "Perjalanan aktif", value: active.length, icon: "compass" },
-    { label: "Rata-rata progres", value: `${avgProgress}%`, icon: "gauge" },
-    {
-      label: "Task selesai",
-      value: `${tasksDone}/${tasksTotal}`,
-      icon: "check",
-    },
-    { label: "Tuntas", value: completed.length, icon: "flag" },
+  const stats: { label: string; value: string | number; icon: IconName; bg: string; text: string }[] = [
+    { label: "Aktif", value: active.length, icon: "compass", bg: "stat-bg-primary", text: "text-primary-600" },
+    { label: "Rata progres", value: `${avgProgress}%`, icon: "gauge", bg: "stat-bg-ai", text: "text-ai-600" },
+    { label: "Task selesai", value: `${tasksDone}/${tasksTotal}`, icon: "check", bg: "stat-bg-success", text: "text-success-600" },
+    { label: "Tuntas", value: completed.length, icon: "flag", bg: "stat-bg-warning", text: "text-warning-600" },
   ];
 
   return (
-    <div className="grid grid-cols-2 divide-x divide-y divide-surface-150 overflow-hidden rounded-2xl border border-surface-200 bg-surface-0 sm:grid-cols-4 sm:divide-y-0">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {stats.map((stat) => (
-        <div key={stat.label} className="flex items-center gap-3 px-5 py-4">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
-            <Icon name={stat.icon} size={16} />
+        <div key={stat.label} className={`bento-tile ${stat.bg} p-4 flex items-center gap-3`}>
+          <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/70 ${stat.text}`}>
+            <Icon name={stat.icon} size={15} />
           </span>
           <div className="min-w-0">
-            <p className="text-lg font-bold leading-none text-surface-900">
-              {stat.value}
-            </p>
-            <p className="mt-1 truncate text-[11px] font-medium uppercase tracking-wide text-surface-400">
+            <p className="text-lg font-bold leading-none text-surface-900">{stat.value}</p>
+            <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wide text-surface-500">
               {stat.label}
             </p>
           </div>
@@ -85,98 +89,100 @@ function StatStrip({
 
 function GoalCardRow({ goal }: { goal: GoalCard }) {
   const done = goal.progress === 100;
+  const cfg = typeConfig[goal.type] ?? typeConfig.OTHER;
+  const grad = accentGradient[goal.type] ?? accentGradient.OTHER;
+
   return (
     <Link
       href={`/goals/${goal.id}`}
-      className="group relative block overflow-hidden rounded-3xl border border-surface-200 bg-surface-0 p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-raised sm:p-7"
+      className="group relative block overflow-hidden rounded-2xl border border-surface-150 bg-white shadow-soft transition-all hover:border-primary-200 hover:shadow-[var(--shadow-card-hover)] card-interactive"
     >
+      {/* Left gradient accent */}
       <span
         aria-hidden="true"
-        className={`absolute inset-y-0 left-0 w-1 rounded-l-3xl ${done ? "bg-success-500" : "bg-primary-500"}`}
+        className={`absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-gradient-to-b ${grad}`}
       />
 
-      <div className="flex items-start justify-between gap-6 pl-2">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2.5">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600">
-              <Icon name={typeIcon[goal.type] ?? "target"} size={15} />
+      <div className="px-5 py-4 pl-6">
+        {/* Header row */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2 min-w-0">
+            <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${cfg.bg} ${cfg.text}`}>
+              <Icon name={cfg.icon} size={14} />
             </span>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">
+            <span className={`chip border ${cfg.bg} ${cfg.text} ${cfg.border}`}>
               {goal.type}
-            </p>
+            </span>
             <StatusBadge status={goal.status} />
+            {goal.targetDateLabel && (
+              <span className="chip bg-surface-50 text-surface-500 border border-surface-150">
+                <Icon name="clock" size={10} />
+                {goal.targetDateLabel}
+              </span>
+            )}
           </div>
-          <h2 className="mt-3 text-xl font-bold tracking-tight text-surface-900 transition-colors group-hover:text-primary-700 sm:text-2xl">
-            {goal.name}
-          </h2>
-          {goal.targetDateLabel && (
-            <p className="mt-1 text-sm text-surface-500">
-              Hingga {goal.targetDateLabel}
-            </p>
-          )}
+          <FocusOrb
+            value={goal.progress}
+            size={52}
+            stroke={5}
+            tone={done ? "success" : "primary"}
+            label={`Progres ${goal.name} ${goal.progress} persen`}
+          >
+            <span className="text-[12px] font-bold text-surface-900">{goal.progress}%</span>
+          </FocusOrb>
         </div>
 
-        <FocusOrb
-          value={goal.progress}
-          size={72}
-          stroke={6}
-          tone={done ? "success" : "primary"}
-          label={`Progres ${goal.name} ${goal.progress} persen`}
-        >
-          <span className="text-lg font-bold text-surface-900">
-            {goal.progress}%
-          </span>
-        </FocusOrb>
-      </div>
+        {/* Goal name */}
+        <h2 className="mt-2.5 text-[16px] font-bold tracking-tight text-surface-900 transition-colors group-hover:text-primary-700">
+          {goal.name}
+        </h2>
 
-      <div className="mt-6 pl-2">
-        {goal.waypoints.length > 0 ? (
-          <JourneyRoute
-            waypoints={goal.waypoints}
-            size={goal.waypoints.length <= 6 ? "md" : "sm"}
-            label={`Peta perjalanan ${goal.name}`}
-          />
-        ) : (
-          <p className="text-sm text-surface-500">
-            Belum ada stage — mulailah menyusun peta perjalanan ini.
-          </p>
+        {/* Progress bar */}
+        <div className="mt-3">
+          <ProgressBar value={goal.progress} size="sm" tone={done ? "success" : "primary"} />
+        </div>
+
+        {/* Journey waypoints */}
+        {goal.waypoints.length > 0 && (
+          <div className="mt-3">
+            <JourneyRoute
+              waypoints={goal.waypoints}
+              size={goal.waypoints.length <= 6 ? "md" : "sm"}
+              label={`Peta ${goal.name}`}
+            />
+          </div>
         )}
-      </div>
 
-      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-dashed border-surface-150 pl-2 pt-5">
-        <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-surface-400">
-            {done
-              ? "Status"
-              : goal.currentStageIndex === -1
-                ? "Status"
-                : `Stage ${goal.currentStageIndex + 1}`}
-          </p>
-          <p className="truncate text-sm font-medium text-surface-800">
-            {done
-              ? "Perjalanan selesai"
-              : (goal.currentStageName ?? "Belum ada stage")}
-          </p>
+        {/* Footer meta */}
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 pt-3 border-t border-surface-100">
+          <div className="min-w-0">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-surface-400">
+              {done ? "Status" : `Stage ${(goal.currentStageIndex + 1) || "—"}`}
+            </p>
+            <p className="truncate text-[12.5px] font-medium text-surface-700">
+              {done ? "Selesai 🎉" : (goal.currentStageName ?? "Belum ada stage")}
+            </p>
+          </div>
+          {goal.nextTaskName && !done && (
+            <>
+              <span className="hidden h-5 w-px shrink-0 bg-surface-200 sm:block" aria-hidden />
+              <div className="min-w-0">
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-surface-400">
+                  Task berikutnya
+                </p>
+                <p className="truncate text-[12.5px] font-medium text-surface-700">
+                  {goal.nextTaskName}
+                </p>
+              </div>
+            </>
+          )}
+          <span className="ml-auto flex shrink-0 items-center gap-1 text-[11px] font-semibold text-primary-600 opacity-0 transition-opacity group-hover:opacity-100">
+            Lanjutkan <Icon name="arrowRight" size={12} />
+          </span>
+          <span className="shrink-0 text-[11px] text-surface-400">
+            {goal.totalStages} stage · {goal.completedTasks}/{goal.totalTasks} task
+          </span>
         </div>
-        <span
-          className="hidden h-6 w-px shrink-0 bg-surface-200 sm:block"
-          aria-hidden="true"
-        />
-        <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-surface-400">
-            Berikutnya
-          </p>
-          <p className="truncate text-sm font-medium text-surface-800">
-            {goal.nextTaskName ?? (done ? "—" : "uraikan dahulu")}
-          </p>
-        </div>
-        <span className="ml-auto flex shrink-0 items-center gap-1 text-xs font-semibold text-primary-600 opacity-0 transition-opacity group-hover:opacity-100">
-          Lanjutkan <Icon name="arrowRight" size={13} />
-        </span>
-        <span className="shrink-0 text-xs font-medium text-surface-500 sm:ml-2">
-          {goal.totalStages} stage · {goal.completedTasks}/{goal.totalTasks}{" "}
-          task
-        </span>
       </div>
     </Link>
   );
@@ -184,26 +190,27 @@ function GoalCardRow({ goal }: { goal: GoalCard }) {
 
 function CompletedGrid({ goals }: { goals: GoalCard[] }) {
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {goals.map((goal) => (
-        <Link
-          key={goal.id}
-          href={`/goals/${goal.id}`}
-          className="group flex items-center gap-3 rounded-2xl border border-success-200 bg-success-50/60 p-4 transition hover:border-success-300 hover:bg-success-50"
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-success-500 text-white">
-            <Icon name="check" size={16} strokeWidth={3} />
-          </span>
-          <div className="min-w-0">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-success-700">
-              {goal.type}
-            </p>
-            <h3 className="truncate text-sm font-semibold text-surface-800 transition-colors group-hover:text-success-800">
-              {goal.name}
-            </h3>
-          </div>
-        </Link>
-      ))}
+    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      {goals.map((goal) => {
+        const cfg = typeConfig[goal.type] ?? typeConfig.OTHER;
+        return (
+          <Link
+            key={goal.id}
+            href={`/goals/${goal.id}`}
+            className="group flex items-center gap-3 rounded-xl border border-success-200 bg-gradient-to-r from-success-50/60 to-white p-3.5 transition-all hover:border-success-300 hover:shadow-soft card-interactive"
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success-500 text-white">
+              <Icon name="check" size={15} strokeWidth={3} />
+            </span>
+            <div className="min-w-0">
+              <span className={`chip ${cfg.bg} ${cfg.text} mb-0.5`}>{goal.type}</span>
+              <p className="truncate text-[13px] font-semibold text-surface-800 transition-colors group-hover:text-success-700">
+                {goal.name}
+              </p>
+            </div>
+          </Link>
+        );
+      })}
     </div>
   );
 }
@@ -219,55 +226,62 @@ export function GoalsBoard({
   const hasCompleted = completedGoals.length > 0;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       <StatStrip active={activeGoals} completed={completedGoals} />
 
-      <div className="flex items-center gap-2 border-b border-surface-150">
+      {/* Tab nav */}
+      <div className="flex items-center gap-1 rounded-xl border border-surface-150 bg-surface-50 p-1 w-fit">
         <button
           type="button"
           onClick={() => setTab("active")}
-          className={`relative px-1 pb-3 text-sm font-semibold transition-colors ${
+          className={`relative flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
             tab === "active"
-              ? "text-surface-900"
-              : "text-surface-400 hover:text-surface-600"
+              ? "bg-white text-surface-900 shadow-soft border border-surface-150"
+              : "text-surface-500 hover:text-surface-700"
           }`}
         >
-          Sedang berjalan
-          <span className="ml-1.5 text-xs font-medium text-surface-400">
+          Aktif
+          <span
+            className={`chip ${
+              tab === "active"
+                ? "bg-primary-100 text-primary-700"
+                : "bg-surface-100 text-surface-400"
+            }`}
+          >
             {activeGoals.length}
           </span>
-          {tab === "active" && (
-            <span className="absolute -bottom-px left-0 h-0.5 w-full rounded-full bg-primary-600" />
-          )}
         </button>
         {hasCompleted && (
           <button
             type="button"
             onClick={() => setTab("completed")}
-            className={`relative px-1 pb-3 text-sm font-semibold transition-colors ${
+            className={`relative flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
               tab === "completed"
-                ? "text-surface-900"
-                : "text-surface-400 hover:text-surface-600"
+                ? "bg-white text-surface-900 shadow-soft border border-surface-150"
+                : "text-surface-500 hover:text-surface-700"
             }`}
           >
             Tuntas
-            <span className="ml-1.5 text-xs font-medium text-surface-400">
+            <span
+              className={`chip ${
+                tab === "completed"
+                  ? "bg-success-100 text-success-700"
+                  : "bg-surface-100 text-surface-400"
+              }`}
+            >
               {completedGoals.length}
             </span>
-            {tab === "completed" && (
-              <span className="absolute -bottom-px left-0 h-0.5 w-full rounded-full bg-success-600" />
-            )}
           </button>
         )}
       </div>
 
       {tab === "active" ? (
         activeGoals.length === 0 ? (
-          <p className="py-8 text-sm text-surface-500">
-            Belum ada goal aktif saat ini. Buat satu untuk memulai.
+          <p className="py-4 text-[13px] text-surface-500">
+            Belum ada goal aktif. Buat satu untuk memulai.
           </p>
         ) : (
-          <div className="space-y-5">
+          <div className="space-y-3">
             {activeGoals.map((goal) => (
               <GoalCardRow key={goal.id} goal={goal} />
             ))}

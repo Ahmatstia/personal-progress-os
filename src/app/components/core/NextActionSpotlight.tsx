@@ -3,10 +3,6 @@ import { Icon } from "../ui/Icon";
 import { StartSessionButton } from "./StartSessionButton";
 import { FocusOrb } from "./FocusOrb";
 
-// Next Action Spotlight — signature component.
-// Objek utama yang menceritakan "Apa yang harus saya kerjakan sekarang?"
-// Satu spotlight per halaman; bukan katalog card.
-
 export function NextActionSpotlight({
   nextAction,
   progress,
@@ -31,29 +27,42 @@ export function NextActionSpotlight({
 
   return (
     <section
-      className={`relative overflow-hidden rounded-3xl border border-primary-200/70 bg-surface-0 p-6 shadow-raised sm:p-7 ${className}`}
+      className={`relative overflow-hidden rounded-2xl hero-border-animated p-5 sm:p-6 ${className}`}
+      style={{ background: "linear-gradient(145deg, #ffffff 0%, #f8f7ff 50%, #faf9ff 100%)" }}
     >
+      {/* Ambient orbs */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-primary-100/50 blur-3xl"
+        className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-gradient-to-br from-primary-100/70 to-ai-100/50 blur-3xl"
       />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-gradient-to-tr from-primary-50/60 to-ai-50/40 blur-2xl"
+      />
+
       <div className="relative">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="flex items-center gap-2 text-primary-700">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100">
-              <Icon name="bolt" size={16} />
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-ai-500 text-white">
+              <Icon name="bolt" size={14} />
             </span>
-            <p className="eyebrow">Aksi berikutnya</p>
+            <p className="eyebrow text-primary-700">Aksi berikutnya</p>
+            {inSession && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-success-100 px-2.5 py-0.5 text-[10px] font-bold text-success-700 border border-success-200">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success-500" />
+                Aktif
+              </span>
+            )}
           </div>
           {progress != null && (
             <FocusOrb
               value={progress}
-              size={56}
+              size={52}
               stroke={5}
               tone="primary"
-              label={`Progress goal ${Math.round(progress)} persen`}
+              label={`Progress ${Math.round(progress)} persen`}
             >
-              <span className="text-sm font-bold text-surface-900">
+              <span className="text-[13px] font-bold text-surface-900">
                 {Math.round(progress)}%
               </span>
             </FocusOrb>
@@ -61,70 +70,65 @@ export function NextActionSpotlight({
         </div>
 
         {!nextAction ? (
-          <div className="mt-5">
-            <h2 className="text-xl font-semibold text-surface-900">
-              Semua sudah jelas
-            </h2>
-            <p className="mt-2 max-w-md text-sm text-surface-500">
-              Tidak ada aksi berikutnya yang harus dikerjakan. Buat task atau
-              lengkapi review untuk menjaga momentum.
+          <div className="mt-4">
+            <h2 className="text-xl font-bold text-surface-900">Semua sudah jelas</h2>
+            <p className="mt-1.5 max-w-md text-[13px] text-surface-500">
+              Tidak ada aksi berikutnya. Buat task atau lengkapi review untuk menjaga momentum.
             </p>
-            <div className="mt-6 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2">
               <Link
                 href="/today"
-                className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary-600 px-4 text-sm font-semibold text-white transition hover:bg-primary-700"
+                className="inline-flex h-9 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 px-4 text-[13px] font-semibold text-white transition hover:from-primary-700 hover:to-ai-600 shine-parent overflow-hidden"
               >
-                <Icon name="sun" size={16} /> Ke Hari Ini
+                <Icon name="sun" size={14} /> Ke Hari Ini
               </Link>
               <Link
                 href="/goals"
-                className="inline-flex h-10 items-center gap-2 rounded-xl border border-surface-200 bg-surface-0 px-4 text-sm font-semibold text-surface-700 transition hover:bg-surface-100"
+                className="inline-flex h-9 items-center gap-2 rounded-xl border border-surface-200 bg-white px-4 text-[13px] font-semibold text-surface-700 transition hover:border-primary-200 hover:bg-primary-50"
               >
-                <Icon name="target" size={16} /> Ke Goals
+                <Icon name="target" size={14} /> Ke Goals
               </Link>
             </div>
           </div>
         ) : (
-          <div className="mt-6">
-            <p className="text-xs font-medium uppercase tracking-wider text-surface-400">
+          <div className="mt-4">
+            <p className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-surface-400">
               Kerjakan ini berikutnya
             </p>
+            <h2 className="mt-1 text-xl font-bold leading-tight text-surface-900 sm:text-2xl">
+              {nextAction.taskName}
+            </h2>
             <div className="mt-1.5 flex flex-wrap items-center gap-2">
-              <h2 className="text-2xl font-bold leading-tight text-surface-900 sm:text-3xl">
-                {nextAction.taskName}
-              </h2>
-              {inSession && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-success-100 px-2.5 py-0.5 text-[11px] font-semibold text-success-700">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success-600" />
-                  Sesi berlangsung
-                </span>
-              )}
+              <span className="chip bg-primary-50 text-primary-700 border border-primary-100">
+                {nextAction.goalName}
+              </span>
+              <span className="text-surface-300" aria-hidden="true">·</span>
+              <span className="chip bg-surface-100 text-surface-600">
+                {nextAction.stageName}
+              </span>
+              {nextAction.estimatedMinutes != null &&
+                nextAction.estimatedMinutes > 0 && (
+                  <span className="chip bg-surface-50 text-surface-500 border border-surface-150">
+                    <Icon name="clock" size={10} />
+                    {nextAction.estimatedMinutes >= 60
+                      ? `${(nextAction.estimatedMinutes / 60).toFixed(
+                          nextAction.estimatedMinutes % 60 === 0 ? 0 : 1,
+                        )} jam`
+                      : `${nextAction.estimatedMinutes} mnt`}
+                  </span>
+                )}
             </div>
-            <p className="mt-2 text-sm text-surface-500">
-              {nextAction.goalName}
-              <span className="mx-1.5 text-surface-300">·</span>
-              {nextAction.stageName}
-            </p>
 
-            {nextAction.estimatedMinutes != null && nextAction.estimatedMinutes > 0 && (
-              <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-surface-200 bg-surface-50 px-3 py-1 text-xs font-medium text-surface-600">
-                <Icon name="clock" size={14} />
-                ±{" "}
-                {nextAction.estimatedMinutes >= 60
-                  ? `${(nextAction.estimatedMinutes / 60).toFixed(
-                      nextAction.estimatedMinutes % 60 === 0 ? 0 : 1,
-                    )} jam`
-                  : `${nextAction.estimatedMinutes} menit`}
-              </p>
-            )}
-
-            <div className="mt-6 flex flex-wrap items-center gap-2">
-              <StartSessionButton taskId={nextAction.taskId} taskName={nextAction.taskName} />
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              <StartSessionButton
+                taskId={nextAction.taskId}
+                taskName={nextAction.taskName}
+              />
               <Link
                 href={`/tasks/${nextAction.taskId}`}
-                className="inline-flex h-10 items-center gap-2 rounded-xl border border-surface-200 bg-surface-0 px-4 text-sm font-semibold text-surface-700 transition hover:bg-surface-100"
+                className="inline-flex h-9 items-center gap-2 rounded-xl border border-surface-200 bg-white px-4 text-[13px] font-semibold text-surface-700 transition hover:border-primary-200 hover:bg-primary-50"
               >
-                <Icon name="arrowRight" size={16} /> Buka task
+                <Icon name="arrowRight" size={14} /> Buka task
               </Link>
             </div>
           </div>

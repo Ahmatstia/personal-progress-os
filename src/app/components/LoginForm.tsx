@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { Icon } from "@/app/components/ui/Icon";
 
 export default function LoginForm() {
   const [error, setError] = useState("");
@@ -31,45 +32,78 @@ export default function LoginForm() {
     }
   }
 
-  const inputClass =
-    "w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-3 text-sm text-surface-900 outline-none placeholder:text-surface-400 transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100";
+  const inputBase =
+    "w-full rounded-xl border bg-surface-50 px-3.5 py-2.5 text-[13.5px] text-surface-900 outline-none placeholder:text-surface-400 transition-all duration-200 focus:border-primary-300 focus:bg-white focus:ring-2 focus:ring-primary-100";
 
   return (
-    <form onSubmit={submit} className="mt-6 space-y-4">
+    <form onSubmit={submit} className="mt-5 space-y-3.5">
       <label className="block">
-        <span className="mb-1.5 block text-sm font-medium text-surface-700">Email</span>
-        <input name="email" type="email" required placeholder="you@example.com" autoComplete="email" className={inputClass} />
+        <span className="mb-1 block text-[12.5px] font-semibold text-surface-600">Email</span>
+        <input
+          name="email"
+          type="email"
+          required
+          placeholder="you@example.com"
+          autoComplete="email"
+          className={`${inputBase} border-surface-200`}
+        />
       </label>
+
       <label className="block">
-        <span className="mb-1.5 block text-sm font-medium text-surface-700">Nama (opsional)</span>
-        <input name="name" placeholder="Siapa nama Anda?" className={inputClass} />
+        <span className="mb-1 block text-[12.5px] font-semibold text-surface-600">
+          Nama <span className="font-normal text-surface-400">(opsional)</span>
+        </span>
+        <input
+          name="name"
+          placeholder="Nama Anda"
+          className={`${inputBase} border-surface-200`}
+        />
       </label>
+
       <label className="block">
-        <span className="mb-1.5 block text-sm font-medium text-surface-700">Kode akses</span>
+        <span className="mb-1 block text-[12.5px] font-semibold text-surface-600">Kode akses</span>
         <div className="relative">
           <input
             name="accessCode"
             type={showCode ? "text" : "password"}
             required
             placeholder="Kode akses"
-            className={`${inputClass} pr-16`}
+            className={`${inputBase} border-surface-200 pr-14`}
           />
           <button
             type="button"
             onClick={() => setShowCode(!showCode)}
-            aria-label={showCode ? "Sembunyikan kode akses" : "Tampilkan kode akses"}
-            className="absolute inset-y-0 right-0 flex w-14 items-center justify-center text-xs font-medium text-surface-500 hover:text-primary-700"
+            aria-label={showCode ? "Sembunyikan kode" : "Tampilkan kode"}
+            className="absolute inset-y-0 right-0 flex w-13 items-center justify-center text-[11px] font-semibold text-surface-400 hover:text-primary-600 transition-colors"
           >
-            {showCode ? "Sembunyikan" : "Tampilkan"}
+            {showCode ? (
+              <Icon name="x" size={14} />
+            ) : (
+              <span>Lihat</span>
+            )}
           </button>
         </div>
       </label>
-      {error && <p className="text-sm text-danger-600">{error}</p>}
+
+      {error && (
+        <div className="flex items-center gap-2 rounded-xl border border-danger-200 bg-danger-50 px-3 py-2">
+          <Icon name="x" size={13} className="shrink-0 text-danger-500" />
+          <p className="text-[12.5px] text-danger-600">{error}</p>
+        </div>
+      )}
+
       <button
         disabled={busy}
-        className="w-full rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary-700 disabled:opacity-50"
+        className="relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-all hover:from-primary-700 hover:to-ai-600 hover:shadow-[var(--shadow-interactive)] disabled:opacity-50 shine-parent active:scale-[0.98]"
       >
-        {busy ? "Masuk…" : "Masuk"}
+        {busy ? (
+          <span className="flex items-center justify-center gap-2">
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            Masuk…
+          </span>
+        ) : (
+          "Masuk"
+        )}
       </button>
     </form>
   );
