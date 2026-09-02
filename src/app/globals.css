@@ -76,9 +76,9 @@
   --color-surface-900: #26241f;
   --color-surface-950: #171613;
 
-  /* Typography */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Typography — Inter dimuat & di-self-host lewat next/font (--font-inter) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* Elevation */
   --shadow-soft: 0 1px 2px rgba(38, 35, 30, 0.04),
@@ -98,6 +98,7 @@
   body {
     background-color: var(--color-surface-50);
     color: var(--color-surface-900);
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -115,6 +116,61 @@
 }
 
 @layer utilities {
+  /* Label orientasi — satu pola konsisten untuk semua eyebrow */
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* Halo lembut di belakang waypoint aktif (Focus Orb / Journey node) */
+  .halo {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle at 50% 50%,
+      var(--color-primary-200),
+      transparent 70%
+    );
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Waypoint aktif — denyut sangat halus (orientasi, bukan dekorasi) */
+  .waypoint-pulse {
+    animation: waypoint-pulse 2.6s ease-in-out infinite;
+  }
+  @keyframes waypoint-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.35);
+    }
+    50% {
+      box-shadow: 0 0 0 7px rgba(99, 102, 241, 0);
+    }
+  }
+
+  /* Sapuan lembut pada orb timer — "waktu berjalan" tanpa klaim target */
+  .sweep-dot {
+    animation: focus-sweep 12s linear infinite;
+  }
+  @keyframes focus-sweep {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Route line — sisa perjalanan digambar putus-putus */
+  .route-dash {
+    stroke-dasharray: 3 4;
+    stroke-dashoffset: 0;
+  }
+
   /* Skeleton shimmer */
   .skeleton {
     position: relative;
@@ -152,5 +208,20 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+}
+
+/* Motion hanya untuk orientasi/feedback/continuity. Hapus animasi
+   dekoratif saat user memilih reduced motion di sistem. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .waypoint-pulse {
+    animation: none !important;
   }
 }

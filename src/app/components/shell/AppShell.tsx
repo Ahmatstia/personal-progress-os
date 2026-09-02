@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Icon, type IconName } from "../ui/Icon";
 import { AICommandPanel } from "../AICommandPanel";
 import { Sidebar, isActive } from "./Sidebar";
+import { useFocusMode } from "../focus-mode-store";
 
 type GlobalAIDrawerProps = {
   open: boolean;
@@ -16,11 +17,15 @@ type GlobalAIDrawerProps = {
 export function GlobalAIDrawer({ open, onClose, context }: GlobalAIDrawerProps) {
   useEffect(() => {
     if (!open) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      previouslyFocused?.focus?.();
+    };
   }, [open, onClose]);
 
   if (!open) return null;
@@ -57,11 +62,11 @@ export function GlobalAIDrawer({ open, onClose, context }: GlobalAIDrawerProps) 
 }
 
 const mobileNav: { href: string; label: string; icon: IconName }[] = [
-  { href: "/", label: "Beranda", icon: "sparkles" },
+  { href: "/", label: "Mulai", icon: "compass" },
   { href: "/today", label: "Hari Ini", icon: "sun" },
   { href: "/goals", label: "Goals", icon: "flag" },
   { href: "/dashboard", label: "Dashboard", icon: "chart" },
-  { href: "/review", label: "Refleksi", icon: "compass" },
+  { href: "/review", label: "Refleksi", icon: "capture" },
 ];
 
 export function AppShell({
@@ -76,6 +81,7 @@ export function AppShell({
   const pathname = usePathname();
   const [aiOpen, setAiOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const focusMode = useFocusMode();
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -90,10 +96,19 @@ export function AppShell({
 
   const showSearchCta = !isActive("/", pathname) && !isActive("/today", pathname) && !isActive("/goals", pathname) && !isActive("/dashboard", pathname);
 
+  // Saat mode fokus aktif, chrome memudar — permukaan kerja yang bercahaya.
+  const chromeClass = focusMode
+    ? "border-surface-200/60 bg-surface-50/70 backdrop-blur"
+    : "border-surface-200 bg-surface-0/85 backdrop-blur";
+
   return (
     <div className="min-h-screen bg-surface-50 text-surface-900">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-surface-200 bg-surface-0 px-4 py-5 lg:block">
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 hidden w-64 border-r px-4 py-5 transition-colors duration-300 lg:block ${
+          focusMode ? "border-surface-200/50 bg-surface-50/60" : "border-surface-200 bg-surface-0"
+        }`}
+      >
         <Sidebar user={user} />
       </aside>
 
@@ -114,7 +129,9 @@ export function AppShell({
       {/* Main column */}
       <div className="lg:pl-64">
         {/* Topbar */}
-        <header className="sticky top-0 z-30 border-b border-surface-200 bg-surface-0/85 backdrop-blur">
+        <header
+          className={`sticky top-0 z-30 border-b transition-colors duration-300 ${chromeClass}`}
+        >
           <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:px-6">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -176,17 +193,19 @@ export function AppShell({
           </div>
         </header>
 
-        <main className="mx-auto max-w-6xl px-4 pb-24 pt-6 sm:px-6 lg:pb-12">
+        <main className="mx-auto max-w-6xl px-4 pb-28 pt-6 sm:px-6 lg:pb-12">
           {children}
         </main>
       </div>
 
       {/* Mobile bottom nav */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-surface-200 bg-surface-0/95 backdrop-blur lg:hidden"
+        className={`fixed inset-x-0 bottom-0 z-40 border-t pb-[max(0.25rem,env(safe-area-inset-bottom))] transition-colors duration-300 lg:hidden ${
+          focusMode ? "border-surface-200/60 bg-surface-50/80 backdrop-blur" : "border-surface-200 bg-surface-0/95 backdrop-blur"
+        }`}
         aria-label="Navigasi utama"
       >
-        <div className="mx-auto flex max-w-lg items-center justify-around px-2 py-1.5">
+        <div className="mx-auto flex max-w-lg items-stretch justify-around px-2">
           {mobileNav.map((item) => {
             const active = isActive(item.href, pathname);
             return (
@@ -194,18 +213,23 @@ export function AppShell({
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-lg px-1 py-1.5 text-[11px] font-medium ${
+                className={`relative flex min-h-[48px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-[11px] font-medium ${
                   active ? "text-primary-700" : "text-surface-500"
                 }`}
               >
-                <Icon name={item.icon} size={21} className={active ? "text-primary-600" : ""} />
+                <span className="relative">
+                  <Icon name={item.icon} size={21} className={active ? "text-primary-600" : ""} />
+                  {active && (
+                    <span aria-hidden="true" className="absolute -top-1 right-0 h-1.5 w-1.5 rounded-full bg-primary-500" />
+                  )}
+                </span>
                 {item.label}
               </Link>
             );
           })}
           <button
             onClick={() => setAiOpen(true)}
-            className="flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-lg px-1 py-1.5 text-[11px] font-medium text-ai-700"
+            className="flex min-h-[48px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-[11px] font-medium text-ai-700"
           >
             <Icon name="sparkles" size={21} />
             Asisten

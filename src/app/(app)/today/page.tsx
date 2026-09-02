@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { FocusPanel } from "@/app/components/core/FocusPanel";
 import { SessionFocusMode } from "@/app/components/core/SessionFocusMode";
-import { NextActionCard } from "@/app/components/core/NextActionCard";
+import { NextActionSpotlight } from "@/app/components/core/NextActionSpotlight";
 import QuickCapture from "@/app/components/QuickCapture";
 import { getToday } from "@/services/today.service";
 import { getRecentCaptures } from "@/services/capture.service";
 import { requirePageUser } from "@/lib/auth";
 import { Icon } from "@/app/components/ui/Icon";
 import { PageHeader } from "@/app/components/ui/PageHeader";
+import { StatRow } from "@/app/components/ui/StatRow";
 import { HistoryDeleteButton } from "@/app/components/ui/HistoryDeleteButton";
 import { formatDuration } from "@/lib/format";
 
@@ -59,6 +60,7 @@ export default async function TodayPage() {
         stageName: ranked.stageName,
         taskName: ranked.taskName,
         priority: ranked.priority,
+        estimatedMinutes: ranked.estimatedMinutes,
         startedAt: ranked.startedAt,
       }
     : null;
@@ -71,7 +73,7 @@ export default async function TodayPage() {
         description="Rencana yang jelas dan fokus untuk pekerjaan yang Anda pilih hari ini."
       />
 
-      <NextActionCard nextAction={nextActionCard} />
+      <NextActionSpotlight nextAction={nextActionCard} />
 
       <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
         {/* Left column: focus + session */}
@@ -141,9 +143,16 @@ export default async function TodayPage() {
                 <Icon name="check" size={16} />
               </span>
               <h2 className="text-base font-semibold text-surface-900">Selesai hari ini</h2>
+              {today.completedTasks.length > 0 && (
+                <span className="ml-auto rounded-full bg-success-100 px-2.5 py-0.5 text-xs font-semibold text-success-700">
+                  {today.stats.completedTasks}
+                </span>
+              )}
             </div>
             {today.completedTasks.length === 0 ? (
-              <p className="mt-4 text-sm text-surface-500">Belum ada yang selesai — momentum dimulai dari satu task yang selesai.</p>
+              <p className="mt-4 text-sm text-surface-500">
+                Belum ada yang selesai — momentum dimulai dari satu task yang selesai.
+              </p>
             ) : (
               <ul className="mt-3 divide-y divide-surface-150">
                 {today.completedTasks.map((task) => (
@@ -157,21 +166,23 @@ export default async function TodayPage() {
               </ul>
             )}
           </section>
-
-          <section className="grid grid-cols-3 gap-2">
-            {[
-              { label: "Belajar", value: formatDuration(today.stats.totalMinutes) },
-              { label: "Fokus selesai", value: `${today.focusCompleted}/${today.focusTotal}` },
-              { label: "Task selesai", value: String(today.stats.completedTasks) },
-            ].map((stat) => (
-              <div key={stat.label} className="rounded-2xl border border-surface-200 bg-surface-0 p-3 text-center shadow-soft">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-surface-400">{stat.label}</p>
-                <p className="mt-1.5 text-lg font-bold text-surface-900">{stat.value}</p>
-              </div>
-            ))}
-          </section>
         </div>
       </div>
+
+      {/* Narrative stats — fakta literal, bukan grid kartu stat dekoratif */}
+      <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft sm:p-6">
+        <div className="mb-4 flex items-center gap-2 text-surface-700">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-100">
+            <Icon name="trendingUp" size={16} />
+          </span>
+          <h2 className="text-base font-semibold text-surface-900">Rangkuman hari ini</h2>
+        </div>
+        <div className="grid gap-0 sm:grid-cols-3 sm:gap-4">
+          <StatRow icon="clock" label="Waktu fokus" value={formatDuration(today.stats.totalMinutes)} hint="dalam sesi selesai" />
+          <StatRow icon="check" tone="success" label="Task selesai" value={String(today.stats.completedTasks)} hint="dari semua task" />
+          <StatRow icon="target" tone="warning" label="Prioritas selesai" value={`${today.focusCompleted}/${today.focusTotal}`} hint="dari daftar fokus" />
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,7 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import { Icon } from "./Icon";
+
+// Dialog dengan a11y lengkap:
+// - focus trap (Tab/Shift+Tab berputar di dalam panel)
+// - fokus awal ke input ber-autofocus / input pertama / tombol tutup
+// - fokus dikembalikan ke elemen asal saat dialog ditutup
+// - aria-labelledby + aria-describedby eksplisit
 
 export function Dialog({
   open,
@@ -21,18 +27,64 @@ export function Dialog({
   closeable?: boolean;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && closeable) onClose();
+    const panel = panelRef.current;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
+    const getFocusables = () =>
+      Array.from(
+        panel?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      );
+
+    const focusInside = () => {
+      const native =
+        panel?.querySelector<HTMLElement>("[autofocus]") ??
+        panel?.querySelector<HTMLElement>(
+          "input:not([disabled]), textarea:not([disabled]), select:not([disabled])",
+        );
+      if (native && panel?.contains(native)) {
+        native.focus();
+        return;
+      }
+      const list = getFocusables();
+      const closeButton = panel?.querySelector<HTMLElement>('button[aria-label="Tutup dialog"]');
+      (closeButton ?? list[0])?.focus();
     };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && closeable) {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const list = getFocusables();
+      if (list.length === 0) return;
+      const first = list[0];
+      const last = list[list.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      const inside = !!active && panel?.contains(active);
+      if (e.shiftKey && (active === first || !inside)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !inside)) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
-    panelRef.current?.querySelector<HTMLElement>("input,button,select,textarea")?.focus();
+    const raf = requestAnimationFrame(focusInside);
     return () => {
+      cancelAnimationFrame(raf);
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      previouslyFocused?.focus?.();
     };
   }, [open, onClose, closeable]);
 
@@ -46,7 +98,8 @@ export function Dialog({
       }}
       role="dialog"
       aria-modal="true"
-      aria-label={title}
+      aria-labelledby={titleId}
+      aria-describedby={description ? `${titleId}-desc` : undefined}
     >
       <div
         ref={panelRef}
@@ -54,9 +107,13 @@ export function Dialog({
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-surface-900">{title}</h2>
+            <h2 id={titleId} className="text-lg font-semibold text-surface-900">
+              {title}
+            </h2>
             {description && (
-              <p className="mt-1 text-sm text-surface-500">{description}</p>
+              <p id={`${titleId}-desc`} className="mt-1 text-sm text-surface-500">
+                {description}
+              </p>
             )}
           </div>
           {closeable && (
