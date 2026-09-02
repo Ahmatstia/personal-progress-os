@@ -17,7 +17,9 @@ export type IconName =
   | "chevronRight"
   | "play"
   | "stop"
+  | "pause"
   | "clock"
+  | "timer"
   | "calendar"
   | "edit"
   | "trash"
@@ -36,7 +38,17 @@ export type IconName =
   | "trendingUp"
   | "gauge"
   | "circle"
-  | "tree";
+  | "tree"
+  | "coffee"
+  | "lightbulb"
+  | "tag"
+  | "star"
+  | "award"
+  | "bookOpen"
+  | "pen"
+  | "brain"
+  | "pomodoro"
+  | "flame";
 
 const paths: Record<IconName, React.ReactNode> = {
   sparkles: (
@@ -189,6 +201,72 @@ const paths: Record<IconName, React.ReactNode> = {
     <>
       <path d="M12 21V8" />
       <path d="M12 8c-2.5-1.5-4-1.5-6.5-.5M12 8c2.5-1.5 4-1.5 6.5-.5M12 12c-2.5-1.5-4-1.5-6.5-.5M12 12c2.5-1.5 4-1.5 6.5-.5M12 16c-2.5-1.5-4-1.5-6.5-.5M12 16c2.5-1.5 4-1.5 6.5-.5" />
+    </>
+  ),
+  pause: <path d="M6 4h4v16H6zM14 4h4v16h-4z" />,
+  timer: (
+    <>
+      <circle cx="12" cy="13" r="8" />
+      <path d="M12 9v4l2.5 2.5M12 5V3M10 3h4" />
+    </>
+  ),
+  coffee: (
+    <>
+      <path d="M18 8h1a4 4 0 010 8h-1" />
+      <path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z" />
+      <path d="M6 1v3M10 1v3M14 1v3" />
+    </>
+  ),
+  lightbulb: (
+    <>
+      <path d="M9 18h6M10 22h4M12 2a7 7 0 00-3.5 13H15.5A7 7 0 0012 2z" />
+      <path d="M9 18v-1a3 3 0 016 0v1" />
+    </>
+  ),
+  tag: (
+    <>
+      <path d="M20.6 11.6L12.4 3.4A2 2 0 0011 3H4a1 1 0 00-1 1v7a2 2 0 00.6 1.4l8.2 8.2a2 2 0 002.8 0l6-6a2 2 0 000-2.8z" />
+      <circle cx="7" cy="8" r="1.5" fill="currentColor" stroke="none" />
+    </>
+  ),
+  star: <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />,
+  award: (
+    <>
+      <circle cx="12" cy="9" r="6" />
+      <path d="M8.2 14.4L7 22l5-3 5 3-1.2-7.6" />
+    </>
+  ),
+  bookOpen: (
+    <>
+      <path d="M2 4h6a2 2 0 012 2v14a2 2 0 00-2-2H2V4z" />
+      <path d="M22 4h-6a2 2 0 00-2 2v14a2 2 0 012-2h6V4z" />
+    </>
+  ),
+  pen: (
+    <>
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+    </>
+  ),
+  brain: (
+    <>
+      <path d="M12 5a3 3 0 10-5.9.7A3 3 0 004 9a3 3 0 00.5 1.7A3 3 0 006 16v2a1 1 0 001 1h2" />
+      <path d="M12 5a3 3 0 115.9.7A3 3 0 0120 9a3 3 0 01-.5 1.7A3 3 0 0118 16v2a1 1 0 01-1 1h-2" />
+      <path d="M12 5v16" />
+    </>
+  ),
+  pomodoro: (
+    <>
+      <circle cx="12" cy="13" r="8" />
+      <path d="M12 9v4l2.5 2.5" />
+      <path d="M10 3c0-1 4-1 4 0" />
+      <path d="M9 2.5l1.5 1M15 2.5l-1.5 1" />
+    </>
+  ),
+  flame: (
+    <>
+      <path d="M8.5 14.5A4.5 4.5 0 0012 19a4.5 4.5 0 002-8.5c0 1.5-1 3-2 3.5 0-2-1-4-3.5-4.5C9 11 8.5 13 8.5 14.5z" />
+      <path d="M12 19c-3.3 0-6-2.7-6-6 0-4 3-7 6-10 3 3 6 6 6 10 0 3.3-2.7 6-6 6z" />
     </>
   ),
 };

@@ -344,3 +344,91 @@
   }
   .waypoint-pulse, .hero-border-animated, .float-gentle { animation: none !important; }
 }
+
+/* ── Pomodoro & Task Enhancement Utilities ─────────────── */
+@layer utilities {
+  /* Countdown ring pulse — subtle beat when time is low */
+  .countdown-pulse {
+    animation: countdown-pulse 1s ease-in-out infinite;
+  }
+  @keyframes countdown-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.65; }
+  }
+
+  /* Celebration pop when Pomodoro/task completes */
+  .celebrate-pop {
+    animation: celebrate-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  @keyframes celebrate-pop {
+    0%   { transform: scale(0.5); opacity: 0; }
+    70%  { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Segment tab slide indicator */
+  .segment-active {
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Status pill ripple */
+  .status-ripple {
+    animation: status-ripple 0.4s ease-out both;
+  }
+  @keyframes status-ripple {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  /* Learning note card appear */
+  .note-card-in {
+    animation: note-card-in 0.3s cubic-bezier(0.34, 1.3, 0.64, 1) both;
+  }
+  @keyframes note-card-in {
+    from { transform: translateY(8px) scale(0.97); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  /* Tag chip pop */
+  .tag-pop {
+    animation: tag-pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  @keyframes tag-pop {
+    from { transform: scale(0.7); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  /* Timer digit flip */
+  .digit-tick {
+    animation: digit-tick 0.15s ease-out both;
+  }
+  @keyframes digit-tick {
+    from { transform: translateY(-4px); opacity: 0.6; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* Break time glow */
+  .break-glow {
+    animation: break-glow 2s ease-in-out infinite;
+  }
+  @keyframes break-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(47, 162, 99, 0.3); }
+    50%       { box-shadow: 0 0 0 10px rgba(47, 162, 99, 0); }
+  }
+
+  /* Sticky note paper texture bg */
+  .sticky-note {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef9e4 100%);
+    border: 1px solid #fde68a;
+    position: relative;
+  }
+  .sticky-note::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 24px; height: 24px;
+    background: linear-gradient(225deg, #fcd34d 50%, transparent 50%);
+    border-radius: 0 6px 0 0;
+  }
+}
+

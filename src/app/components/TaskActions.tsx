@@ -4,13 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Dialog } from "./ui/Dialog";
 import { Button } from "./ui/Button";
-import { StatusBadge } from "./ui/Badge";
 import { useToast } from "./ui/Toast";
 import { useConfirm } from "./ui/Confirm";
+import { Icon } from "./ui/Icon";
 
 type Props = {
   id: string;
-  status: string;
   name: string;
   description: string | null;
   priority: string;
@@ -18,7 +17,7 @@ type Props = {
   notes: string | null;
 };
 
-export default function TaskActions({ id, status, name, description, priority, estimatedHours, notes }: Props) {
+export default function TaskActions({ id, name, description, priority, estimatedHours, notes }: Props) {
   const router = useRouter();
   const { toast } = useToast();
   const { askConfirm, confirmDialog } = useConfirm();
@@ -54,102 +53,140 @@ export default function TaskActions({ id, status, name, description, priority, e
     }
   }
 
-  const primaryAction =
-    status === "COMPLETED" ? (
-      <Button variant="secondary" onClick={() => patch({ status: "IN_PROGRESS" }, "Task dibuka kembali.")} disabled={loading}>
-        Buka kembali
-      </Button>
-    ) : status === "IN_PROGRESS" ? (
-      <Button
-        variant="success"
-        icon="check"
-        onClick={() => {
-          void (async () => {
-            const confirmed = await askConfirm({
-              title: "Selesaikan task",
-              description: `Selesaikan task "${name}"?`,
-              confirmLabel: "Selesaikan",
-            });
-            if (confirmed) patch({ status: "COMPLETED" }, "Task selesai. Bagus!");
-          })();
-        }}
-        disabled={loading}
-      >
-        Selesaikan task
-      </Button>
-    ) : (
-      <Button
-        variant="primary"
-        icon="play"
-        onClick={() => patch({ status: "IN_PROGRESS" }, "Task dimulai.")}
-        disabled={loading}
-      >
-        Mulai kerjakan
-      </Button>
-    );
+  async function handleDelete() {
+    const confirmed = await askConfirm({
+      title: "Hapus task",
+      description: `Yakin ingin menghapus task "${name}"? Seluruh riwayat sesi pada task ini juga akan terhapus.`,
+      confirmLabel: "Hapus task",
+      danger: true,
+    });
+    if (!confirmed) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/tasks/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      toast("Task berhasil dihapus.", "info");
+      router.back();
+    } catch {
+      toast("Gagal menghapus task.", "error");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <div className="mt-5 flex flex-wrap items-center gap-2">
-      <StatusBadge status={status} />
-      {primaryAction}
-      <Button variant="ghost" icon="edit" size="md" onClick={() => setEditing(true)} disabled={loading}>
-        Edit
+    <div className="flex items-center gap-2">
+      <Button
+        variant="secondary"
+        icon="edit"
+        size="sm"
+        onClick={() => setEditing(true)}
+        disabled={loading}
+      >
+        Edit detail
       </Button>
-      {error && <p className="w-full text-sm text-danger-600">{error}</p>}
+
+      <Button
+        variant="ghost"
+        icon="trash"
+        size="sm"
+        onClick={handleDelete}
+        disabled={loading}
+        className="text-surface-400 hover:text-danger-600 hover:bg-danger-50"
+      >
+        Hapus
+      </Button>
+
+      {error && <p className="w-full text-xs text-danger-600">{error}</p>}
 
       <Dialog
         open={editing}
         onClose={() => setEditing(false)}
-        title="Edit task"
-        description="Perbarui detail task ini."
+        title="Edit detail task"
+        description="Perbarui informasi dan estimasi task ini."
       >
         <div className="space-y-4">
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label className="block text-[12px] font-semibold text-surface-600 mb-1">
+              Nama Task
+            </label>
             <input
               value={values.name}
               onChange={(e) => setValues({ ...values, name: e.target.value })}
               placeholder="Nama task"
-              className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
+              className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none transition focus:border-primary-400 focus:bg-white"
             />
-            <select
-              value={values.priority}
-              onChange={(e) => setValues({ ...values, priority: e.target.value })}
-              className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
-            >
-              <option value="LOW">Rendah</option>
-              <option value="MEDIUM">Sedang</option>
-              <option value="HIGH">Tinggi</option>
-            </select>
           </div>
-          <textarea
-            value={values.description}
-            onChange={(e) => setValues({ ...values, description: e.target.value })}
-            placeholder="Deskripsi"
-            rows={3}
-            className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
-          />
-          <textarea
-            value={values.notes}
-            onChange={(e) => setValues({ ...values, notes: e.target.value })}
-            placeholder="Catatan"
-            rows={2}
-            className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
-          />
-          <input
-            type="number"
-            min="0"
-            step="0.5"
-            value={values.estimatedHours}
-            onChange={(e) => setValues({ ...values, estimatedHours: e.target.value })}
-            placeholder="Estimasi jam"
-            className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
-          />
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label className="block text-[12px] font-semibold text-surface-600 mb-1">
+                Prioritas
+              </label>
+              <select
+                value={values.priority}
+                onChange={(e) => setValues({ ...values, priority: e.target.value })}
+                className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none transition focus:border-primary-400 focus:bg-white"
+              >
+                <option value="LOW">Rendah</option>
+                <option value="MEDIUM">Sedang</option>
+                <option value="HIGH">Tinggi</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[12px] font-semibold text-surface-600 mb-1">
+                Estimasi (Jam)
+              </label>
+              <input
+                type="number"
+                min="0"
+                step="0.5"
+                value={values.estimatedHours}
+                onChange={(e) => setValues({ ...values, estimatedHours: e.target.value })}
+                placeholder="0.5, 1, 2..."
+                className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none transition focus:border-primary-400 focus:bg-white"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[12px] font-semibold text-surface-600 mb-1">
+              Deskripsi
+            </label>
+            <textarea
+              value={values.description}
+              onChange={(e) => setValues({ ...values, description: e.target.value })}
+              placeholder="Rincian yang perlu dikerjakan..."
+              rows={3}
+              className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none transition focus:border-primary-400 focus:bg-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[12px] font-semibold text-surface-600 mb-1">
+              Catatan / Sticky Notes
+            </label>
+            <textarea
+              value={values.notes}
+              onChange={(e) => setValues({ ...values, notes: e.target.value })}
+              placeholder="Catatan tambahan, tips, link, atau referensi..."
+              rows={2}
+              className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none transition focus:border-primary-400 focus:bg-white"
+            />
+          </div>
+
           {error && <p className="text-sm text-danger-600">{error}</p>}
-          <div className="flex justify-end gap-2">
+
+          <div className="flex justify-end gap-2 pt-2">
             <Button variant="secondary" onClick={() => setEditing(false)} type="button">
               Batal
             </Button>
-            <Button loading={loading} disabled={!values.name.trim()} onClick={() => patch({ ...values, estimatedHours: Number(values.estimatedHours) })}>
+            <Button
+              loading={loading}
+              disabled={!values.name.trim()}
+              onClick={() => patch({ ...values, estimatedHours: Number(values.estimatedHours) })}
+            >
               Simpan perubahan
             </Button>
           </div>
