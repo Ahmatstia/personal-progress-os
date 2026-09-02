@@ -38,7 +38,7 @@ export default function NewGoalButton() {
       setType("LEARNING");
       setOpen(false);
       toast("Goal dibuat.", "success");
-      router.refresh();
+      router.push(`/goals/${data.id}`);
     } catch (error) {
       toast(error instanceof Error ? error.message : "Gagal membuat goal.", "error");
     } finally {

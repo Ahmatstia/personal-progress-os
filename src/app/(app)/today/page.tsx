@@ -36,7 +36,7 @@ export default async function TodayPage() {
   const recentCaptures = await getRecentCaptures(user.id, 8);
 
   const primaryFocus = today.focusTasks[0]?.task;
-  const firstAvailable = today.availableTasks[0] ?? null;
+  const ranked = today.nextAction;
 
   const sessionTask = today.currentSession
     ? {
@@ -47,19 +47,19 @@ export default async function TodayPage() {
       }
     : primaryFocus
       ? { id: primaryFocus.id, name: primaryFocus.name, goalName: primaryFocus.stage.goal.name, stageName: primaryFocus.stage.name }
-      : firstAvailable
-        ? { id: firstAvailable.id, name: firstAvailable.name, goalName: firstAvailable.stage.goal.name, stageName: firstAvailable.stage.name }
+      : ranked
+        ? { id: ranked.taskId, name: ranked.taskName, goalName: ranked.goalName, stageName: ranked.stageName }
         : null;
 
-  const nextActionCard = firstAvailable
+  const nextActionCard = ranked
     ? {
-        taskId: firstAvailable.id,
-        goalId: firstAvailable.stage.goalId,
-        goalName: firstAvailable.stage.goal.name,
-        stageName: firstAvailable.stage.name,
-        taskName: firstAvailable.name,
-        priority: firstAvailable.priority,
-        startedAt: firstAvailable.startedAt,
+        taskId: ranked.taskId,
+        goalId: ranked.goalId,
+        goalName: ranked.goalName,
+        stageName: ranked.stageName,
+        taskName: ranked.taskName,
+        priority: ranked.priority,
+        startedAt: ranked.startedAt,
       }
     : null;
 

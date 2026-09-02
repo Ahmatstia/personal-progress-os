@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
@@ -114,15 +115,27 @@ export function SessionFocusMode({
           <Icon name="clock" size={16} />
           <span className="text-xs font-semibold uppercase tracking-[0.16em]">Sesi</span>
         </div>
-        <p className="mt-3 text-lg font-semibold text-surface-800">Siap saat Anda siap.</p>
-        <p className="mt-1 text-sm text-surface-500">
-          Kosongkan pikiran dan fokus pada satu hal: <span className="font-medium text-surface-700">{taskName}</span>.
-        </p>
-        <div className="mt-4">
-          <Button icon="play" onClick={start} loading={isLoading}>
-            {idleCta}
-          </Button>
-        </div>
+        {taskId ? (
+          <>
+            <p className="mt-3 text-lg font-semibold text-surface-800">Siap saat Anda siap.</p>
+            <p className="mt-1 text-sm text-surface-500">
+              Kosongkan pikiran dan fokus pada satu hal: <span className="font-medium text-surface-700">{taskName}</span>.
+            </p>
+            <div className="mt-4">
+              <Button icon="play" onClick={start} loading={isLoading}>
+                {idleCta}
+              </Button>
+            </div>
+          </>
+        ) : (
+          <p className="mt-3 text-sm text-surface-500">
+            Belum ada task untuk sesi fokus.{" "}
+            <Link href="/goals" className="font-semibold text-primary-600 hover:text-primary-700">
+              Buat task lewat Goals
+            </Link>
+            .
+          </p>
+        )}
         {error && <p className="mt-3 text-sm text-danger-600">{error}</p>}
       </div>
     );
