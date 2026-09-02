@@ -177,11 +177,11 @@ export default async function TodayPage() {
           </span>
           <h2 className="text-base font-semibold text-surface-900">Rangkuman hari ini</h2>
         </div>
-        <div className="grid gap-0 sm:grid-cols-3 sm:gap-4">
+        <dl className="grid gap-0 sm:grid-cols-3 sm:gap-4">
           <StatRow icon="clock" label="Waktu fokus" value={formatDuration(today.stats.totalMinutes)} hint="dalam sesi selesai" />
           <StatRow icon="check" tone="success" label="Task selesai" value={String(today.stats.completedTasks)} hint="dari semua task" />
           <StatRow icon="target" tone="warning" label="Prioritas selesai" value={`${today.focusCompleted}/${today.focusTotal}`} hint="dari daftar fokus" />
-        </div>
+        </dl>
       </section>
     </div>
   );

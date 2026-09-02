@@ -12,8 +12,10 @@ import { Button } from "@/app/components/ui/Button";
 import { StatusBadge } from "@/app/components/ui/Badge";
 import { ProgressBar } from "@/app/components/ui/Progress";
 import { EmptyState } from "@/app/components/ui/EmptyState";
+import { StatRow } from "@/app/components/ui/StatRow";
 import { formatHours } from "@/lib/format";
 import { Icon } from "@/app/components/ui/Icon";
+import { JourneyRoute, CurrentWaypointTag } from "@/app/components/core/JourneyRoute";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +48,21 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const progress = calculateGoalProgress(goal.stages);
   const completedTasks = allTasks.filter((task) => task.status === "COMPLETED").length;
   const completedStages = goal.stages.filter((stage) => stage.tasks.length > 0 && calculateStageProgress(stage.tasks) === 100).length;
+
+  const currentStageIndex = goal.stages.findIndex((stage) =>
+    stage.tasks.some((task) => task.status !== "COMPLETED"),
+  );
+  const waypoints = goal.stages.map((stage, index) => ({
+    id: stage.id,
+    label: stage.name,
+    status:
+      currentStageIndex === -1 ||
+      index < currentStageIndex
+        ? ("COMPLETED" as const)
+        : index === currentStageIndex
+          ? ("CURRENT" as const)
+          : ("UPCOMING" as const),
+  }));
 
   return (
     <div className="space-y-8">
@@ -89,19 +106,12 @@ export default async function GoalPage({ params }: GoalPageProps) {
           <ProgressBar value={progress} />
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-          {[
-            { label: "Stage", value: String(goal.stages.length) },
-            { label: "Stage selesai", value: String(completedStages) },
-            { label: "Task selesai", value: `${completedTasks}/${allTasks.length}` },
-            { label: "Estimasi usaha", value: formatHours(allTasks.reduce((s, t) => s + (t.estimatedHours || 0), 0)) },
-          ].map((stat) => (
-            <div key={stat.label} className="rounded-2xl border border-surface-200 bg-surface-0 p-4">
-              <p className="text-xs text-surface-500">{stat.label}</p>
-              <p className="mt-1.5 text-2xl font-bold text-surface-900">{stat.value}</p>
-            </div>
-          ))}
-        </div>
+        <dl className="mt-6 grid gap-x-8 sm:grid-cols-2">
+          <StatRow icon="layers" label="Jumlah stage" value={String(goal.stages.length)} />
+          <StatRow icon="check" tone="success" label="Stage selesai" value={String(completedStages)} />
+          <StatRow icon="target" tone="warning" label="Task selesai" value={`${completedTasks}/${allTasks.length}`} />
+          <StatRow icon="clock" label="Estimasi usaha" value={formatHours(allTasks.reduce((s, t) => s + (t.estimatedHours || 0), 0))} />
+        </dl>
       </section>
 
       {/* Roadmap */}
@@ -128,6 +138,13 @@ export default async function GoalPage({ params }: GoalPageProps) {
           </div>
         </div>
 
+        {goal.stages.length > 0 && (
+          <div className="mb-6 rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
+            <p className="eyebrow mb-3 text-surface-400">Posisi Anda</p>
+            <JourneyRoute waypoints={waypoints} size="md" />
+          </div>
+        )}
+
         {goal.stages.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-surface-300 bg-surface-0 p-10 text-center shadow-soft">
             <EmptyState
@@ -145,22 +162,36 @@ export default async function GoalPage({ params }: GoalPageProps) {
               const completed = stage.tasks.filter((task) => task.status === "COMPLETED").length;
               const total = stage.tasks.length;
               const isCompleted = total > 0 && completed === total;
+              const isCurrent = index === currentStageIndex;
 
               return (
-                <article key={stage.id} className="relative rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft md:pl-16">
+                <article
+                  key={stage.id}
+                  className={`relative rounded-2xl border bg-surface-0 p-5 shadow-soft md:pl-16 ${
+                    isCurrent
+                      ? "border-primary-300 ring-1 ring-primary-100"
+                      : isCompleted
+                        ? "border-success-200"
+                        : "border-surface-200"
+                  }`}
+                >
                   <div className="absolute left-3 top-6 hidden h-6 w-6 shrink-0 flex-col items-center md:flex">
                     <span
-                      className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${
-                        isCompleted ? "bg-success-500 text-white" : "bg-primary-600 text-white"
+                      className={`relative flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${
+                        isCompleted ? "bg-success-500 text-white" : isCurrent ? "bg-primary-600 text-white" : "bg-surface-200 text-surface-600"
                       }`}
                     >
                       {isCompleted ? <Icon name="check" size={13} /> : index + 1}
+                      {isCurrent && <span aria-hidden="true" className="halo" />}
                     </span>
                   </div>
 
                   <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-primary-500">Stage {index + 1}</p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-xs font-semibold uppercase tracking-wider text-primary-500">Stage {index + 1}</p>
+                        {isCurrent && <CurrentWaypointTag />}
+                      </div>
                       <h3 className="mt-1 text-lg font-semibold text-surface-900">{stage.name}</h3>
                       {stage.description && <p className="mt-2 text-sm leading-6 text-surface-500">{stage.description}</p>}
                     </div>

@@ -6,8 +6,9 @@ import { getCurrentUser } from "@/lib/auth";
 import LoginForm from "@/app/components/LoginForm";
 import { Button } from "@/app/components/ui/Button";
 import { PageHeader } from "@/app/components/ui/PageHeader";
-import { ProgressSnapshot } from "@/app/components/core/ProgressSnapshot";
-import { NextActionCard } from "@/app/components/core/NextActionCard";
+import { NextActionSpotlight } from "@/app/components/core/NextActionSpotlight";
+import { FocusOrb } from "@/app/components/core/FocusOrb";
+import { StatRow } from "@/app/components/ui/StatRow";
 import { ProgressBar } from "@/app/components/ui/Progress";
 import { EmptyState } from "@/app/components/ui/EmptyState";
 import { Icon } from "@/app/components/ui/Icon";
@@ -75,7 +76,7 @@ export default async function Home() {
 
       {/* Focus + next action for the day */}
       <div className="grid gap-5 lg:grid-cols-[1.35fr_0.65fr]">
-        <NextActionCard nextAction={dashboard.nextAction} />
+        <NextActionSpotlight nextAction={dashboard.nextAction} />
         <div className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
           <div className="flex items-center gap-2 text-primary-600">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100">
@@ -104,14 +105,43 @@ export default async function Home() {
       </div>
 
       {/* Progress snapshot */}
-      <ProgressSnapshot
-        items={[
-          { label: "Goals aktif", value: String(goalCount), icon: "flag", hint: "sedang berjalan" },
-          { label: "Task selesai", value: `${dashboard.completedTaskCount}/${dashboard.totalTaskCount}`, icon: "check", hint: `${completionPct}% selesai` },
-          { label: "Belajar hari ini", value: formatDuration(dashboard.studyMinutesToday), icon: "clock", hint: "waktu sesi" },
-          { label: "Progres keseluruhan", value: `${dashboard.totalProgress}%`, icon: "gauge", hint: "di seluruh goals" },
-        ]}
-      />
+      <section
+        className={`rounded-2xl border bg-surface-0 p-5 shadow-soft ${
+          completionPct === 100 ? "border-success-200" : "border-surface-200"
+        }`}
+      >
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <div className="flex flex-wrap items-center gap-6">
+            <div className="min-w-[160px]">
+              <p className="eyebrow text-surface-400">Ringkasan</p>
+              <h2 className="mt-1 text-lg font-semibold text-surface-900">
+                {dashboard.completedTaskCount || dashboard.totalTaskCount === 0
+                  ? "Semua task beres"
+                  : "Dalam perjalanan"}
+              </h2>
+              <p className="mt-1 max-w-xs text-sm text-surface-500">
+                {goalCount} goal aktif · {dashboard.completedTaskCount}/{dashboard.totalTaskCount} task selesai.
+              </p>
+            </div>
+            <FocusOrb
+              value={completionPct}
+              size={92}
+              stroke={7}
+              tone={completionPct === 100 ? "success" : "primary"}
+              label={`Progres keseluruhan ${completionPct} persen`}
+            >
+              <span className="text-xl font-bold text-surface-900">{completionPct}%</span>
+              <span className="mt-0.5 text-[10px] uppercase tracking-wider text-surface-400">selesai</span>
+            </FocusOrb>
+          </div>
+          <dl className="min-w-[220px] flex-1 grid gap-x-6">
+            <StatRow icon="flag" label="Goals aktif" value={String(goalCount)} />
+            <StatRow icon="check" tone="success" label="Task selesai" value={`${dashboard.completedTaskCount}/${dashboard.totalTaskCount}`} />
+            <StatRow icon="clock" label="Belajar hari ini" value={formatDuration(dashboard.studyMinutesToday)} />
+            <StatRow icon="gauge" tone="warning" label="Progres keseluruhan" value={`${dashboard.totalProgress}%`} />
+          </dl>
+        </div>
+      </section>
 
       {/* Weekly review prompt */}
       {dashboard.reviewSummary && (

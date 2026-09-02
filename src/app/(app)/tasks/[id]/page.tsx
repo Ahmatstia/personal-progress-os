@@ -6,6 +6,8 @@ import { getTaskDetail } from "@/services/task.service";
 import { requirePageUser } from "@/lib/auth";
 import { StatusBadge } from "@/app/components/ui/Badge";
 import { Icon } from "@/app/components/ui/Icon";
+import { StatRow } from "@/app/components/ui/StatRow";
+import { SectionHeader } from "@/app/components/ui/SectionHeader";
 import { HistoryDeleteButton } from "@/app/components/ui/HistoryDeleteButton";
 import { formatHours } from "@/lib/format";
 
@@ -30,15 +32,17 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
           href={`/goals/${task.stage.goalId}`}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-surface-500 transition hover:text-primary-700"
         >
-          <Icon name="arrowLeft" size={15} /> Kembali ke {task.stage.goal.name}
+          <Icon name="arrowLeft" size={15} /> {task.stage.goal.name}
         </Link>
+        <span className="text-surface-300">/</span>
+        <span className="text-sm font-medium text-surface-700">{task.stage.name}</span>
       </div>
 
       <section className="rounded-3xl border border-surface-200 bg-surface-0 p-6 shadow-soft md:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0 max-w-2xl">
             <div className="flex flex-wrap items-center gap-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">{task.stage.name}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">Task</p>
               <span className="h-1 w-1 rounded-full bg-surface-300" />
               <StatusBadge status={task.status} />
             </div>
@@ -57,44 +61,40 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
           notes={task.notes}
         />
 
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {[
-            { label: "Prioritas", value: task.priority },
-            { label: "Estimasi", value: formatHours(task.estimatedHours) },
-            { label: "Aktual", value: formatHours(task.actualHours) },
-            { label: "Sesi", value: String(task.sessions.length) },
-          ].map((stat) => (
-            <div key={stat.label} className="rounded-2xl border border-surface-200 bg-surface-50 p-4">
-              <p className="text-xs text-surface-500">{stat.label}</p>
-              <p className="mt-1.5 text-xl font-bold text-surface-900">{stat.value}</p>
-            </div>
-          ))}
+        <div className="mt-6 grid gap-x-8 gap-y-1 border-t border-surface-150 pt-4 sm:grid-cols-2">
+          <StatRow icon="gauge" tone="warning" label="Prioritas" value={task.priority} />
+          <StatRow icon="target" label="Estimasi" value={formatHours(task.estimatedHours)} />
+          <StatRow icon="clock" tone="success" label="Waktu aktual" value={formatHours(task.actualHours)} hint={task.actualHours > task.estimatedHours && task.estimatedHours > 0 ? "melebihi estimasi" : undefined} />
+          <StatRow icon="layers" label="Jumlah sesi" value={String(task.sessions.length)} hint={task.sessions.length === 0 ? "belum ada sesi fokus" : undefined} />
         </div>
       </section>
 
       <section>
-        <div className="mb-3 flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-ai-100 text-ai-600">
-            <Icon name="clock" size={16} />
-          </span>
-          <h2 className="text-base font-semibold text-surface-900">Sesi fokus</h2>
-        </div>
-        <SessionFocusMode
-          key={activeSession?.id ?? "idle"}
-          taskId={task.id}
-          taskName={task.name}
-          goalName={task.stage.goal.name}
-          stageName={task.stage.name}
-          activeSession={activeSession ? { id: activeSession.id, startedAt: activeSession.startedAt.toISOString() } : null}
-          idleCta="Mulai sesi fokus"
+        <SectionHeader
+          icon="clock"
+          iconTone="ai"
+          eyebrow="Sesi fokus"
+          title="Fokus pada task ini"
+          description="Waktu yang Anda habiskan untuk satu task sekaligus."
         />
+        <div className="mt-3">
+          <SessionFocusMode
+            key={activeSession?.id ?? "idle"}
+            taskId={task.id}
+            taskName={task.name}
+            goalName={task.stage.goal.name}
+            stageName={task.stage.name}
+            activeSession={activeSession ? { id: activeSession.id, startedAt: activeSession.startedAt.toISOString() } : null}
+            idleCta="Mulai sesi fokus"
+          />
+        </div>
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-surface-900">Sesi terbaru</h2>
+        <SectionHeader eyebrow="Riwayat" title="Sesi terbaru" />
         {task.sessions.length === 0 ? (
           <p className="mt-3 rounded-xl border border-dashed border-surface-300 p-5 text-sm text-surface-500">
-            Belum ada sesi fokus.
+            Belum ada sesi fokus. Mulai sesi pertama untuk mencatat waktu dan pemahaman Anda.
           </p>
         ) : (
           <div className="mt-3 space-y-2">

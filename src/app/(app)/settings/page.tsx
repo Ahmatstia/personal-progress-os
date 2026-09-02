@@ -2,6 +2,7 @@ import { requirePageUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import LogoutButton from "@/app/components/LogoutButton";
 import { PageHeader } from "@/app/components/ui/PageHeader";
+import { StatRow } from "@/app/components/ui/StatRow";
 import { Icon } from "@/app/components/ui/Icon";
 
 export const dynamic = "force-dynamic";
@@ -38,17 +39,10 @@ export default async function SettingsPage() {
           </div>
         </div>
 
-        <dl className="mt-6 grid gap-3 border-t border-surface-150 pt-6 sm:grid-cols-3">
-          {[
-            { label: "Goals", value: String(goalCount) },
-            { label: "Task", value: String(taskCount) },
-            { label: "Sesi fokus", value: String(sessionCount) },
-          ].map((stat) => (
-            <div key={stat.label} className="rounded-xl bg-surface-50 p-4">
-              <dt className="text-xs text-surface-500">{stat.label}</dt>
-              <dd className="mt-1 text-2xl font-bold text-surface-900">{stat.value}</dd>
-            </div>
-          ))}
+        <dl className="mt-6 grid gap-x-8 border-t border-surface-150 pt-4 sm:grid-cols-3">
+          <StatRow icon="flag" label="Goals" value={String(goalCount)} />
+          <StatRow icon="layers" tone="primary" label="Task" value={String(taskCount)} />
+          <StatRow icon="clock" tone="success" label="Sesi fokus" value={String(sessionCount)} />
         </dl>
 
         <p className="mt-6 text-xs text-surface-400">Akun dibuat {formatDate(user.createdAt)}</p>

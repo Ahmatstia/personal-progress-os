@@ -22,17 +22,19 @@ function nodeClass(status: Waypoint["status"], size: "sm" | "md") {
 export function JourneyRoute({
   waypoints,
   size = "md",
+  label = "Peta perjalanan goal",
   className = "",
 }: {
   waypoints: Waypoint[];
   size?: "sm" | "md";
+  label?: string;
   className?: string;
 }) {
   return (
     <div
       className={`flex w-full items-center ${className}`}
       role="img"
-      aria-label="Peta perjalanan goal"
+      aria-label={label}
     >
       {waypoints.map((waypoint, index) => {
         const isLast = index === waypoints.length - 1;
