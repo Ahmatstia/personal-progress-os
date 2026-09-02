@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/Button";
+import { useConfirm } from "../ui/Confirm";
 
 export function StartSessionButton({
   taskId,
@@ -22,10 +23,16 @@ export function StartSessionButton({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const { askConfirm, confirmDialog } = useConfirm();
 
   async function start() {
     if (loading) return;
-    if (!window.confirm(taskName ? `Mulai sesi fokus untuk "${taskName}"?` : "Mulai sesi fokus?")) return;
+    const confirmed = await askConfirm({
+      title: "Mulai sesi fokus",
+      description: taskName ? `Mulai sesi fokus untuk "${taskName}"?` : "Mulai sesi fokus?",
+      confirmLabel: "Mulai sesi",
+    });
+    if (!confirmed) return;
     setLoading(true);
     setError(false);
     try {
@@ -55,6 +62,7 @@ export function StartSessionButton({
       {error && (
         <span className="text-xs text-danger-600">Gagal memulai sesi. Coba lagi.</span>
       )}
+      {confirmDialog}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "./ui/Icon";
 import { useToast } from "./ui/Toast";
+import { useConfirm } from "./ui/Confirm";
 
 export default function StageActions({
   id,
@@ -20,6 +21,7 @@ export default function StageActions({
 }) {
   const router = useRouter();
   const { toast } = useToast();
+  const { askConfirm, confirmDialog } = useConfirm();
   const [editing, setEditing] = useState(false);
   const [stageName, setStageName] = useState(name);
   const [stageDescription, setStageDescription] = useState(description ?? "");
@@ -48,6 +50,13 @@ export default function StageActions({
   }
 
   async function remove() {
+    const confirmed = await askConfirm({
+      title: "Hapus stage",
+      description: `Hapus stage "${name}"? Semua task di dalamnya ikut terhapus.`,
+      confirmLabel: "Hapus",
+      danger: true,
+    });
+    if (!confirmed) return;
     try {
       const response = await fetch(`/api/stages/${id}`, { method: "DELETE" });
       const result = await response.json();
@@ -118,15 +127,14 @@ export default function StageActions({
         <Icon name="edit" size={14} />
       </button>
       <button
-        onClick={() => {
-          if (window.confirm(`Hapus stage "${name}"? Semua task di dalamnya ikut terhapus.`)) remove();
-        }}
+        onClick={() => void remove()}
         aria-label="Hapus stage"
         className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-danger-50 hover:text-danger-600"
       >
         <Icon name="trash" size={14} />
       </button>
       {error && <p className="w-full text-xs text-danger-600">{error}</p>}
+      {confirmDialog}
     </div>
   );
 }

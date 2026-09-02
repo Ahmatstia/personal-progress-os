@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
+import { useConfirm } from "../ui/Confirm";
 
 function formatElapsed(seconds: number) {
   const h = Math.floor(seconds / 3600);
@@ -31,6 +32,7 @@ export function SessionFocusMode({
   compact?: boolean;
 }) {
   const router = useRouter();
+  const { askConfirm, confirmDialog } = useConfirm();
   const [session, setSession] = useState(activeSession);
   const [elapsed, setElapsed] = useState(0);
   const [ending, setEnding] = useState(false);
@@ -50,7 +52,12 @@ export function SessionFocusMode({
   }, [session]);
 
   async function start() {
-    if (!window.confirm(`Mulai sesi untuk "${taskName}"?`)) return;
+    const confirmed = await askConfirm({
+      title: "Mulai sesi fokus",
+      description: `Mulai sesi untuk "${taskName}"?`,
+      confirmLabel: "Mulai sesi",
+    });
+    if (!confirmed) return;
     setIsLoading(true);
     setError("");
     try {
@@ -90,7 +97,13 @@ export function SessionFocusMode({
 
   async function cancel() {
     if (!session) return;
-    if (!window.confirm(`Batalkan sesi untuk "${taskName}"? Sesi ini akan dihapus dari riwayat dan tidak menambah waktu belajar.`)) return;
+    const confirmed = await askConfirm({
+      title: "Batalkan sesi",
+      description: `Batalkan sesi untuk "${taskName}"? Sesi ini akan dihapus dari riwayat dan tidak menambah waktu belajar.`,
+      confirmLabel: "Batalkan sesi",
+      danger: true,
+    });
+    if (!confirmed) return;
     setIsLoading(true);
     setError("");
     try {
@@ -110,7 +123,8 @@ export function SessionFocusMode({
   // Idle state — a calm prompt to begin
   if (!session) {
     return (
-      <div className={`rounded-2xl border border-dashed border-surface-300 bg-surface-0 p-6 ${compact ? "" : ""}`}>
+      <>
+        <div className={`rounded-2xl border border-dashed border-surface-300 bg-surface-0 p-6 ${compact ? "" : ""}`}>
         <div className="flex items-center gap-2 text-surface-400">
           <Icon name="clock" size={16} />
           <span className="text-xs font-semibold uppercase tracking-[0.16em]">Sesi</span>
@@ -137,13 +151,16 @@ export function SessionFocusMode({
           </p>
         )}
         {error && <p className="mt-3 text-sm text-danger-600">{error}</p>}
-      </div>
+        </div>
+        {confirmDialog}
+      </>
     );
   }
 
   // Active — focused workspace
   return (
-    <section className="overflow-hidden rounded-2xl border border-ai-200 bg-gradient-to-br from-ai-50 via-surface-0 to-surface-0 p-6 shadow-soft">
+    <>
+      <section className="overflow-hidden rounded-2xl border border-ai-200 bg-gradient-to-br from-ai-50 via-surface-0 to-surface-0 p-6 shadow-soft">
       <div className="flex items-center gap-2 text-ai-700">
         <span className="h-2 w-2 animate-pulse rounded-full bg-ai-500" aria-hidden="true" />
         <span className="text-xs font-semibold uppercase tracking-[0.16em]">Mode fokus — sedang sesi</span>
@@ -247,6 +264,8 @@ export function SessionFocusMode({
           </div>
         </div>
       )}
-    </section>
+      </section>
+      {confirmDialog}
+    </>
   );
 }

@@ -6,6 +6,7 @@ import { Dialog } from "./ui/Dialog";
 import { Button } from "./ui/Button";
 import { StatusBadge } from "./ui/Badge";
 import { useToast } from "./ui/Toast";
+import { useConfirm } from "./ui/Confirm";
 
 type Props = {
   id: string;
@@ -20,6 +21,7 @@ type Props = {
 export default function TaskActions({ id, status, name, description, priority, estimatedHours, notes }: Props) {
   const router = useRouter();
   const { toast } = useToast();
+  const { askConfirm, confirmDialog } = useConfirm();
   const [editing, setEditing] = useState(false);
   const [values, setValues] = useState({
     name,
@@ -62,7 +64,14 @@ export default function TaskActions({ id, status, name, description, priority, e
         variant="success"
         icon="check"
         onClick={() => {
-          if (window.confirm(`Selesaikan task "${name}"?`)) patch({ status: "COMPLETED" }, "Task selesai. Bagus!");
+          void (async () => {
+            const confirmed = await askConfirm({
+              title: "Selesaikan task",
+              description: `Selesaikan task "${name}"?`,
+              confirmLabel: "Selesaikan",
+            });
+            if (confirmed) patch({ status: "COMPLETED" }, "Task selesai. Bagus!");
+          })();
         }}
         disabled={loading}
       >
@@ -146,6 +155,7 @@ export default function TaskActions({ id, status, name, description, priority, e
           </div>
         </div>
       </Dialog>
+      {confirmDialog}
     </div>
   );
 }

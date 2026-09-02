@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Icon } from "./ui/Icon";
 import { PriorityBadge, StatusBadge } from "./ui/Badge";
 import { useToast } from "./ui/Toast";
+import { useConfirm } from "./ui/Confirm";
 import { formatHours } from "@/lib/format";
 
 type TaskItemProps = {
@@ -31,6 +32,7 @@ export default function TaskItem({
 }: TaskItemProps) {
   const router = useRouter();
   const { toast } = useToast();
+  const { askConfirm, confirmDialog } = useConfirm();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -95,7 +97,12 @@ export default function TaskItem({
   }
 
   async function deleteTask() {
-    const confirmed = window.confirm(`Hapus task "${name}"?`);
+    const confirmed = await askConfirm({
+      title: "Hapus task",
+      description: `Hapus task "${name}"?`,
+      confirmLabel: "Hapus",
+      danger: true,
+    });
     if (!confirmed) return;
     setIsLoading(true);
     try {
@@ -113,7 +120,8 @@ export default function TaskItem({
 
   if (isEditing) {
     return (
-      <div className="rounded-2xl border border-surface-200 bg-surface-0 p-4 shadow-soft">
+      <>
+        <div className="rounded-2xl border border-surface-200 bg-surface-0 p-4 shadow-soft">
         <div className="space-y-3">
           <input
             value={editName}
@@ -172,13 +180,16 @@ export default function TaskItem({
             {isLoading ? "Menyimpan…" : "Simpan"}
           </button>
         </div>
-      </div>
+        </div>
+        {confirmDialog}
+      </>
     );
   }
 
   return (
-    <div
-      className={`group flex items-center gap-3 rounded-xl border px-3.5 py-3 transition ${
+    <>
+      <div
+        className={`group flex items-center gap-3 rounded-xl border px-3.5 py-3 transition ${
         completed ? "border-success-200 bg-success-50/50" : "border-surface-200 bg-surface-0 shadow-soft"
       }`}
     >
@@ -238,6 +249,8 @@ export default function TaskItem({
           <Icon name="trash" size={15} />
         </button>
       </div>
-    </div>
+      </div>
+      {confirmDialog}
+    </>
   );
 }
