@@ -50,33 +50,49 @@ export default async function ReviewPage() {
     }),
   );
 
+  const totalMinutes = rows.reduce((s, r) => s + r.metrics.learningMinutes, 0);
+  const totalTasks = rows.reduce((s, r) => s + r.metrics.tasksCompleted, 0);
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       <PageHeader
         eyebrow="Review"
         title="Berhenti dan renungkan"
         description="Ritual mingguan yang tenang: pahami apa yang berhasil, apa yang tidak, dan ke mana harus mengarahkan energi Anda berikutnya."
       />
 
-      <section className="rounded-3xl border border-ai-200 bg-gradient-to-br from-ai-50 via-surface-0 to-surface-0 p-6 shadow-soft md:p-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ai-600">Minggu ini</p>
-            <h2 className="mt-1.5 text-2xl font-bold text-surface-900">{formatRange(period.periodStart, period.periodEnd)}</h2>
-            <p className="mt-1 text-sm text-surface-500">
-              {rows.length === 0
-                ? "Belum ada goals aktif untuk direview."
-                : `${reviewed.size} dari ${rows.length} goals sudah direview minggu ini`}
-            </p>
-          </div>
-          <span className="rounded-full bg-ai-100 px-3 py-1 text-xs font-semibold text-ai-700">
-            {reviewed.size}/{rows.length} selesai
-          </span>
+      <section className="relative overflow-hidden border-b border-ai-200/60 pb-10 md:pb-12">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-ai-100/50 blur-3xl"
+        />
+        <div className="relative">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ai-600">Minggu ini</p>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-surface-900 sm:text-4xl">
+            {formatRange(period.periodStart, period.periodEnd)}
+          </h2>
+          <p className="mt-2 max-w-xl text-sm text-surface-500">
+            {rows.length === 0
+              ? "Belum ada goals aktif untuk direview."
+              : `${reviewed.size} dari ${rows.length} goals sudah direview minggu ini.`}
+          </p>
+
+          {rows.length > 0 && (
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <span className="rounded-full bg-ai-100 px-3 py-1 text-xs font-semibold text-ai-700">
+                {reviewed.size}/{rows.length} selesai
+              </span>
+              <span className="h-px w-6 bg-surface-200" aria-hidden="true" />
+              <span className="text-sm text-surface-500">{formatDuration(totalMinutes)} fokus</span>
+              <span className="text-surface-300">·</span>
+              <span className="text-sm text-surface-500">{totalTasks} task selesai</span>
+            </div>
+          )}
         </div>
       </section>
 
       {rows.length === 0 ? (
-        <div className="rounded-2xl border border-surface-200 bg-surface-0 shadow-soft">
+        <div className="border-t border-surface-150 pt-10">
           <EmptyState
             icon="sparkles"
             title="Belum ada yang direview"
@@ -84,33 +100,42 @@ export default async function ReviewPage() {
           />
         </div>
       ) : (
-        <div className="space-y-3">
-          {rows.map(({ goal, metrics, review, progress }) => {
+        <ol className="divide-y divide-surface-150">
+          {rows.map(({ goal, metrics, review, progress }, index) => {
             const done = !!review;
             return (
-              <div
-                key={goal.id}
-                className={`rounded-2xl border p-5 shadow-soft ${
-                  done ? "border-success-200 bg-success-50/50" : "border-surface-200 bg-surface-0"
-                }`}
-              >
-                <div className="flex flex-wrap items-start justify-between gap-4">
+              <li key={goal.id} className="py-8 sm:py-10">
+                <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0">
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">{goal.type}</p>
-                    <Link href={`/goals/${goal.id}`} className="mt-1 block truncate text-lg font-bold text-surface-900 hover:text-primary-700">
-                      {goal.name}
-                    </Link>
-                    <div className="mt-2 flex items-center gap-2 text-xs text-surface-500">
-                      <span>{formatDuration(metrics.learningMinutes)} fokus</span>
-                      <span className="text-surface-300">·</span>
-                      <span>{metrics.tasksCompleted} task selesai</span>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                          done ? "bg-success-500 text-white" : "bg-surface-200 text-surface-600"
+                        }`}
+                      >
+                        {done ? <Icon name="check" size={15} strokeWidth={3} /> : <span className="font-mono">{index + 1}</span>}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">{goal.type}</p>
+                        <Link
+                          href={`/goals/${goal.id}`}
+                          className="block truncate text-xl font-bold text-surface-900 transition hover:text-primary-700 sm:text-2xl"
+                        >
+                          {goal.name}
+                        </Link>
+                      </div>
                     </div>
+                    <p className="mt-3 text-sm text-surface-500">
+                      {formatDuration(metrics.learningMinutes)} fokus · {metrics.tasksCompleted} task selesai minggu ini
+                    </p>
                   </div>
-                  <div className="flex shrink-0 flex-col items-end gap-2">
-                    <span className="text-lg font-bold text-primary-700">{progress}%</span>
-                    <div className="w-28">
-                      <ProgressBar value={progress} size="sm" tone={done ? "success" : "primary"} />
-                    </div>
+
+                  <div className="shrink-0 sm:flex sm:items-center sm:gap-6">
+                    {progress < 100 && (
+                      <div className="hidden w-24 sm:block">
+                        <ProgressBar value={progress} size="sm" tone={done ? "success" : "primary"} />
+                      </div>
+                    )}
                     <Link href={`/goals/${goal.id}/reviews`}>
                       <Button size="sm" variant={done ? "secondary" : "ai"} icon={done ? "check" : "sparkles"}>
                         {done ? "Sunting review" : "Tulis review"}
@@ -118,23 +143,20 @@ export default async function ReviewPage() {
                     </Link>
                   </div>
                 </div>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ol>
       )}
 
-      <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
-        <div className="flex items-center gap-2 text-primary-600">
-          <Icon name="info" size={16} />
-          <h2 className="font-semibold text-surface-900">Mengapa review mingguan?</h2>
-        </div>
-        <p className="mt-3 text-sm leading-6 text-surface-600">
+      <footer className="max-w-2xl border-t border-surface-150 pt-6">
+        <h2 className="font-semibold text-surface-800">Mengapa review mingguan?</h2>
+        <p className="mt-2 text-sm leading-6 text-surface-500">
           Review bukanlah rapor. Ini adalah kesempatan untuk melihat apa yang benar-benar bergerak, menyebut apa yang
           menghambat Anda, dan memilih satu fokus yang jelas untuk minggu ke depan — sehingga progres terus bertambah,
           bukan sekadar mengalir begitu saja.
         </p>
-      </section>
+      </footer>
     </div>
   );
 }

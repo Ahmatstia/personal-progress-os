@@ -5,7 +5,6 @@ import { getToday } from "@/services/today.service";
 import { getCurrentUser } from "@/lib/auth";
 import LoginForm from "@/app/components/LoginForm";
 import { Button } from "@/app/components/ui/Button";
-import { PageHeader } from "@/app/components/ui/PageHeader";
 import { NextActionSpotlight } from "@/app/components/core/NextActionSpotlight";
 import { FocusOrb } from "@/app/components/core/FocusOrb";
 import { StatRow } from "@/app/components/ui/StatRow";
@@ -53,31 +52,30 @@ export default async function Home() {
       : Math.round((dashboard.completedTaskCount / dashboard.totalTaskCount) * 100);
 
   return (
-    <div className="space-y-8">
-      <PageHeader
-        eyebrow="Ringkasan"
-        title={
-          <span>
+    <div className="space-y-12">
+      <header className="flex flex-wrap items-end justify-between gap-4 border-b border-surface-150 pb-6">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-600">Ringkasan</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-surface-900 sm:text-4xl">
             Selamat datang kembali, {user.name?.split(" ")[0] || "teman"}.
-          </span>
-        }
-        description="Berikut ringkasan progres Anda saat ini."
-        actions={
-          <>
-            <Link href="/today">
-              <Button variant="primary" icon="sun">Ke Hari Ini</Button>
-            </Link>
-            <Link href="/goals">
-              <Button variant="secondary" icon="flag">Semua goals</Button>
-            </Link>
-          </>
-        }
-      />
+          </h1>
+          <p className="mt-2 text-sm text-surface-500">Berikut status perjalanan Anda saat ini.</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/today">
+            <Button variant="primary" icon="sun">Ke Hari Ini</Button>
+          </Link>
+          <Link href="/goals">
+            <Button variant="secondary" icon="flag">Semua goals</Button>
+          </Link>
+        </div>
+      </header>
 
-      {/* Focus + next action for the day */}
-      <div className="grid gap-5 lg:grid-cols-[1.35fr_0.65fr]">
-        <NextActionSpotlight nextAction={dashboard.nextAction} />
-        <div className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
+      {/* Pita komando — fokus hari ini */}
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <NextActionSpotlight nextAction={dashboard.nextAction} progress={dashboard.totalProgress} />
+
+        <section className="rounded-3xl border border-surface-200 bg-surface-0 p-5 shadow-soft sm:p-6">
           <div className="flex items-center gap-2 text-primary-600">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100">
               <Icon name="sun" size={16} />
@@ -94,30 +92,33 @@ export default async function Home() {
           <p className="mt-1.5 text-sm text-surface-500">
             {formatDuration(today.stats.totalMinutes)} belajar · {today.stats.completedTasks} task selesai
           </p>
-          <div className="mt-5">
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
             <Link href="/today">
               <Button variant="secondary" iconRight="arrowRight" size="sm">
                 Buka Hari Ini
               </Button>
             </Link>
+            <span className="text-xs text-surface-400">
+              {today.focusCompleted}/{today.focusTotal} fokus selesai
+            </span>
           </div>
-        </div>
+        </section>
       </div>
 
-      {/* Progress snapshot */}
-      <section
-        className={`rounded-2xl border bg-surface-0 p-5 shadow-soft ${
-          completionPct === 100 ? "border-success-200" : "border-surface-200"
-        }`}
-      >
-        <div className="flex flex-wrap items-center justify-between gap-6">
+      {/* Progres keseluruhan — bagian terbuka */}
+      <section className="border-t border-surface-150 pt-8">
+        <div className="flex flex-wrap items-center justify-between gap-8">
           <div className="flex flex-wrap items-center gap-6">
-            <div className="min-w-[160px]">
+            <div className="min-w-[180px]">
               <p className="eyebrow text-surface-400">Ringkasan</p>
-              <h2 className="mt-1 text-lg font-semibold text-surface-900">
-                {dashboard.completedTaskCount || dashboard.totalTaskCount === 0
-                  ? "Semua task beres"
-                  : "Dalam perjalanan"}
+              <h2 className="mt-1 text-xl font-bold text-surface-900">
+                {dashboard.completedTaskCount === 0 && dashboard.totalTaskCount > 0
+                  ? "Dalam perjalanan"
+                  : dashboard.totalTaskCount === 0
+                    ? "Belum ada task"
+                    : dashboard.completedTaskCount === dashboard.totalTaskCount
+                      ? "Semua task beres"
+                      : "Dalam perjalanan"}
               </h2>
               <p className="mt-1 max-w-xs text-sm text-surface-500">
                 {goalCount} goal aktif · {dashboard.completedTaskCount}/{dashboard.totalTaskCount} task selesai.
@@ -143,19 +144,17 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Weekly review prompt */}
+      {/* Ajakan review — strip aksen, bukan kotak penuh */}
       {dashboard.reviewSummary && (
         <section
-          className={`rounded-2xl border p-5 shadow-soft ${
-            dashboard.reviewSummary.review
-              ? "border-success-200 bg-success-50"
-              : "border-primary-200 bg-primary-50"
+          className={`border-l-4 py-1 pl-5 ${
+            dashboard.reviewSummary.review ? "border-success-500" : "border-primary-500"
           }`}
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-start gap-3">
               <span
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+                className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
                   dashboard.reviewSummary.review ? "bg-success-100 text-success-700" : "bg-primary-100 text-primary-600"
                 }`}
               >
@@ -185,11 +184,11 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Active goals */}
-      <section className="space-y-4">
+      {/* Goals aktif — daftar perjalanan terbuka */}
+      <section className="border-t border-surface-150 pt-8">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">Goals</p>
+            <p className="eyebrow text-surface-400">Goals</p>
             <h2 className="mt-1 text-xl font-bold text-surface-900">Goals aktif</h2>
           </div>
           <Link href="/goals" className="inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-700">
@@ -198,7 +197,7 @@ export default async function Home() {
         </div>
 
         {dashboard.activeGoals.length === 0 ? (
-          <div className="rounded-2xl border border-surface-200 bg-surface-0 shadow-soft">
+          <div className="border-t border-dashed border-surface-200 pt-8">
             <EmptyState
               icon="flag"
               title="Belum ada goals aktif"
@@ -207,50 +206,51 @@ export default async function Home() {
             />
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <ul className="mt-5 divide-y divide-surface-150">
             {dashboard.activeGoals.map((goal) => {
               const progress = calculateGoalProgress(goal.stages);
               const tasks = goal.stages.flatMap((stage) => stage.tasks);
               const completed = tasks.filter((task) => task.status === "COMPLETED").length;
               return (
-                <Link
-                  key={goal.id}
-                  href={`/goals/${goal.id}`}
-                  className="group rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-raised"
-                >
-                  <div className="flex items-start justify-between gap-3">
+                <li key={goal.id} className="py-4">
+                  <Link
+                    href={`/goals/${goal.id}`}
+                    className="group flex items-center justify-between gap-6"
+                  >
                     <div className="min-w-0">
-                      <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">{goal.type}</p>
-                      <h3 className="mt-1 truncate font-semibold text-surface-900 group-hover:text-primary-700">{goal.name}</h3>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">{goal.type}</p>
+                        <span className="h-1 w-1 rounded-full bg-surface-300" />
+                        <span className="text-xs text-surface-500">
+                          {completed}/{tasks.length} task · {goal.stages.length} stage
+                        </span>
+                      </div>
+                      <h3 className="mt-0.5 truncate text-lg font-bold text-surface-800 group-hover:text-primary-700">
+                        {goal.name}
+                      </h3>
                     </div>
-                    <span className="shrink-0 rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700">
-                      {progress}%
-                    </span>
-                  </div>
-                  <div className="mt-4">
-                    <ProgressBar value={progress} size="sm" />
-                  </div>
-                  <div className="mt-3 flex items-center justify-between text-xs text-surface-500">
-                    <span>{completed} / {tasks.length} task</span>
-                    <span>{goal.stages.length} stage</span>
-                  </div>
-                </Link>
+                    <div className="flex w-44 shrink-0 items-center gap-4">
+                      <div className="flex-1">
+                        <ProgressBar value={progress} size="sm" />
+                      </div>
+                      <span className="w-10 shrink-0 text-right text-sm font-bold text-primary-700">{progress}%</span>
+                    </div>
+                  </Link>
+                </li>
               );
             })}
-          </div>
+          </ul>
         )}
       </section>
 
-      {/* Recent activity */}
-      <section className="rounded-2xl border border-surface-200 bg-surface-0 p-5 shadow-soft">
-        <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-100 text-surface-500">
-            <Icon name="clock" size={16} />
-          </span>
-          <h2 className="text-base font-semibold text-surface-900">Aktivitas terbaru</h2>
+      {/* Aktivitas terbaru — daftar terbuka */}
+      <section className="border-t border-surface-150 pt-8">
+        <div>
+          <p className="eyebrow text-surface-400">Jejak</p>
+          <h2 className="mt-1 text-xl font-bold text-surface-900">Aktivitas terbaru</h2>
         </div>
         {dashboard.recentActivity.length === 0 ? (
-          <p className="mt-4 text-sm text-surface-500">
+          <p className="mt-5 text-sm text-surface-500">
             Belum ada aktivitas. Mulai sesi pertama atau catat sesuatu untuk membangun momentum.
           </p>
         ) : (
