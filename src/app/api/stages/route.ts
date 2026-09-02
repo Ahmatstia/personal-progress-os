@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
+import { requireCurrentUser, authErrorResponse, AuthorizationError } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
@@ -51,8 +51,8 @@ export async function POST(request: Request) {
     return NextResponse.json(stage, {
       status: 201,
     });
-  } catch (error) {
-    if (error instanceof Error && error.message === "Autentikasi diperlukan.") return authErrorResponse(error);
+} catch (error) {
+    if (error instanceof AuthorizationError) return authErrorResponse(error);
     console.error("POST /api/stages error:", error);
 
     return NextResponse.json(

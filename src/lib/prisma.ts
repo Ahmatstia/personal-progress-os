@@ -5,8 +5,14 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
+function databasePath() {
+  const configured = process.env.DATABASE_URL;
+  if (!configured) return "./prisma/dev.db";
+  return configured.replace(/^file:/, "");
+}
+
 const adapter = new PrismaBetterSqlite3({
-  url: "./prisma/dev.db",
+  url: databasePath(),
 });
 
 const cachedPrisma = globalForPrisma.prisma;

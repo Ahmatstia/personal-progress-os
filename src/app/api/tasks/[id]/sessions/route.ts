@@ -6,7 +6,7 @@ import {
   getSessionHistory,
   startSession,
 } from "@/services/session.service";
-import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
+import { requireCurrentUser, authErrorResponse, AuthorizationError } from "@/lib/auth";
 
 type Context = { params: Promise<{ id: string }> };
 
@@ -38,7 +38,7 @@ export async function POST(request: Request, context: Context) {
     const user = await requireCurrentUser(request);
     return NextResponse.json({ success: true, data: await startSession(id, user.id) }, { status: 201 });
   } catch (error) {
-    return error instanceof Error && error.message === "Autentikasi diperlukan." ? authErrorResponse(error) : errorResponse(error);
+    return error instanceof AuthorizationError ? authErrorResponse(error) : errorResponse(error);
   }
 }
 
@@ -52,6 +52,6 @@ export async function GET(_request: Request, context: Context) {
     ]);
     return NextResponse.json({ success: true, data: { active, history } });
   } catch (error) {
-    return error instanceof Error && error.message === "Autentikasi diperlukan." ? authErrorResponse(error) : errorResponse(error);
+    return error instanceof AuthorizationError ? authErrorResponse(error) : errorResponse(error);
   }
 }

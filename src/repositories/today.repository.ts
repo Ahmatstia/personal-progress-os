@@ -43,6 +43,6 @@ export function findCapture(userId: string, id: string) {
   return prisma.capture.findFirst({ where: { id, userId } });
 }
 
-export function deleteCaptureById(id: string) {
-  return prisma.capture.delete({ where: { id } });
+export function deleteCaptureById(userId: string, id: string) {
+  return prisma.capture.deleteMany({ where: { id, userId } });
 }

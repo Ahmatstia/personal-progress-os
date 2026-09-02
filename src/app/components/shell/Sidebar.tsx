@@ -34,7 +34,11 @@ export function Sidebar({
   const router = useRouter();
 
   async function logout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      // Lanjut ke beranda walau permintaan logout gagal (cookie dihapus klien).
+    }
     router.push("/");
     router.refresh();
   }

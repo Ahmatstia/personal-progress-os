@@ -86,6 +86,7 @@ export default async function TodayPage() {
               <h2 className="text-base font-semibold text-surface-900">Sesi fokus</h2>
             </div>
             <SessionFocusMode
+              key={today.currentSession?.id ?? "idle"}
               taskId={sessionTask?.id ?? ""}
               taskName={sessionTask?.name ?? "task berikutnya Anda"}
               goalName={sessionTask?.goalName}

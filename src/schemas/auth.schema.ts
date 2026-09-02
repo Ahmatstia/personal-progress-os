@@ -8,5 +8,5 @@ export const loginSchema = z.object({
     .max(100)
     .optional()
     .transform((value) => (value ? value : undefined)),
-  accessCode: z.string().min(1),
+  accessCode: z.string().min(1).max(256),
 });

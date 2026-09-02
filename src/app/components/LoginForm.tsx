@@ -11,19 +11,24 @@ export default function LoginForm() {
     event.preventDefault();
     setBusy(true);
     setError("");
-    const form = new FormData(event.currentTarget);
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(Object.fromEntries(form)),
-    });
-    if (!response.ok) {
-      const body = await response.json().catch(() => ({}));
-      setError(body.error ?? "Gagal masuk.");
+    try {
+      const form = new FormData(event.currentTarget);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(form)),
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        setError(body.error ?? "Gagal masuk.");
+        return;
+      }
+      window.location.reload();
+    } catch {
+      setError("Tidak dapat terhubung ke server.");
+    } finally {
       setBusy(false);
-      return;
     }
-    window.location.reload();
   }
 
   const inputClass =
@@ -33,7 +38,7 @@ export default function LoginForm() {
     <form onSubmit={submit} className="mt-6 space-y-4">
       <label className="block">
         <span className="mb-1.5 block text-sm font-medium text-surface-700">Email</span>
-        <input name="email" type="email" required defaultValue="dev@example.com" placeholder="you@example.com" className={inputClass} />
+        <input name="email" type="email" required placeholder="you@example.com" autoComplete="email" className={inputClass} />
       </label>
       <label className="block">
         <span className="mb-1.5 block text-sm font-medium text-surface-700">Nama (opsional)</span>
@@ -46,7 +51,6 @@ export default function LoginForm() {
             name="accessCode"
             type={showCode ? "text" : "password"}
             required
-            defaultValue="development-access-code"
             placeholder="Kode akses"
             className={`${inputClass} pr-16`}
           />

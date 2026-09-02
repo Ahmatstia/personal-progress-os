@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { updateTaskSchema } from "@/schemas/task.schema";
 import { deleteTask, TaskServiceError, updateTask } from "@/services/task.service";
-import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
+import { requireCurrentUser, authErrorResponse, AuthorizationError } from "@/lib/auth";
 
 type Context = { params: Promise<{ id: string }> };
 
@@ -24,7 +24,7 @@ export async function PATCH(request: Request, context: Context) {
     if (!parsed.success) return NextResponse.json({ success: false, error: { message: "Data task tidak valid.", code: "INVALID_INPUT" } }, { status: 400 });
     return NextResponse.json({ success: true, data: await updateTask((await context.params).id, parsed.data, user.id) });
   } catch (error) {
-    return serviceErrorResponse(error);
+    return error instanceof AuthorizationError ? authErrorResponse(error) : serviceErrorResponse(error);
   }
 }
 
@@ -33,6 +33,6 @@ export async function DELETE(_request: Request, context: Context) {
     const user = await requireCurrentUser(_request);
     return NextResponse.json({ success: true, data: await deleteTask((await context.params).id, user.id) });
   } catch (error) {
-    return error instanceof Error && error.message === "Autentikasi diperlukan." ? authErrorResponse(error) : serviceErrorResponse(error);
+    return error instanceof AuthorizationError ? authErrorResponse(error) : serviceErrorResponse(error);
   }
 }

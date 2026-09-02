@@ -46,3 +46,7 @@ __pycache__/
 
 # generated transformer artifacts
 /nlp/models/
+
+# database artifacts (jangan commit .db/.db-journal)
+/prisma/*.db*
+/prisma/*.db-journal

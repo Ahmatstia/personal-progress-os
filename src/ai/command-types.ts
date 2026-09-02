@@ -15,6 +15,7 @@ export type AICommandResponse = {
   };
   data?: unknown;
   requiresConfirmation?: boolean;
+  confirmationToken?: string;
 };
 
 export type AIPanelState =

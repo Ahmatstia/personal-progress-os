@@ -23,11 +23,11 @@ type AICommandPanelProps = {
   initialContext?: { taskId?: string; taskName?: string; goalId?: string; goalName?: string; stageId?: string };
 };
 
-async function sendCommand(text: string, confirmed: boolean, context?: { taskId?: string; taskName?: string; goalId?: string; goalName?: string; stageId?: string }): Promise<AICommandResponse> {
+async function sendCommand(text: string, confirmed: boolean, context?: { taskId?: string; taskName?: string; goalId?: string; goalName?: string; stageId?: string }, confirmationToken?: string): Promise<AICommandResponse> {
   const response = await fetch("/api/ai/command", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, confirmed, context }),
+    body: JSON.stringify({ text, confirmed, context, confirmationToken }),
   });
 
   const json = await response.json();
@@ -76,6 +76,7 @@ export function AICommandPanel({ className = "", initialContext }: AICommandPane
   const [loading, setLoading] = useState(false);
   const [pendingText, setPendingText] = useState("");
   const [pendingContext, setPendingContext] = useState<{ taskId?: string; taskName?: string; goalId?: string } | undefined>(undefined);
+  const [confirmToken, setConfirmToken] = useState<string | undefined>(undefined);
   const [showExamples, setShowExamples] = useState(false);
 
   useEffect(() => {
@@ -89,14 +90,16 @@ export function AICommandPanel({ className = "", initialContext }: AICommandPane
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  async function handleCommand(text: string, confirmed = false, context?: { taskId?: string; taskName?: string; goalId?: string }) {
+  async function handleCommand(text: string, confirmed = false, context?: { taskId?: string; taskName?: string; goalId?: string }, token?: string) {
     setLoading(true);
     setPanelState("loading");
     setCurrentResponse(null);
+    setConfirmToken(undefined);
     try {
-      const response = await sendCommand(text, confirmed, context ?? initialContext);
+      const response = await sendCommand(text, confirmed, context ?? initialContext, token);
       const state = resolvePanelState(response);
       setCurrentResponse(response);
+      setConfirmToken(response.confirmationToken ?? undefined);
       setPanelState(state);
       setHistory((prev) => [...prev, { id: crypto.randomUUID(), input: text, state, timestamp: new Date() }]);
       if (state === "success") {
@@ -131,7 +134,7 @@ export function AICommandPanel({ className = "", initialContext }: AICommandPane
       if (pendingContext.taskName) context.taskName = pendingContext.taskName;
       if (pendingContext.goalId) context.goalId = pendingContext.goalId;
     }
-    handleCommand(pendingText || currentResponse.interpretation.input, true, context);
+    handleCommand(pendingText || currentResponse.interpretation.input, true, context, confirmToken);
   }
 
   function handleCancel() {
@@ -139,6 +142,7 @@ export function AICommandPanel({ className = "", initialContext }: AICommandPane
     setCurrentResponse(null);
     setPendingText("");
     setPendingContext(undefined);
+    setConfirmToken(undefined);
   }
 
   function handleAmbiguousSelect(taskId: string, taskName: string) {
@@ -148,7 +152,7 @@ export function AICommandPanel({ className = "", initialContext }: AICommandPane
     setPendingText(originalText);
     setPendingContext({ taskId, taskName });
     if (["TASK_COMPLETE", "TASK_REOPEN", "SESSION_START", "FOCUS"].includes(intent)) {
-      handleCommand(originalText, true, { taskId, taskName });
+      handleCommand(originalText, true, { taskId, taskName }, currentResponse.confirmationToken);
     } else {
       handleCommand(originalText, false, { taskId, taskName });
     }

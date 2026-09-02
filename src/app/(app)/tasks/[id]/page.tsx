@@ -80,6 +80,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
           <h2 className="text-base font-semibold text-surface-900">Sesi fokus</h2>
         </div>
         <SessionFocusMode
+          key={activeSession?.id ?? "idle"}
           taskId={task.id}
           taskName={task.name}
           goalName={task.stage.goal.name}

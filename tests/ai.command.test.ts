@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/services/task.service", () => ({ completeTask: vi.fn(), createTask: vi.fn(), findMatchingTasks: vi.fn(), findTask: vi.fn(), reopenTask: vi.fn() }));
+vi.mock("@/services/task.service", () => ({ completeTask: vi.fn(), createTask: vi.fn(), findMatchingTasks: vi.fn(async () => []), findTask: vi.fn(), reopenTask: vi.fn() }));
 vi.mock("@/services/goal.service", () => ({ createGoal: vi.fn() }));
 vi.mock("@/services/session.service", () => ({ endSession: vi.fn(), getAnyActiveSession: vi.fn(), startSession: vi.fn() }));
 vi.mock("@/services/today.service", () => ({ addTodayFocus: vi.fn(), getToday: vi.fn() }));
@@ -17,7 +17,7 @@ vi.mock("@/services/ai.service", () => ({
     source: "baseline",
   })),
 }));
-import { canRead, canWrite } from "../src/ai/safety";
+import { canRead, canWrite, createConfirmationToken } from "../src/ai/safety";
 import { aiCommandSchema } from "../src/schemas/ai-command.schema";
 import { executeAICommand, resolveContextInterpretation } from "../src/services/ai-command.service";
 import { interpretInput } from "../src/services/ai.service";
@@ -49,5 +49,23 @@ describe("AI command safety", () => {
   it("requires confirmation before a write command", async () => {
     const result = await executeAICommand({ text: "selesaikan task Belajar Python", context: { taskName: "Belajar Python" } });
     expect(result).toMatchObject({ success: false, code: "CONFIRMATION_REQUIRED", requiresConfirmation: true });
+    expect(result.confirmationToken).toBeTruthy();
+  });
+
+  it("rejects a confirmed write without a server-issued confirmation token", async () => {
+    const result = await executeAICommand({ text: "selesaikan task Belajar Python", confirmed: true, context: { taskName: "Belajar Python" } });
+    expect(result).toMatchObject({ success: false, code: "CONFIRMATION_REQUIRED" });
+  });
+
+  it("rejects a confirmed write with a confirmation token bound to another intent", async () => {
+    const other = createConfirmationToken("FOCUS");
+    const result = await executeAICommand({ text: "selesaikan task Belajar Python", confirmed: true, confirmationToken: other.token, context: { taskName: "Belajar Python" } });
+    expect(result).toMatchObject({ success: false, code: "CONFIRMATION_REQUIRED" });
+  });
+
+  it("executes a confirmed write that carries a valid confirmation token", async () => {
+    const issued = await executeAICommand({ text: "selesaikan task Belajar Python", context: { taskName: "Belajar Python" } });
+    const result = await executeAICommand({ text: "selesaikan task Belajar Python", confirmed: true, confirmationToken: issued.confirmationToken, context: { taskName: "Belajar Python" } });
+    expect(result.code).toBe("TASK_NOT_FOUND");
   });
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon, type IconName } from "../ui/Icon";
@@ -14,6 +14,15 @@ type GlobalAIDrawerProps = {
 };
 
 export function GlobalAIDrawer({ open, onClose, context }: GlobalAIDrawerProps) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
   if (!open) return null;
   return (
     <div
@@ -68,6 +77,17 @@ export function AppShell({
   const [aiOpen, setAiOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setAiOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const showSearchCta = !isActive("/", pathname) && !isActive("/today", pathname) && !isActive("/goals", pathname) && !isActive("/dashboard", pathname);
 
   return (
@@ -116,6 +136,8 @@ export function AppShell({
             {/* AI trigger */}
             <button
               onClick={() => setAiOpen(true)}
+              aria-label="Buka asisten AI"
+              title="Tanya apa saja (⌘K)"
               className={`inline-flex h-10 items-center gap-2 rounded-xl border border-ai-200 bg-ai-50 px-3 text-sm font-medium text-ai-700 transition hover:bg-ai-100 ${
                 showSearchCta ? "" : "lg:min-w-[260px]"
               }`}

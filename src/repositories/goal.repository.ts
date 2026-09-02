@@ -8,6 +8,6 @@ export function findGoal(userId: string, id: string) {
   return prisma.goal.findFirst({ where: { id, userId } });
 }
 
-export function deleteGoal(_userId: string, id: string) {
-  return prisma.goal.delete({ where: { id } });
+export function deleteGoal(userId: string, id: string) {
+  return prisma.goal.deleteMany({ where: { id, userId } });
 }

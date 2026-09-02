@@ -20,5 +20,5 @@ export function getRecentCaptures(userId?: string, limit = 10) {
 export async function deleteCapture(id: string, userId?: string) {
   const owner = requireUserId(userId);
   if (!(await findCapture(owner, id))) throw new CaptureServiceError("Capture tidak ditemukan.", "CAPTURE_NOT_FOUND");
-  return deleteCaptureById(id);
+  return deleteCaptureById(owner, id);
 }

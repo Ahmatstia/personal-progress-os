@@ -13,7 +13,8 @@ export async function POST(request: Request) {
   try {
     const result = await executeAICommand(parsed.data, user.id);
     return NextResponse.json(result, { status: result.success ? 200 : result.code === "SAFE_FALLBACK" ? 422 : 409 });
-  } catch {
+  } catch (error) {
+    console.error("POST /api/ai/command:", error);
     return NextResponse.json({ success: false, error: { code: "INTERNAL_ERROR", message: "Command AI gagal diproses." } }, { status: 500 });
   }
 }

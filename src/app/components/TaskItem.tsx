@@ -213,7 +213,7 @@ export default function TaskItem({
         </p>
       </div>
 
-      <div className="flex shrink-0 items-center gap-0.5 opacity-100 sm:opacity-0 sm:transition sm:group-hover:opacity-100">
+      <div className="flex shrink-0 items-center gap-0.5">
         <Link
           href={`/tasks/${id}`}
           aria-label={`Buka ${name}`}

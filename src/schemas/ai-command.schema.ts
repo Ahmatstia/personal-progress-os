@@ -11,6 +11,7 @@ export const aiCommandContextSchema = z.object({
 export const aiCommandSchema = z.object({
   text: z.string().trim().min(1).max(2000),
   confirmed: z.boolean().default(false),
+  confirmationToken: z.string().trim().min(1).max(512).optional(),
   context: aiCommandContextSchema.optional(),
 });
 

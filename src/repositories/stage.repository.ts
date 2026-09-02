@@ -10,7 +10,7 @@ export function updateStage(userId: string, id: string, data: Prisma.StageUpdate
 }
 
 export function deleteStage(userId: string, id: string) {
-  return prisma.stage.delete({ where: { id } });
+  return prisma.stage.deleteMany({ where: { id, userId } });
 }
 
 export function findGoalStages(userId: string, goalId: string) {

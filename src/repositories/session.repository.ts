@@ -63,22 +63,20 @@ export function findSessionsByTaskId(taskId: string, userId: string) {
   });
 }
 
-export function sumCompletedSessionMinutes(taskId: string, userId: string) {
-  return prisma.session.aggregate({
-    where: { taskId, endedAt: { not: null }, ...(userId ? { userId } : {}) },
-    _sum: { durationMinutes: true },
+export function recomputeTaskActualHours(taskId: string, userId: string) {
+  return prisma.$transaction(async (tx) => {
+    const result = await tx.session.aggregate({
+      where: { taskId, endedAt: { not: null }, ...(userId ? { userId } : {}) },
+      _sum: { durationMinutes: true },
+    });
+    const actualHours = (result._sum.durationMinutes ?? 0) / 60;
+    await tx.task.update({ where: { id: taskId, userId }, data: { actualHours } });
+    return actualHours;
   });
 }
 
-export function updateTaskActualHours(userId: string, taskId: string, actualHours: number) {
-  return prisma.task.update({
-    where: { id: taskId, userId },
-    data: { actualHours },
-  });
-}
-
-export function deleteSessionById(id: string) {
-  return prisma.session.delete({ where: { id } });
+export function deleteSessionById(userId: string, id: string) {
+  return prisma.session.deleteMany({ where: { id, userId } });
 }
 
 export function findTaskForSession(taskId: string, userId: string) {

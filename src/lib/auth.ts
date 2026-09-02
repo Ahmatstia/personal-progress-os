@@ -1,12 +1,19 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { prisma } from "./prisma";
 
 export const SESSION_COOKIE = "ppos_session";
 const SESSION_TTL = 60 * 60 * 24 * 30;
 
-function secret() {
-  return process.env.AUTH_SECRET ?? "development-only-change-me";
+// Ephemeral, per-proses secret untuk development/test agar aplikasi tetap
+// berjalan tanpa env, tetapi TIDAK pernah konstanta yang bisa ditebak.
+const devSecret = `dev-${randomBytes(24).toString("hex")}`;
+
+export function secret() {
+  const configured = process.env.AUTH_SECRET?.trim();
+  if (configured) return configured;
+  if (process.env.NODE_ENV === "production") throw new Error("AUTH_SECRET wajib dikonfigurasi sebelum menjalankan production.");
+  return devSecret;
 }
 
 function signature(value: string) {

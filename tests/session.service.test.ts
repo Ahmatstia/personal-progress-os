@@ -8,33 +8,36 @@ const state = vi.hoisted(() => ({
 }));
 
 vi.mock("@/repositories/session.repository", () => ({
-  createSession: vi.fn(async (taskId: string) => {
+  createSession: vi.fn(async (_userId: string, taskId: string) => {
     state.active = { id: "session-1", taskId, startedAt: new Date(), endedAt: null };
     state.history.unshift(state.active);
     return state.active;
   }),
   findActiveSessionByTaskId: vi.fn(async () => state.active),
+  findAnyActiveSession: vi.fn(async () => null),
   findSessionById: vi.fn(async () => state.active),
   findSessionsByTaskId: vi.fn(async () => state.history),
-  endSession: vi.fn(async (_id: string, data: { endedAt: Date; durationMinutes: number }) => {
+  endSession: vi.fn(async (_userId: string, _id: string, data: { endedAt: Date; durationMinutes: number }) => {
     if (!state.active) return null;
     state.active = { ...state.active, ...data };
     state.history[0] = state.active;
     return state.active;
   }),
-  sumCompletedSessionMinutes: vi.fn(async () => ({ _sum: { durationMinutes: 90 } })),
-  updateTaskActualHours: vi.fn(async (_taskId: string, hours: number) => {
-    state.actualHours = hours;
+  recomputeTaskActualHours: vi.fn(async () => {
+    state.actualHours = 1.5;
+    return 1.5;
   }),
   findTaskForSession: vi.fn(async () => state.task),
-  markTaskInProgress: vi.fn(async (_taskId: string, startedAt: Date) => {
+  markTaskInProgress: vi.fn(async (_userId: string, _taskId: string, startedAt: Date) => {
     state.task.status = "IN_PROGRESS";
     state.task.startedAt = startedAt;
   }),
+  deleteSessionById: vi.fn(async () => ({ count: 1 })),
 }));
 
 import {
   calculateDuration,
+  deleteSession,
   endSession,
   getActiveSession,
   getSessionHistory,
@@ -96,5 +99,30 @@ describe("session.service", () => {
     await expect(endSession("session-1", { sessionId: "session-1" })).rejects.toMatchObject({
       code: "SESSION_ALREADY_ENDED",
     });
+  });
+
+  it("blocks starting a session while another task session is active", async () => {
+    const { findAnyActiveSession } = await import("../src/repositories/session.repository");
+    vi.mocked(findAnyActiveSession).mockResolvedValueOnce({
+      id: "session-other",
+      taskId: "task-other",
+      startedAt: new Date(),
+      endedAt: null,
+    } as never);
+    await expect(startSession("task-1")).rejects.toMatchObject({ code: "ACTIVE_SESSION_EXISTS" });
+  });
+
+  it("recomputes actual hours when a completed session is deleted", async () => {
+    const { findSessionById } = await import("../src/repositories/session.repository");
+    vi.mocked(findSessionById).mockResolvedValueOnce({
+      id: "session-1",
+      taskId: "task-1",
+      userId: "test-user",
+      startedAt: new Date("2026-09-01T10:00:00.000Z"),
+      endedAt: new Date("2026-09-01T11:00:00.000Z"),
+      durationMinutes: 60,
+    } as never);
+    await deleteSession("session-1");
+    expect(state.actualHours).toBe(1.5);
   });
 });

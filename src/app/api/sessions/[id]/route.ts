@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { SessionServiceError, deleteSession, getSession } from "@/services/session.service";
-import { requireCurrentUser, authErrorResponse } from "@/lib/auth";
+import { requireCurrentUser, authErrorResponse, AuthorizationError } from "@/lib/auth";
 
 export async function DELETE(
   _request: Request,
@@ -9,7 +9,7 @@ export async function DELETE(
   try {
     const user = await requireCurrentUser(_request);
     return NextResponse.json({ success: true, data: await deleteSession((await context.params).id, user.id) });
-  } catch (error) { return handleSessionError(error); }
+  } catch (error) { return error instanceof AuthorizationError ? authErrorResponse(error) : handleSessionError(error); }
 }
 
 export async function GET(
