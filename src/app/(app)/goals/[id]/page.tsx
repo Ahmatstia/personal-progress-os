@@ -14,7 +14,8 @@ import { ProgressBar } from "@/app/components/ui/Progress";
 import { EmptyState } from "@/app/components/ui/EmptyState";
 import { formatHours } from "@/lib/format";
 import { Icon } from "@/app/components/ui/Icon";
-import { JourneyRoute, CurrentWaypointTag } from "@/app/components/core/JourneyRoute";
+import { CurrentWaypointTag } from "@/app/components/core/JourneyRoute";
+import { GoalJourneyView } from "@/app/components/core/GoalJourneyView";
 import { FocusOrb } from "@/app/components/core/FocusOrb";
 
 export const dynamic = "force-dynamic";
@@ -53,17 +54,24 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const currentStageIndex = goal.stages.findIndex((stage) =>
     stage.tasks.some((task) => task.status !== "COMPLETED"),
   );
-  const waypoints = goal.stages.map((stage, index) => ({
-    id: stage.id,
-    label: stage.name,
-    status:
-      currentStageIndex === -1 ||
-      index < currentStageIndex
-        ? ("COMPLETED" as const)
-        : index === currentStageIndex
-          ? ("CURRENT" as const)
-          : ("UPCOMING" as const),
-  }));
+  const waypoints = goal.stages.map((stage, index) => {
+    const stageDone = stage.tasks.filter((task) => task.status === "COMPLETED").length;
+    return {
+      id: stage.id,
+      label: stage.name,
+      taskLabel:
+        stage.tasks.length === 0
+          ? "belum ada task"
+          : `${stageDone}/${stage.tasks.length} task`,
+      status:
+        currentStageIndex === -1 ||
+        index < currentStageIndex
+          ? ("COMPLETED" as const)
+          : index === currentStageIndex
+            ? ("CURRENT" as const)
+            : ("UPCOMING" as const),
+    };
+  });
 
   return (
     <div className="space-y-12">
@@ -150,7 +158,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
         {goal.stages.length > 0 ? (
           <>
             <div className="mt-8">
-              <JourneyRoute waypoints={waypoints} size="md" label="Peta jalan goal" />
+              <GoalJourneyView waypoints={waypoints} />
             </div>
             <p className="mt-3 text-xs text-surface-500">
               {currentStageIndex === -1

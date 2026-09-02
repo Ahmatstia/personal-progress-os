@@ -35,7 +35,8 @@ export type IconName =
   | "user"
   | "trendingUp"
   | "gauge"
-  | "circle";
+  | "circle"
+  | "tree";
 
 const paths: Record<IconName, React.ReactNode> = {
   sparkles: (
@@ -184,6 +185,12 @@ const paths: Record<IconName, React.ReactNode> = {
     </>
   ),
   circle: <circle cx="12" cy="12" r="9" />,
+  tree: (
+    <>
+      <path d="M12 21V8" />
+      <path d="M12 8c-2.5-1.5-4-1.5-6.5-.5M12 8c2.5-1.5 4-1.5 6.5-.5M12 12c-2.5-1.5-4-1.5-6.5-.5M12 12c2.5-1.5 4-1.5 6.5-.5M12 16c-2.5-1.5-4-1.5-6.5-.5M12 16c2.5-1.5 4-1.5 6.5-.5" />
+    </>
+  ),
 };
 
 export function Icon({
