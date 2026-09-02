@@ -36,15 +36,21 @@ export function StatRow({
   className?: string;
 }) {
   return (
-    <div className={`flex items-center gap-3 py-3 first:pt-0 last:pb-0 border-b border-surface-150 last:border-0 ${className}`}>
-      <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${iconTones[tone]}`}>
+    <div
+      className={`flex items-center gap-3 py-3 first:pt-0 last:pb-0 border-b border-surface-150 last:border-0 ${className}`}
+    >
+      <span
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${iconTones[tone]}`}
+      >
         <Icon name={icon} size={15} />
       </span>
       <div className="flex min-w-0 flex-1 items-center justify-between gap-4">
         <dt className="min-w-0 truncate text-sm text-surface-500">{label}</dt>
         <dd className="text-right">
           <span className="block font-semibold text-surface-900">{value}</span>
-          {hint && <span className="block text-xs text-surface-400">{hint}</span>}
+          {hint && (
+            <span className="block text-xs text-surface-400">{hint}</span>
+          )}
         </dd>
       </div>
     </div>

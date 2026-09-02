@@ -17,7 +17,10 @@ import { formatDuration } from "@/lib/format";
 export const dynamic = "force-dynamic";
 
 function formatDate(value: Date) {
-  return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short" }).format(value);
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+  }).format(value);
 }
 
 export default async function Home() {
@@ -31,9 +34,13 @@ export default async function Home() {
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-ai-600 text-white">
               <Icon name="sparkles" size={20} />
             </span>
-            <span className="text-lg font-bold tracking-tight text-surface-900">Personal Progress OS</span>
+            <span className="text-lg font-bold tracking-tight text-surface-900">
+              Personal Progress OS
+            </span>
           </div>
-          <h1 className="mt-6 text-2xl font-bold text-surface-900">Selamat datang kembali</h1>
+          <h1 className="mt-6 text-2xl font-bold text-surface-900">
+            Selamat datang kembali
+          </h1>
           <p className="mt-2 text-sm leading-relaxed text-surface-500">
             Masuk agar goals, progres, dan refleksi Anda tetap pribadi.
           </p>
@@ -43,44 +50,62 @@ export default async function Home() {
     );
   }
 
-  const [dashboard, today] = await Promise.all([getDashboardData(user.id), getToday(new Date(), user.id)]);
+  const [dashboard, today] = await Promise.all([
+    getDashboardData(user.id),
+    getToday(new Date(), user.id),
+  ]);
 
   const goalCount = dashboard.activeGoals.length;
   const completionPct =
     dashboard.totalTaskCount === 0
       ? 0
-      : Math.round((dashboard.completedTaskCount / dashboard.totalTaskCount) * 100);
+      : Math.round(
+          (dashboard.completedTaskCount / dashboard.totalTaskCount) * 100,
+        );
 
   return (
     <div className="space-y-12">
       <header className="flex flex-wrap items-end justify-between gap-4 border-b border-surface-150 pb-6">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-600">Ringkasan</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-600">
+            Ringkasan
+          </p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-surface-900 sm:text-4xl">
             Selamat datang kembali, {user.name?.split(" ")[0] || "teman"}.
           </h1>
-          <p className="mt-2 text-sm text-surface-500">Berikut status perjalanan Anda saat ini.</p>
+          <p className="mt-2 text-sm text-surface-500">
+            Berikut status perjalanan Anda saat ini.
+          </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Link href="/today">
-            <Button variant="primary" icon="sun">Ke Hari Ini</Button>
+            <Button variant="primary" icon="sun">
+              Ke Hari Ini
+            </Button>
           </Link>
           <Link href="/goals">
-            <Button variant="secondary" icon="flag">Semua goals</Button>
+            <Button variant="secondary" icon="flag">
+              Semua goals
+            </Button>
           </Link>
         </div>
       </header>
 
       {/* Pita komando — fokus hari ini */}
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-        <NextActionSpotlight nextAction={dashboard.nextAction} progress={dashboard.totalProgress} />
+        <NextActionSpotlight
+          nextAction={dashboard.nextAction}
+          progress={dashboard.totalProgress}
+        />
 
         <section className="rounded-3xl border border-surface-200 bg-surface-0 p-5 shadow-soft sm:p-6">
           <div className="flex items-center gap-2 text-primary-600">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100">
               <Icon name="sun" size={16} />
             </span>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em]">Hari Ini</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em]">
+              Hari Ini
+            </p>
           </div>
           <p className="mt-4 text-2xl font-bold text-surface-900">
             {today.currentSession
@@ -90,7 +115,8 @@ export default async function Home() {
                 : "Belum ada fokus dipilih"}
           </p>
           <p className="mt-1.5 text-sm text-surface-500">
-            {formatDuration(today.stats.totalMinutes)} belajar · {today.stats.completedTasks} task selesai
+            {formatDuration(today.stats.totalMinutes)} belajar ·{" "}
+            {today.stats.completedTasks} task selesai
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
             <Link href="/today">
@@ -112,7 +138,8 @@ export default async function Home() {
             <div className="min-w-[180px]">
               <p className="eyebrow text-surface-400">Ringkasan</p>
               <h2 className="mt-1 text-xl font-bold text-surface-900">
-                {dashboard.completedTaskCount === 0 && dashboard.totalTaskCount > 0
+                {dashboard.completedTaskCount === 0 &&
+                dashboard.totalTaskCount > 0
                   ? "Dalam perjalanan"
                   : dashboard.totalTaskCount === 0
                     ? "Belum ada task"
@@ -121,7 +148,8 @@ export default async function Home() {
                       : "Dalam perjalanan"}
               </h2>
               <p className="mt-1 max-w-xs text-sm text-surface-500">
-                {goalCount} goal aktif · {dashboard.completedTaskCount}/{dashboard.totalTaskCount} task selesai.
+                {goalCount} goal aktif · {dashboard.completedTaskCount}/
+                {dashboard.totalTaskCount} task selesai.
               </p>
             </div>
             <FocusOrb
@@ -131,15 +159,37 @@ export default async function Home() {
               tone={completionPct === 100 ? "success" : "primary"}
               label={`Progres keseluruhan ${completionPct} persen`}
             >
-              <span className="text-xl font-bold text-surface-900">{completionPct}%</span>
-              <span className="mt-0.5 text-[10px] uppercase tracking-wider text-surface-400">selesai</span>
+              <span className="text-xl font-bold text-surface-900">
+                {completionPct}%
+              </span>
+              <span className="mt-0.5 text-[10px] uppercase tracking-wider text-surface-400">
+                selesai
+              </span>
             </FocusOrb>
           </div>
           <dl className="min-w-[220px] flex-1 grid gap-x-6">
-            <StatRow icon="flag" label="Goals aktif" value={String(goalCount)} />
-            <StatRow icon="check" tone="success" label="Task selesai" value={`${dashboard.completedTaskCount}/${dashboard.totalTaskCount}`} />
-            <StatRow icon="clock" label="Belajar hari ini" value={formatDuration(dashboard.studyMinutesToday)} />
-            <StatRow icon="gauge" tone="warning" label="Progres keseluruhan" value={`${dashboard.totalProgress}%`} />
+            <StatRow
+              icon="flag"
+              label="Goals aktif"
+              value={String(goalCount)}
+            />
+            <StatRow
+              icon="check"
+              tone="success"
+              label="Task selesai"
+              value={`${dashboard.completedTaskCount}/${dashboard.totalTaskCount}`}
+            />
+            <StatRow
+              icon="clock"
+              label="Belajar hari ini"
+              value={formatDuration(dashboard.studyMinutesToday)}
+            />
+            <StatRow
+              icon="gauge"
+              tone="warning"
+              label="Progres keseluruhan"
+              value={`${dashboard.totalProgress}%`}
+            />
           </dl>
         </div>
       </section>
@@ -148,36 +198,53 @@ export default async function Home() {
       {dashboard.reviewSummary && (
         <section
           className={`border-l-4 py-1 pl-5 ${
-            dashboard.reviewSummary.review ? "border-success-500" : "border-primary-500"
+            dashboard.reviewSummary.review
+              ? "border-success-500"
+              : "border-primary-500"
           }`}
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-start gap-3">
               <span
                 className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
-                  dashboard.reviewSummary.review ? "bg-success-100 text-success-700" : "bg-primary-100 text-primary-600"
+                  dashboard.reviewSummary.review
+                    ? "bg-success-100 text-success-700"
+                    : "bg-primary-100 text-primary-600"
                 }`}
               >
                 <Icon name="compass" size={18} />
               </span>
               <div>
                 <h2 className="text-base font-semibold text-surface-900">
-                  {dashboard.reviewSummary.review ? "Review minggu ini selesai" : "Waktunya review mingguan"}
+                  {dashboard.reviewSummary.review
+                    ? "Review minggu ini selesai"
+                    : "Waktunya review mingguan"}
                 </h2>
                 <p className="mt-1 text-sm text-surface-600">
-                  {formatDuration(dashboard.reviewSummary.metrics.learningMinutes)} belajar ·{" "}
-                  {dashboard.reviewSummary.metrics.tasksCompleted} task selesai
+                  {formatDuration(
+                    dashboard.reviewSummary.metrics.learningMinutes,
+                  )}{" "}
+                  belajar · {dashboard.reviewSummary.metrics.tasksCompleted}{" "}
+                  task selesai
                 </p>
                 {dashboard.reviewSummary.review?.nextFocus && (
                   <p className="mt-1.5 text-sm text-surface-700">
-                    <span className="font-medium">Fokus berikutnya:</span> {dashboard.reviewSummary.review.nextFocus}
+                    <span className="font-medium">Fokus berikutnya:</span>{" "}
+                    {dashboard.reviewSummary.review.nextFocus}
                   </p>
                 )}
               </div>
             </div>
             <Link href={`/goals/${dashboard.reviewSummary.goalId}/reviews`}>
-              <Button variant={dashboard.reviewSummary.review ? "secondary" : "primary"} icon="arrowRight">
-                {dashboard.reviewSummary.review ? "Lihat review" : "Lengkapi review"}
+              <Button
+                variant={
+                  dashboard.reviewSummary.review ? "secondary" : "primary"
+                }
+                icon="arrowRight"
+              >
+                {dashboard.reviewSummary.review
+                  ? "Lihat review"
+                  : "Lengkapi review"}
               </Button>
             </Link>
           </div>
@@ -189,9 +256,14 @@ export default async function Home() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="eyebrow text-surface-400">Goals</p>
-            <h2 className="mt-1 text-xl font-bold text-surface-900">Goals aktif</h2>
+            <h2 className="mt-1 text-xl font-bold text-surface-900">
+              Goals aktif
+            </h2>
           </div>
-          <Link href="/goals" className="inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-700">
+          <Link
+            href="/goals"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-700"
+          >
             Lihat semua <Icon name="arrowRight" size={15} />
           </Link>
         </div>
@@ -202,7 +274,13 @@ export default async function Home() {
               icon="flag"
               title="Belum ada goals aktif"
               description="Ubah hal penting menjadi jalur yang jelas. Goals pertama Anda akan muncul di sini."
-              action={<Link href="/goals"><Button variant="primary" icon="plus">Buat goal</Button></Link>}
+              action={
+                <Link href="/goals">
+                  <Button variant="primary" icon="plus">
+                    Buat goal
+                  </Button>
+                </Link>
+              }
             />
           </div>
         ) : (
@@ -210,7 +288,9 @@ export default async function Home() {
             {dashboard.activeGoals.map((goal) => {
               const progress = calculateGoalProgress(goal.stages);
               const tasks = goal.stages.flatMap((stage) => stage.tasks);
-              const completed = tasks.filter((task) => task.status === "COMPLETED").length;
+              const completed = tasks.filter(
+                (task) => task.status === "COMPLETED",
+              ).length;
               return (
                 <li key={goal.id} className="py-4">
                   <Link
@@ -219,10 +299,13 @@ export default async function Home() {
                   >
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">{goal.type}</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">
+                          {goal.type}
+                        </p>
                         <span className="h-1 w-1 rounded-full bg-surface-300" />
                         <span className="text-xs text-surface-500">
-                          {completed}/{tasks.length} task · {goal.stages.length} stage
+                          {completed}/{tasks.length} task · {goal.stages.length}{" "}
+                          stage
                         </span>
                       </div>
                       <h3 className="mt-0.5 truncate text-lg font-bold text-surface-800 group-hover:text-primary-700">
@@ -233,7 +316,9 @@ export default async function Home() {
                       <div className="flex-1">
                         <ProgressBar value={progress} size="sm" />
                       </div>
-                      <span className="w-10 shrink-0 text-right text-sm font-bold text-primary-700">{progress}%</span>
+                      <span className="w-10 shrink-0 text-right text-sm font-bold text-primary-700">
+                        {progress}%
+                      </span>
                     </div>
                   </Link>
                 </li>
@@ -247,11 +332,14 @@ export default async function Home() {
       <section className="border-t border-surface-150 pt-8">
         <div>
           <p className="eyebrow text-surface-400">Jejak</p>
-          <h2 className="mt-1 text-xl font-bold text-surface-900">Aktivitas terbaru</h2>
+          <h2 className="mt-1 text-xl font-bold text-surface-900">
+            Aktivitas terbaru
+          </h2>
         </div>
         {dashboard.recentActivity.length === 0 ? (
           <p className="mt-5 text-sm text-surface-500">
-            Belum ada aktivitas. Mulai sesi pertama atau catat sesuatu untuk membangun momentum.
+            Belum ada aktivitas. Mulai sesi pertama atau catat sesuatu untuk
+            membangun momentum.
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-surface-150">
@@ -266,18 +354,45 @@ export default async function Home() {
                         : "bg-success-50 text-success-600"
                   }`}
                 >
-                  <Icon name={item.kind === "session" ? "play" : item.kind === "capture" ? "inbox" : "check"} size={15} />
+                  <Icon
+                    name={
+                      item.kind === "session"
+                        ? "play"
+                        : item.kind === "capture"
+                          ? "inbox"
+                          : "check"
+                    }
+                    size={15}
+                  />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-surface-800">{item.label}</p>
-                  <p className="truncate text-xs text-surface-500">{item.detail}</p>
+                  <p className="truncate text-sm font-medium text-surface-800">
+                    {item.label}
+                  </p>
+                  <p className="truncate text-xs text-surface-500">
+                    {item.detail}
+                  </p>
                 </div>
-                <span className="shrink-0 text-xs text-surface-400">{formatDate(item.timestamp)}</span>
+                <span className="shrink-0 text-xs text-surface-400">
+                  {formatDate(item.timestamp)}
+                </span>
                 {item.kind !== "task" && (
                   <HistoryDeleteButton
-                    path={item.kind === "session" ? `/api/sessions/${item.entityId}` : `/api/captures/${item.entityId}`}
-                    message={item.kind === "session" ? "Hapus sesi ini dari riwayat?" : "Hapus catatan ini?"}
-                    toastMessage={item.kind === "session" ? "Sesi dihapus." : "Catatan dihapus."}
+                    path={
+                      item.kind === "session"
+                        ? `/api/sessions/${item.entityId}`
+                        : `/api/captures/${item.entityId}`
+                    }
+                    message={
+                      item.kind === "session"
+                        ? "Hapus sesi ini dari riwayat?"
+                        : "Hapus catatan ini?"
+                    }
+                    toastMessage={
+                      item.kind === "session"
+                        ? "Sesi dihapus."
+                        : "Catatan dihapus."
+                    }
                     aria-label="Hapus dari riwayat"
                   />
                 )}

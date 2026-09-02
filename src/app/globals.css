@@ -77,15 +77,17 @@
   --color-surface-950: #171613;
 
   /* Typography — Inter dimuat & di-self-host lewat next/font (--font-inter) */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* Elevation */
-  --shadow-soft: 0 1px 2px rgba(38, 35, 30, 0.04),
-    0 4px 12px -2px rgba(38, 35, 30, 0.06);
-  --shadow-raised: 0 2px 4px rgba(38, 35, 30, 0.05),
-    0 12px 28px -6px rgba(38, 35, 30, 0.12);
-  --shadow-pop: 0 8px 24px -6px rgba(38, 35, 30, 0.18),
+  --shadow-soft:
+    0 1px 2px rgba(38, 35, 30, 0.04), 0 4px 12px -2px rgba(38, 35, 30, 0.06);
+  --shadow-raised:
+    0 2px 4px rgba(38, 35, 30, 0.05), 0 12px 28px -6px rgba(38, 35, 30, 0.12);
+  --shadow-pop:
+    0 8px 24px -6px rgba(38, 35, 30, 0.18),
     0 24px 60px -12px rgba(38, 35, 30, 0.22);
 }
 
@@ -122,6 +124,28 @@
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(
+      var(--color-surface-300) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  .journey-tooltip {
+    animation: journey-tooltip-in 0.15s ease-out both;
+  }
+  @keyframes journey-tooltip-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 4px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
   }
 
   /* Halo lembut di belakang waypoint aktif (Focus Orb / Journey node) */
@@ -169,31 +193,6 @@
   .route-dash {
     stroke-dasharray: 3 4;
     stroke-dashoffset: 0;
-  }
-
-  /* Skeleton shimmer */
-  .skeleton {
-    position: relative;
-    overflow: hidden;
-    background: var(--color-surface-150);
-  }
-  .skeleton::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    transform: translateX(-100%);
-    animation: skeleton-shimmer 1.6s infinite;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.65),
-      transparent
-    );
-  }
-  @keyframes skeleton-shimmer {
-    100% {
-      transform: translateX(100%);
-    }
   }
 
   .animate-in-soft {

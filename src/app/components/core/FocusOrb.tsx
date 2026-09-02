@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 
 // Focus Orb — signature component.
 // Lingkaran kemajuan untuk satu angka penting: progress goal, persentase fokus,
@@ -7,10 +7,26 @@ import type { ReactNode } from "react";
 // agar terasa hidup tanpa mengeklaim target durasi).
 
 const tones = {
-  primary: { track: "stroke-surface-150", arc: "stroke-primary-500" },
-  success: { track: "stroke-surface-150", arc: "stroke-success-500" },
-  ai: { track: "stroke-surface-150", arc: "stroke-ai-500" },
-  warning: { track: "stroke-surface-150", arc: "stroke-warning-500" },
+  primary: {
+    from: "var(--color-primary-400)",
+    to: "var(--color-primary-600)",
+    track: "stroke-surface-150",
+  },
+  success: {
+    from: "var(--color-success-400)",
+    to: "var(--color-success-600)",
+    track: "stroke-surface-150",
+  },
+  ai: {
+    from: "var(--color-ai-400)",
+    to: "var(--color-ai-600)",
+    track: "stroke-surface-150",
+  },
+  warning: {
+    from: "var(--color-warning-400)",
+    to: "var(--color-warning-600)",
+    track: "stroke-surface-150",
+  },
 } as const;
 
 export function FocusOrb({
@@ -32,10 +48,14 @@ export function FocusOrb({
   children?: ReactNode;
   className?: string;
 }) {
+  const gradId = useId();
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const percent = value == null ? null : Math.max(0, Math.min(100, value));
-  const offset = percent == null ? circumference : circumference * (1 - percent / 100);
+  const offset =
+    percent == null ? circumference : circumference * (1 - percent / 100);
+  const t = tones[tone];
+  const gradientId = `orb-grad-${gradId}`;
 
   return (
     <div
@@ -45,13 +65,19 @@ export function FocusOrb({
       aria-label={label}
     >
       <svg width={size} height={size} className="-rotate-90" aria-hidden="true">
+        <defs>
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={t.from} />
+            <stop offset="100%" stopColor={t.to} />
+          </linearGradient>
+        </defs>
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
           strokeWidth={stroke}
-          className={tones[tone].track}
+          className={t.track}
         />
         {percent != null && (
           <circle
@@ -63,12 +89,17 @@ export function FocusOrb({
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={offset}
-            className={`${tones[tone].arc} transition-[stroke-dashoffset] duration-700 ease-out`}
+            stroke={`url(#${gradientId})`}
+            className="transition-[stroke-dashoffset] duration-700 ease-out"
           />
         )}
       </svg>
+      {percent === 100 && <span aria-hidden="true" className="halo" />}
       {sweep && (
-        <span aria-hidden="true" className="sweep-dot pointer-events-none absolute inset-0">
+        <span
+          aria-hidden="true"
+          className="sweep-dot pointer-events-none absolute inset-0"
+        >
           <span className="absolute -top-0.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-ai-500/80" />
         </span>
       )}

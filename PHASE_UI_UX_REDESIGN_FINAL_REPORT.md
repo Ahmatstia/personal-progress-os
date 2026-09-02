@@ -10,8 +10,9 @@ authentication, security, and business logic were **not changed**._
 
 Personal Progress OS diretasain ulang dari tampilan "generic SaaS dashboard"
 menjadi **produk interface yang khas ("Calm Progress OS")**: warm-neutral
-foundation + primary indigo→violet yang tenang, bahasa visual **Journey Route
-+ Focus Orb**, dan komposisi naratif menggantikan grid kartu stat templat.
+foundation + primary indigo→violet yang tenang, bahasa visual \*\*Journey Route
+
+- Focus Orb\*\*, dan komposisi naratif menggantikan grid kartu stat templat.
 
 Pengerjaan berjalan 15 fase (2–16) ditambah satu fase lanjutan (17)
 yang merombak **komposisi & tata ruang antar elemen** (lihat §11), dengan
@@ -24,17 +25,19 @@ prinsip eksekusi:
   seluruh test suite (134/134) + production build.
 
 Keputusan desain yang terkunci (dikonfirmasi user):
+
 1. **Inter** dimuat via `next/font/google` dan dipasang ke `--font-sans`.
 2. **Refactor ke primitives** baru diperbolehkan (presentation-only).
 3. **Dark mode dilewati** (fokus pada kualitas light theme).
 4. **Dialog/Confirm ditingkatkan a11y** (focus trap, restore focus, aria-labelledby).
-5. Metafora inti = **Journey Route + Focus Orb** — *visual language*, bukan template layout.
+5. Metafora inti = **Journey Route + Focus Orb** — _visual language_, bukan template layout.
 
 ---
 
 ## 2. UX Philosophy
 
 Prioritas kegunaan (harus dijaga urutannya):
+
 1. Comprehension — paham apa yang dilihat dalam <3 detik.
 2. Navigation — tahu di mana saya berada dan ke mana saya bisa pergi.
 3. Action clarity — satu CTA utama per layar yang tidak ambigu.
@@ -74,6 +77,7 @@ shape/color/typography language yang sama. Informasi tetap **literal**
 Tiga+ komponen khas, masing-masing dengan **alasan UX eksplisit**:
 
 ### 4.1 `JourneyRoute` (+ `CurrentWaypointTag`)
+
 - **Alasan UX:** menjawab **"WHERE AM I?"**. Stage ditampilkan sebagai waypoint
   di satu rute: dilewati (padat primary), sedang (bercahaya + halo + denyut),
   belum (outline putus-putus). Setiap waypoint membawa nama stage (literal).
@@ -81,6 +85,7 @@ Tiga+ komponen khas, masing-masing dengan **alasan UX eksplisit**:
   task/today.
 
 ### 4.2 `FocusOrb`
+
 - **Alasan UX:** satu angka penting ditampilkan sebagai lingkaran kemajuan —
   tidak ada grid kartu stat. Mode `sweep` (dot berputar) memberi kesan "waktu
   berjalan" pada timer tanpa mengeklaim target durasi (tidak menyesatkan).
@@ -88,12 +93,14 @@ Tiga+ komponen khas, masing-masing dengan **alasan UX eksplisit**:
   fokus, dan konseks orb pada spotlight aksi berikutnya.
 
 ### 4.3 `NextActionSpotlight`
+
 - **Alasan UX:** menjawab **"WHAT NOW?"**. Satu spotlight per halaman (bukan
   katalog card): nama task besar, konteks goal · stage, estimasi waktu literal,
   CTA "Mulai sesi" dan "Buka task". Status "Sesi berlangsung" tampil eksplisit.
 - Dipakai di: Beranda, Hari Ini (Today), Dashboard.
 
 ### 4.4 Pendukung / AI presence
+
 - `focus-mode-store` (useSyncExternalStore): saat sesi fokus berjalan, shell
   (sidebar/topbar/bottom-nav) memudar — permukaan kerja yang bercahaya.
 - Kehadiran AI tetap sebagai **panel kontekstual** per halaman (AICommandPanel),
@@ -104,6 +111,7 @@ Tiga+ komponen khas, masing-masing dengan **alasan UX eksplisit**:
 ## 5. Design System
 
 **Primitives baru** (`src/app/components/ui/`):
+
 - `Card` — permukaan ringan dengan tone (default/subtle/primary/success/warning/ai).
 - `SectionHeader` — eyebrow + judul + deskripsi + aksi (icon-tile opsional).
 - `Input`, `Textarea`, `Select` — input dengan label/error/hint, focus ring.
@@ -122,18 +130,18 @@ Semua primitif memakai token `@theme` yang sama, tanpa dependency baru.
 > **§11.3** untuk komposisi akhir per layar. Tabel ini merekam perubahan
 > awal fase 2–16.
 
-| Halaman | Perubahan utama |
-| --- | --- |
-| Beranda `/` | `NextActionSpotlight`; ringkasan dengan **FocusOrb** "progres keseluruhan" + StatRows naratif menggantikan grid ProgressSnapshot; card review/weekly & daftar goals aktif dirapikan. |
-| Hari Ini `/today` | Spotlight aksi berikutnya; statistik jadi baris naratif; badge jumlah task selesai; urutan fokus > sesi > catat cepat > selesai > rangkuman. |
-| Goals `/goals` | Kartu pertama = **featured waypoint card** (komposisi tidak seragam), sisanya kartu dengan **JourneyRoute** per-stage; penghitung aktif di header. |
-| Goal Detail `/goals/[id]` | **Peta "Posisi Anda"** (JourneyRoute), stage saat ini ditandai `SEKARANG` + glow/ring, yang selesai hijau; statistik → StatRows naratif. |
-| Task Detail `/tasks/[id]` | Breadcrumb goal · stage; statistik → StatRows (dengan sinyal "melebihi estimasi"); sesi fokus memakai SectionHeader; daftar sesi tetap literal. |
-| Sesi Fokus `SessionFocusMode` | Timer besar di dalam **FocusOrb sweep**; layout zen; form tutup sesi memakai `Textarea`; integrasi **focus-mode dim** ke shell; tombol batalkan di pojok; prop `compact` dihapus (tidak terpakai). |
-| Dashboard `/dashboard` | Ringkasan 30 hari: **FocusOrb** penyelesaian + narasi; spotlight aksi berikutnya; tren/konsistensi/aktivitas memakai SectionHeader; bottleneck & AI panel tetap. |
-| Refleksi `/review` | Struktur hero minggu + daftar review + penjelasan ritual tetap selaras (sudah sesuai system sebelumnya). |
-| Pengaturan `/settings` | Statistik akun menjadi **StatRows naratif** (bukan 3 kartu angka). |
-| AI layer | Skin tidak diubah fungsional; sudah memakai token AI violet yang konsisten (`AIInput`, `AIResponse`, `AIConfirmation`, `AIAmbiguousSelector`). |
+| Halaman                      | Perubahan utama                                                                                                                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Beranda`/`                   | `NextActionSpotlight`; ringkasan dengan **FocusOrb** "progres keseluruhan" + StatRows naratif menggantikan grid ProgressSnapshot; card review/weekly & daftar goals aktif dirapikan.              |
+| Hari Ini`/today`             | Spotlight aksi berikutnya; statistik jadi baris naratif; badge jumlah task selesai; urutan fokus > sesi > catat cepat > selesai > rangkuman.                                                      |
+| Goals`/goals`                | Kartu pertama =**featured waypoint card** (komposisi tidak seragam), sisanya kartu dengan **JourneyRoute** per-stage; penghitung aktif di header.                                                 |
+| Goal Detail`/goals/[id]`     | **Peta "Posisi Anda"** (JourneyRoute), stage saat ini ditandai `SEKARANG` + glow/ring, yang selesai hijau; statistik → StatRows naratif.                                                          |
+| Task Detail`/tasks/[id]`     | Breadcrumb goal · stage; statistik → StatRows (dengan sinyal "melebihi estimasi"); sesi fokus memakai SectionHeader; daftar sesi tetap literal.                                                   |
+| Sesi Fokus`SessionFocusMode` | Timer besar di dalam**FocusOrb sweep**; layout zen; form tutup sesi memakai `Textarea`; integrasi **focus-mode dim** ke shell; tombol batalkan di pojok; prop `compact` dihapus (tidak terpakai). |
+| Dashboard`/dashboard`        | Ringkasan 30 hari:**FocusOrb** penyelesaian + narasi; spotlight aksi berikutnya; tren/konsistensi/aktivitas memakai SectionHeader; bottleneck & AI panel tetap.                                   |
+| Refleksi`/review`            | Struktur hero minggu + daftar review + penjelasan ritual tetap selaras (sudah sesuai system sebelumnya).                                                                                          |
+| Pengaturan`/settings`        | Statistik akun menjadi**StatRows naratif** (bukan 3 kartu angka).                                                                                                                                 |
+| AI layer                     | Skin tidak diubah fungsional; sudah memakai token AI violet yang konsisten (`AIInput`, `AIResponse`, `AIConfirmation`, `AIAmbiguousSelector`).                                                    |
 
 ---
 
@@ -183,6 +191,7 @@ tidak berubah):
 ## 10. Files Changed
 
 **Modified:**
+
 - `src/app/layout.tsx` — Inter via next/font, `--font-inter`.
 - `src/app/globals.css` — design tokens (`@theme`), `--font-sans`, utilities
   `.eyebrow .halo .waypoint-pulse .sweep-dot .route-dash .skeleton`, reduced-motion.
@@ -201,6 +210,7 @@ tidak berubah):
 - `src/app/components/ui/StatRow.tsx` — `dt`/`dd` berdekatan (HTML semantik).
 
 **Added:**
+
 - `src/app/components/core/JourneyRoute.tsx` (+ `CurrentWaypointTag`)
 - `src/app/components/core/FocusOrb.tsx`
 - `src/app/components/core/NextActionSpotlight.tsx`
@@ -208,6 +218,7 @@ tidak berubah):
 - `src/app/components/ui/{Card,SectionHeader,Input,Textarea,Select,SegmentedControl,Skeleton,StatRow}.tsx`
 
 **Removed (obsolete, sudah diganti):**
+
 - `src/app/components/core/NextActionCard.tsx`
 - `src/app/components/core/ProgressSnapshot.tsx`
 
@@ -224,6 +235,7 @@ primitif `Card`, `SectionHeader`, dll. tetap utuh.
 ## 11. COMPOSITION REDESIGN (Phase 17)
 
 ### 11.1 Masalah komposisi lama (hasil audit)
+
 Sebelum fase ini, layar masih merasa "template SaaS": nyaris semua konten
 dibungkus kartu (card-on-card), semua section lebarnya sama dan ritmenya
 seragam, setiap halaman dibuka dengan header yang identik, tidak ada satu
@@ -232,13 +244,14 @@ membedah makna, dan lebar viewport hanya terpakai sebagai satu kolom sempit
 dengan sisi kanan yang tak terjamah.
 
 ### 11.2 Keputusan tata ruang (spatial decisions)
+
 - **Main + contextual sidebar.** Layar padat (Today, Dashboard) memakai
   grid `lg:grid-cols-[minmax(0,1fr)_340px]`; panel sisi kanan `lg:sticky lg:top-20`
   memuat konteks pendukung (rangkuman, konsistensi, sesi terbaru, catat cepat)
   dan menegakkan **focal → support → context**.
 - **Kurangi ketergantungan kartu.** Section/list menjadi "open forms": garis
   `border-t/border-b` + `divide-y` + tipografi, kartu hanya tersisa untuk
-  *separation* sungguhan: Rangkuman (Today), Ringkasan/Konsistensi/Sesi
+  _separation_ sungguhan: Rangkuman (Today), Ringkasan/Konsistensi/Sesi
   terbaru (Dashboard), komando mini "Hari Ini" (beranda).
 - **Tipografi sebagai layout.** Header halaman jadi pita terbuka dengan
   headline besar (`md:text-4xl/5xl`), bukan kotak; micro-label `eyebrow` dan
@@ -258,25 +271,28 @@ dengan sisi kanan yang tak terjamah.
   pita hero + peta jalan; task = `SessionFocusMode` ("Stasiun sesi"); dst.
 
 ### 11.3 Perubahan komposisi per layar
-| Layar | Susunan baru |
-| --- | --- |
-| Beranda `/` | Header terbuka custom; band komando (spotlight + kartu mini "Hari Ini"); progress orb 92 + 4 StatRow; strip review aksen `border-l`; daftar goals aktif terbuka; aktivitas terbaru terbuka. |
-| Today `/today` | Focal = sesi/spotlight; `FocusPanel` sebagai open divided list (re-add, logika API utuh); "Yang sudah beres" + "Catatan terbaru" list terbuka; aside sticky = Rangkuman (orb) + QuickCapture. |
-| Goals `/goals` | Headline "Perjalanan Anda"; tiap goal = **journey row vertikal** (identitas + orb 80 + JourneyRoute md bila ≤6 stage / sm-dots bila lebih + strip stage · berikutnya · counts); section selesai; EmptyState terbuka. |
-| Goal Detail `/goals/[id]` | Pita hero terbuka (breadcrumb, type · status, h1 5xl, progress + meta literal, orb 140); "Peta jalan" = `JourneyRoute` md full-width **di luar card** + caption posisi; timeline stage ber-node nomor/check, stage aktif bercahaya, TaskList kiri + progress 220px kanan. |
-| Task Detail `/tasks/[id]` | "Action Space": breadcrumb, headline besar, deskripsi, TaskActions, metadata dl (4 StatRow), riwayat sesi terbuka; aside sticky "Stasiun sesi" = `SessionFocusMode`. |
-| Dashboard `/dashboard` | Main: spotlight + bottleneck + "Tren aktivitas" (bars + legend) + "Terbaru" + section AI terbuka; aside sticky: Ringkasan orb, Konsistensi, Sesi terbaru. |
-| Review `/review` | Pita reflektif terbuka (range, jumlah refleksi, total menit/task) + baris jurnal ber-node + penutup "Mengapa review mingguan?". |
-| Settings `/settings` | Bagian terbuka: Profil, Data Anda (3 StatRow), Preferensi, Akun/Keluar. |
-| AI | Skin-only: `AICommandPanel` ditempatkan dalam section AI terbuka di main Dashboard; drawer global tidak tersentuh. |
+
+| Layar                    | Susunan baru                                                                                                                                                                                                                                                             |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Beranda`/`               | Header terbuka custom; band komando (spotlight + kartu mini "Hari Ini"); progress orb 92 + 4 StatRow; strip review aksen`border-l`; daftar goals aktif terbuka; aktivitas terbaru terbuka.                                                                               |
+| Today`/today`            | Focal = sesi/spotlight;`FocusPanel` sebagai open divided list (re-add, logika API utuh); "Yang sudah beres" + "Catatan terbaru" list terbuka; aside sticky = Rangkuman (orb) + QuickCapture.                                                                             |
+| Goals`/goals`            | Headline "Perjalanan Anda"; tiap goal =**journey row vertikal** (identitas + orb 80 + JourneyRoute md bila ≤6 stage / sm-dots bila lebih + strip stage · berikutnya · counts); section selesai; EmptyState terbuka.                                                      |
+| Goal Detail`/goals/[id]` | Pita hero terbuka (breadcrumb, type · status, h1 5xl, progress + meta literal, orb 140); "Peta jalan" =`JourneyRoute` md full-width **di luar card** + caption posisi; timeline stage ber-node nomor/check, stage aktif bercahaya, TaskList kiri + progress 220px kanan. |
+| Task Detail`/tasks/[id]` | "Action Space": breadcrumb, headline besar, deskripsi, TaskActions, metadata dl (4 StatRow), riwayat sesi terbuka; aside sticky "Stasiun sesi" =`SessionFocusMode`.                                                                                                      |
+| Dashboard`/dashboard`    | Main: spotlight + bottleneck + "Tren aktivitas" (bars + legend) + "Terbaru" + section AI terbuka; aside sticky: Ringkasan orb, Konsistensi, Sesi terbaru.                                                                                                                |
+| Review`/review`          | Pita reflektif terbuka (range, jumlah refleksi, total menit/task) + baris jurnal ber-node + penutup "Mengapa review mingguan?".                                                                                                                                          |
+| Settings`/settings`      | Bagian terbuka: Profil, Data Anda (3 StatRow), Preferensi, Akun/Keluar.                                                                                                                                                                                                  |
+| AI                       | Skin-only:`AICommandPanel` ditempatkan dalam section AI terbuka di main Dashboard; drawer global tidak tersentuh.                                                                                                                                                        |
 
 ### 11.4 Penggunaan viewport
+
 Densitas naik di desktop tanpa kartu; kolom main menyisakan effort pada
 hati informasi, kolom kanan membawa konteks yang bisa di-scroll sendiri
 (sticky). Pita hero dan route memakai seluruh lebar kontainer `max-w-6xl`;
 batas antar section memakai garis tipis, bukan bayangan kotak.
 
 ### 11.5 Responsive composition
+
 Urutan direkonstruksi berdasarkan kepentingan, bukan sekadar nge-1 kolom:
 focal selalu pertama, aside turun menjadi bagian bawah yang tetap ringkas;
 `JourneyRoute` md bertukar ke dot-label kecil untuk >6 stage dan layar kecil;
@@ -284,6 +300,7 @@ aksi header membungkus (`flex-wrap`); grid main+330px/220px menumpuk di
 `<lg`; `lg:` menyala hanya pada breakpoint yang sungguh memberi ruang.
 
 ### 11.6 Visual QA & runtime smoke test
+
 Diperiksa per layar (10 pertanyaan: focal jelas? satu CTA tak ambigu? skimming
 <3 detik? over-card? tata ruang asimetris? hierarki tipografis? angka literal?
 kontras? mobilitas/urutan turun? masih terasa template?) — semua layar lolos;
@@ -300,34 +317,35 @@ ada perubahan state/db**. Proses server pengujian dihentikan.
 
 ## 12. Files NOT Changed
 
-| Area | Status |
-| --- | --- |
-| `prisma/**` (schema & migrations) | Tidak disentuh |
-| `src/app/api/**` (semua route API) | Tidak disentuh |
-| `src/services/**` (today, dashboard, analytics, session, task, goal, review, progress, ai-command, capture, dst.) | Tidak disentuh |
-| `src/lib/**` (auth, prisma, format) | Tidak disentuh |
-| `src/ai/**` & `nlp/**` | Tidak disentuh |
-| `tests/**` (16 file, 134 test) | Tidak disentuh |
-| `.github/workflows/**` | Tidak disentuh |
-| Dockerfile / docker-compose / DEPLOY.md | Tidak disentuh |
-| `package.json` / lockfile | Tidak ada dependency baru |
-| `akun.txt`, `Personal Progress OS.bat`, `.env` | Tidak disentuh (tidak di-commit) |
+| Area                                                                                                              | Status                           |
+| ----------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `prisma/**` (schema & migrations)                                                                                 | Tidak disentuh                   |
+| `src/app/api/**` (semua route API)                                                                                | Tidak disentuh                   |
+| `src/services/**` (today, dashboard, analytics, session, task, goal, review, progress, ai-command, capture, dst.) | Tidak disentuh                   |
+| `src/lib/**` (auth, prisma, format)                                                                               | Tidak disentuh                   |
+| `src/ai/**` & `nlp/**`                                                                                            | Tidak disentuh                   |
+| `tests/**` (16 file, 134 test)                                                                                    | Tidak disentuh                   |
+| `.github/workflows/**`                                                                                            | Tidak disentuh                   |
+| Dockerfile / docker-compose / DEPLOY.md                                                                           | Tidak disentuh                   |
+| `package.json` / lockfile                                                                                         | Tidak ada dependency baru        |
+| `akun.txt`, `Personal Progress OS.bat`, `.env`                                                                    | Tidak disentuh (tidak di-commit) |
 
 ---
 
 ## 13. Verification Results
 
-| Pemeriksaan | Hasil |
-| --- | --- |
-| `npx tsc --noEmit` | Lulus — 0 error |
-| `npm run lint` | Lulus — 0 error, 0 warning |
-| `npm run test` | Lulus — 16 files, **134/134 passed** |
-| `npm run build` | Lulus — compiled successfully, 14 routes (semua route tetap) |
+| Pemeriksaan                  | Hasil                                                                                                        |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `npx tsc --noEmit`           | Lulus — 0 error                                                                                              |
+| `npm run lint`               | Lulus — 0 error, 0 warning                                                                                   |
+| `npm run test`               | Lulus — 16 files,**134/134 passed**                                                                          |
+| `npm run build`              | Lulus — compiled successfully, 14 routes (semua route tetap)                                                 |
 | Smoke test runtime (Fase 17) | Lulus — seluruh halaman 200 + marker komposisi tampil dengan autentikasi & data riil; data smoke dibersihkan |
 
 ---
 
 **Pernyataan:**
+
 > Functionality, backend, API, database, AI, authentication, security, and
 > business logic were **not changed** during this UI/UX redesign. All routes,
 > API contracts, data shapes, and behavior remain identical — only the
