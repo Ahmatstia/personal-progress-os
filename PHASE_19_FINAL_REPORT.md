@@ -93,7 +93,7 @@ Tidak ada temuan P0 (blocker).
 - Unique index parsial DB untuk sesi aktif (race berkonkurensi simultan; layanan sudah
   menolak sesi ganda aktif).
 - Rate limiter login lintas-instance (butuh store eksternal; single-instance V1.0 cukup).
-- Deep-link tanpa sesi → redirect eksplisit ke `/` (saat ini error boundary yang ramah).
+- Deep-link tanpa sesi → redirect eksplisit ke `/` (halaman login) via `requirePageUser`; tidak lagi menampilkan layar error generik.
 
 ## 8. Security Verification
 
@@ -243,7 +243,7 @@ Tidak ada test yang dihapus; baseline 134 dipertahankan.
 - Focus-trap penuh & skip-link untuk aksesibilitas lebih lanjut.
 - Unique index parsial sesi aktif (+ transaction) untuk race-proofing penuh.
 - Rate limiter login berbasis store eksternal (multi-instance).
-- Redirect/auth flow yang lebih halus untuk deep-link tanpa sesi.
+- Redirect/auth flow deep-link tanpa sesi → kini dialihkan ke halaman login (`requirePageUser`); sisa fokus ke focus-trap skip-link.
 - Notifikasi & kalender (ringan, sesuai mental model).
 - Recurring goals / template, analytics lanjutan.
 - **Scaling:** migrasi PostgreSQL (Prisma), multi-instance, deployment cloud, aplikasi
