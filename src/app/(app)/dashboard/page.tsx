@@ -6,7 +6,7 @@ import { BottleneckInsight } from "@/app/components/core/BottleneckInsight";
 import { NextActionCard } from "@/app/components/core/NextActionCard";
 import { getDashboardAnalytics } from "@/services/analytics.service";
 import { getDashboardData } from "@/services/dashboard.service";
-import { requireCurrentUser } from "@/lib/auth";
+import { requirePageUser } from "@/lib/auth";
 import { PageHeader } from "@/app/components/ui/PageHeader";
 import { Icon } from "@/app/components/ui/Icon";
 import { HistoryDeleteButton } from "@/app/components/ui/HistoryDeleteButton";
@@ -23,7 +23,7 @@ export default async function AnalyticsPage({
 }: {
   searchParams: Promise<{ goalId?: string }>;
 }) {
-  const user = await requireCurrentUser();
+  const user = await requirePageUser();
   const { goalId } = await searchParams;
   const [analytics, dashboard] = await Promise.all([
     getDashboardAnalytics({ days: 30, goalId }, user.id),

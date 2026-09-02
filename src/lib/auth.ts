@@ -1,5 +1,6 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { prisma } from "./prisma";
 
 export const SESSION_COOKIE = "ppos_session";
@@ -57,6 +58,15 @@ export async function getCurrentUser(request?: Request) {
 export async function requireCurrentUser(request?: Request) {
   const user = await getCurrentUser(request);
   if (!user) throw new AuthorizationError("Autentikasi diperlukan.", 401);
+  return user;
+}
+
+// Untuk halaman autentik (bukan API): bila tidak ada sesi yang valid, alihkan ke
+// halaman login ("/") alih-alih menampilkan layar error generik. Skenario umum:
+// sesi kedaluwarsa / secret dirotasi sehingga cookie lama ditolak.
+export async function requirePageUser() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/");
   return user;
 }
 

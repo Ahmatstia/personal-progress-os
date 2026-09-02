@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { requireCurrentUser } from "@/lib/auth";
+import { requirePageUser } from "@/lib/auth";
 import { getWeekPeriod, getPeriodMetrics, getPeriodReview } from "@/services/review.service";
 import { calculateGoalProgress } from "@/services/progress.service";
 import { PageHeader } from "@/app/components/ui/PageHeader";
@@ -18,7 +18,7 @@ function formatRange(start: Date, end: Date) {
 }
 
 export default async function ReviewPage() {
-  const user = await requireCurrentUser();
+  const user = await requirePageUser();
   const period = getWeekPeriod(new Date());
 
   const goals = await prisma.goal.findMany({

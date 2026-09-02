@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { requireCurrentUser } from "@/lib/auth";
+import { requirePageUser } from "@/lib/auth";
 import StageForm from "@/app/components/StageForm";
 import GoalActions from "@/app/components/GoalActions";
 import NewTaskButton from "@/app/components/NewTaskButton";
@@ -28,7 +28,7 @@ function formatDate(value: Date | null) {
 
 export default async function GoalPage({ params }: GoalPageProps) {
   const { id } = await params;
-  const user = await requireCurrentUser();
+  const user = await requirePageUser();
 
   const goal = await prisma.goal.findUnique({
     where: { id, userId: user.id },

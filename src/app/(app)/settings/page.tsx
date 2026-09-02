@@ -1,4 +1,4 @@
-import { requireCurrentUser } from "@/lib/auth";
+import { requirePageUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import LogoutButton from "@/app/components/LogoutButton";
 import { PageHeader } from "@/app/components/ui/PageHeader";
@@ -11,7 +11,7 @@ function formatDate(value: Date) {
 }
 
 export default async function SettingsPage() {
-  const user = await requireCurrentUser();
+  const user = await requirePageUser();
 
   const [goalCount, taskCount, sessionCount] = await Promise.all([
     prisma.goal.count({ where: { userId: user.id } }),

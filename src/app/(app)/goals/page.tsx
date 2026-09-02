@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { requireCurrentUser } from "@/lib/auth";
+import { requirePageUser } from "@/lib/auth";
 import { calculateGoalProgress } from "@/services/progress.service";
 import NewGoalButton from "@/app/components/NewGoalButton";
 import { PageHeader } from "@/app/components/ui/PageHeader";
@@ -17,7 +17,7 @@ function formatDate(value: Date | null | undefined) {
 }
 
 export default async function GoalsPage() {
-  const user = await requireCurrentUser();
+  const user = await requirePageUser();
 
   const goals = await prisma.goal.findMany({
     where: { userId: user.id },

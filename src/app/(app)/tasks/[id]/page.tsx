@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import TaskActions from "@/app/components/TaskActions";
 import { SessionFocusMode } from "@/app/components/core/SessionFocusMode";
 import { getTaskDetail } from "@/services/task.service";
-import { requireCurrentUser } from "@/lib/auth";
+import { requirePageUser } from "@/lib/auth";
 import { StatusBadge } from "@/app/components/ui/Badge";
 import { Icon } from "@/app/components/ui/Icon";
 import { HistoryDeleteButton } from "@/app/components/ui/HistoryDeleteButton";
@@ -17,7 +17,7 @@ function formatDate(value: Date) {
 
 export default async function TaskPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const user = await requireCurrentUser();
+  const user = await requirePageUser();
   const detail = await getTaskDetail(id, user.id);
   if (!detail) notFound();
 

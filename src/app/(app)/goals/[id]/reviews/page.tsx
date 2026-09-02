@@ -4,7 +4,7 @@ import ReviewForm from "@/app/components/ReviewForm";
 import { getGoalReviewPageData } from "@/services/review.service";
 import { calculateGoalProgress } from "@/services/progress.service";
 import { buildInsights } from "@/services/insight.service";
-import { requireCurrentUser } from "@/lib/auth";
+import { requirePageUser } from "@/lib/auth";
 import { ProgressBar } from "@/app/components/ui/Progress";
 import { Icon } from "@/app/components/ui/Icon";
 import { formatHours } from "@/lib/format";
@@ -16,7 +16,7 @@ function formatDate(value: Date) {
 }
 
 export default async function ReviewsPage({ params }: { params: Promise<{ id: string }> }) {
-  const user = await requireCurrentUser();
+  const user = await requirePageUser();
   const data = await getGoalReviewPageData((await params).id, user.id);
   if (!data) notFound();
   const { goal, reviews, period, review, metrics } = data;

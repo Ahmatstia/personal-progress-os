@@ -5,7 +5,7 @@ import { NextActionCard } from "@/app/components/core/NextActionCard";
 import QuickCapture from "@/app/components/QuickCapture";
 import { getToday } from "@/services/today.service";
 import { getRecentCaptures } from "@/services/capture.service";
-import { requireCurrentUser } from "@/lib/auth";
+import { requirePageUser } from "@/lib/auth";
 import { Icon } from "@/app/components/ui/Icon";
 import { PageHeader } from "@/app/components/ui/PageHeader";
 import { HistoryDeleteButton } from "@/app/components/ui/HistoryDeleteButton";
@@ -31,7 +31,7 @@ function formatCaptureTime(value: Date) {
 }
 
 export default async function TodayPage() {
-  const user = await requireCurrentUser();
+  const user = await requirePageUser();
   const today = await getToday(new Date(), user.id);
   const recentCaptures = await getRecentCaptures(user.id, 8);
 
