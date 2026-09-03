@@ -7,21 +7,36 @@ export function NavigationProgressBar() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const [activeUrl, setActiveUrl] = useState(`${pathname}?${searchParams.toString()}`);
 
-  useEffect(() => {
-    // When path changes, stop loading
-    setLoading(false);
-  }, [pathname, searchParams]);
+  const currentUrl = `${pathname}?${searchParams.toString()}`;
+  if (currentUrl !== activeUrl) {
+    setActiveUrl(currentUrl);
+    if (loading) {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       const target = (e.target as HTMLElement).closest("a");
       if (!target) return;
       const href = target.getAttribute("href");
-      if (!href || href.startsWith("#") || href.startsWith("http") || target.target === "_blank") return;
+      if (
+        !href ||
+        href.startsWith("#") ||
+        href.startsWith("http") ||
+        href.startsWith("mailto:") ||
+        target.target === "_blank" ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.shiftKey
+      ) {
+        return;
+      }
 
       // Same page click ignore
-      if (href === pathname) return;
+      if (href === pathname || href === window.location.pathname) return;
 
       setLoading(true);
     }
