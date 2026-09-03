@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/app/components/ui/Toast";
 import { Icon } from "@/app/components/ui/Icon";
+import { CelebrationEffect } from "./CelebrationEffect";
 
 type Status = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
 
@@ -59,6 +60,9 @@ export function TaskStatusPicker({
   const { toast } = useToast();
   const [current, setCurrent] = useState<Status>(status);
   const [loading, setLoading] = useState<Status | null>(null);
+  const [celebrate, setCelebrate] = useState(false);
+  const completeBtnRef = useRef<HTMLButtonElement>(null);
+  const originRef = useRef<HTMLElement | null>(null);
 
   async function select(next: Status) {
     if (next === current || loading) return;
@@ -74,10 +78,16 @@ export function TaskStatusPicker({
       });
       if (!res.ok) throw new Error();
       setCurrent(next);
+      if (next === "COMPLETED") {
+        originRef.current = completeBtnRef.current;
+        setCelebrate(true);
+        // reset so it can re-trigger if needed
+        setTimeout(() => setCelebrate(false), 100);
+      }
       const labels: Record<Status, string> = {
         NOT_STARTED: "Task dikembalikan ke awal.",
         IN_PROGRESS: "Task dimulai. Semangat! 💪",
-        COMPLETED: "Task selesai! Bagus sekali! 🎉",
+        COMPLETED: "Task selesai! Luar biasa! 🎉",
       };
       toast(labels[next], next === "COMPLETED" ? "success" : "info");
       router.refresh();
@@ -91,7 +101,9 @@ export function TaskStatusPicker({
   const currentStage = stages.find((s) => s.key === current) ?? stages[0];
 
   return (
-    <div className="space-y-2">
+    <>
+      <CelebrationEffect trigger={celebrate} originEl={originRef} />
+      <div className="space-y-2">
       {/* Active status indicator */}
       <div className="flex items-center gap-2">
         <span className={`h-2 w-2 rounded-full ${currentStage.dotClass}`} />
@@ -129,6 +141,7 @@ export function TaskStatusPicker({
                     ? `${stage.activeClass} status-ripple`
                     : "border-transparent text-surface-400 hover:bg-surface-100 hover:text-surface-700"
                 }`}
+                {...(stage.key === "COMPLETED" ? { ref: completeBtnRef } : {})}
               >
                 {isLoading ? (
                   <span className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -168,5 +181,6 @@ export function TaskStatusPicker({
         ))}
       </div>
     </div>
+    </>
   );
 }

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePageUser } from "@/lib/auth";
 import StageForm from "@/app/components/StageForm";
-import GoalActions from "@/app/components/GoalActions";
+import GoalActionsMenu from "@/app/components/GoalActionsMenu";
 import NewTaskButton from "@/app/components/NewTaskButton";
 import TaskList from "@/app/components/TaskList";
 import StageActions from "@/app/components/StageActions";
@@ -11,7 +11,6 @@ import {
   calculateGoalProgress,
   calculateStageProgress,
 } from "@/services/progress.service";
-import { Button } from "@/app/components/ui/Button";
 import { StatusBadge } from "@/app/components/ui/Badge";
 import { ProgressBar } from "@/app/components/ui/Progress";
 import { EmptyState } from "@/app/components/ui/EmptyState";
@@ -61,6 +60,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
     (stage) =>
       stage.tasks.length > 0 && calculateStageProgress(stage.tasks) === 100,
   ).length;
+  const allStagesDone = completedStages === goal.stages.length && goal.stages.length > 0;
   const totalEstimatedHours = allTasks.reduce(
     (s, t) => s + (t.estimatedHours || 0),
     0,
@@ -89,8 +89,36 @@ export default async function GoalPage({ params }: GoalPageProps) {
     };
   });
 
+  const now = new Date();
+  const daysElapsed = Math.floor((now.getTime() - new Date(goal.createdAt).getTime()) / 86400000);
+  const goalStartDate = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" }).format(goal.createdAt);
+
   return (
     <div className="space-y-14">
+      {/* Goal Completion Banner — shown only when all stages done */}
+      {allStagesDone && (
+        <div className="relative overflow-hidden rounded-2xl border border-success-200 bg-gradient-to-br from-success-50 via-success-100/40 to-white p-5 shadow-soft">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-success-200/50 blur-2xl"
+          />
+          <div className="relative flex flex-wrap items-center gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-success-500 text-2xl text-white shadow-[0_0_0_4px_rgba(47,162,99,0.2)]">
+              🏆
+            </span>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-success-600">Goal Selesai</p>
+              <p className="mt-0.5 text-xl font-bold text-surface-900">
+                Perjalanan {goal.name} telah sampai!
+              </p>
+              <p className="mt-0.5 text-[13px] text-success-700">
+                {completedTasks} task · {goal.stages.length} stage · semua tuntas.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header abstrak — blob ganda + dot-grid, bukan satu blur polos */}
       <header className="relative overflow-hidden pb-10 pt-2 md:pb-14">
         <div
@@ -203,17 +231,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <StageForm goalId={goal.id} nextOrder={goal.stages.length} />
-            <Link href={`/goals/${goal.id}/reviews`}>
-              <Button variant="secondary" icon="sparkles" size="sm">
-                Review progres
-              </Button>
-            </Link>
-            <Link href={`/dashboard?goalId=${goal.id}`}>
-              <Button variant="ghost" icon="chart" size="sm">
-                Analytics
-              </Button>
-            </Link>
-            <GoalActions goalId={goal.id} goalName={goal.name} />
+            <GoalActionsMenu goalId={goal.id} goalName={goal.name} />
           </div>
         </div>
 
@@ -230,6 +248,41 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 ? "Semua stage selesai — perjalanan telah sampai di tujuan."
                 : `Anda berada di stage ${currentStageIndex + 1} dari ${goal.stages.length}. Stage selesai tampak tenang, stage saat ini bersinar, sisanya menunggu.`}
             </p>
+
+            {/* Journey Stats Mini-Bar */}
+            <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {[
+                {
+                  label: "Dimulai",
+                  value: goalStartDate,
+                  icon: "🗓",
+                },
+                {
+                  label: "Hari berjalan",
+                  value: `${daysElapsed} hari`,
+                  icon: "⏱",
+                },
+                {
+                  label: "Stage selesai",
+                  value: `${completedStages}/${goal.stages.length}`,
+                  icon: "🎯",
+                },
+                {
+                  label: "Task selesai",
+                  value: `${completedTasks}/${allTasks.length}`,
+                  icon: "✅",
+                },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="flex flex-col gap-0.5 rounded-xl border border-surface-100 bg-white px-3 py-2.5 shadow-soft"
+                >
+                  <span className="text-base leading-none">{stat.icon}</span>
+                  <span className="mt-1.5 text-[15px] font-bold text-surface-900 leading-tight">{stat.value}</span>
+                  <span className="text-[11px] text-surface-400">{stat.label}</span>
+                </div>
+              ))}
+            </div>
           </>
         ) : (
           <div className="mt-8 border-t border-dashed border-surface-200 pt-10">
@@ -296,9 +349,11 @@ export default async function GoalPage({ params }: GoalPageProps) {
 
                   <div
                     className={`rounded-tl-md rounded-br-3xl rounded-tr-3xl rounded-bl-3xl border p-6 sm:p-7 ${
-                      isCurrent
-                        ? "border-primary-200 bg-primary-50/50 shadow-raised"
-                        : "border-surface-200 bg-surface-0 shadow-soft"
+                      isCompleted
+                        ? "border-success-200 bg-gradient-to-br from-success-50/60 to-white shadow-soft"
+                        : isCurrent
+                          ? "border-primary-200 bg-primary-50/50 shadow-raised"
+                          : "border-surface-200 bg-surface-0 shadow-soft"
                     }`}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-4">
@@ -308,6 +363,11 @@ export default async function GoalPage({ params }: GoalPageProps) {
                             Stage {index + 1}
                           </p>
                           {isCurrent && <CurrentWaypointTag />}
+                          {isCompleted && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-success-100 px-2 py-0.5 text-[10px] font-bold text-success-700">
+                              ✓ Selesai
+                            </span>
+                          )}
                         </div>
                         <h3
                           className={`mt-1 text-lg font-semibold sm:text-xl ${

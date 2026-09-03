@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { getDashboardData } from "@/services/dashboard.service";
+import { getDashboardAnalytics } from "@/services/analytics.service";
 import { calculateGoalProgress } from "@/services/progress.service";
 import { getToday } from "@/services/today.service";
 import { getCurrentUser } from "@/lib/auth";
 import LoginForm from "@/app/components/LoginForm";
 import { Button } from "@/app/components/ui/Button";
 import { NextActionSpotlight } from "@/app/components/core/NextActionSpotlight";
-import { FocusOrb } from "@/app/components/core/FocusOrb";
+import { SmartInsightCard, buildInsights } from "@/app/components/core/SmartInsightCard";
 import { ProgressBar } from "@/app/components/ui/Progress";
 import { EmptyState } from "@/app/components/ui/EmptyState";
 import { Icon } from "@/app/components/ui/Icon";
@@ -20,6 +21,15 @@ function formatDate(value: Date) {
     day: "numeric",
     month: "short",
   }).format(value);
+}
+
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 5) return "Selamat malam";
+  if (hour < 11) return "Selamat pagi";
+  if (hour < 15) return "Selamat siang";
+  if (hour < 19) return "Selamat sore";
+  return "Selamat malam";
 }
 
 export default async function Home() {
@@ -78,10 +88,29 @@ export default async function Home() {
     );
   }
 
-  const [dashboard, today] = await Promise.all([
+  const [dashboard, today, analytics] = await Promise.all([
     getDashboardData(user.id),
     getToday(new Date(), user.id),
+    getDashboardAnalytics({ days: 30 }, user.id),
   ]);
+
+  // Days since last session
+  const now = new Date();
+  const lastSession = dashboard.recentSessions[0];
+  const daysSinceLastSession = lastSession
+    ? Math.floor((now.getTime() - new Date(lastSession.startedAt).getTime()) / 86400000)
+    : 999;
+
+  const insights = buildInsights({
+    currentStreak: analytics.summary.currentStreak,
+    longestStreak: analytics.summary.longestStreak,
+    daysSinceLastSession,
+    consistency: analytics.summary.consistency,
+    studyMinutesToday: dashboard.studyMinutesToday,
+    focusTasksCount: today.focusTasks.length,
+    activeTasks: analytics.summary.activeTasks,
+    bottlenecks: analytics.bottlenecks,
+  });
 
   const goalCount = dashboard.activeGoals.length;
   const completionPct =
@@ -92,142 +121,91 @@ export default async function Home() {
         );
 
   const firstName = user.name?.split(" ")[0] || "teman";
+  const greeting = getGreeting();
+
+  // Determine today's status message
+  const todayStatus = today.currentSession
+    ? `Sedang mengerjakan: ${today.currentSession.task.name}`
+    : today.focusTasks.length > 0
+      ? `${today.focusTasks.length} task terpilih untuk hari ini`
+      : dashboard.nextAction
+        ? `Task berikutnya: ${dashboard.nextAction.taskName}`
+        : "Pilih fokus hari ini untuk mulai";
 
   return (
-    <div className="space-y-6">
-      {/* ── Hero header ────────────────────────────────────── */}
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="eyebrow text-primary-600">Ringkasan</p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-surface-900 sm:text-3xl">
-            Halo,{" "}
+    <div className="space-y-8">
+      {/* ── Hero Greeting ────────────────────────────────────── */}
+      <header className="relative overflow-hidden rounded-2xl border border-primary-100 bg-gradient-to-br from-primary-50 via-white to-ai-50 p-6 shadow-soft">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-primary-200/30 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-8 bottom-0 h-32 w-32 rounded-full bg-ai-200/20 blur-2xl"
+        />
+        <div className="relative">
+          <p className="eyebrow text-primary-500">{greeting}</p>
+          <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-surface-900 sm:text-4xl">
             <span className="gradient-text">{firstName}</span> 👋
           </h1>
-          <p className="mt-0.5 text-[13px] text-surface-500">
-            Berikut status perjalanan Anda hari ini.
+
+          <p className="mt-2 max-w-md text-[13.5px] leading-relaxed text-surface-600">
+            {todayStatus}
           </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Link href="/today">
-            <Button variant="primary" icon="sun" size="sm">
-              Hari Ini
-            </Button>
-          </Link>
-          <Link href="/goals">
-            <Button variant="secondary" icon="flag" size="sm">
-              Goals
-            </Button>
-          </Link>
-        </div>
-      </header>
 
-      {/* ── Bento row 1: Next action + Hari Ini card ──────── */}
-      <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
-        <NextActionSpotlight
-          nextAction={dashboard.nextAction}
-          progress={dashboard.totalProgress}
-        />
-
-        {/* Hari Ini mini card */}
-        <div className="rounded-2xl border border-surface-150 bg-white p-4 shadow-soft card-interactive shine-parent">
-          <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-gradient-to-br from-warning-400 to-warning-500 text-white">
-              <Icon name="sun" size={12} />
+          {/* Quick stats row */}
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-white px-3 py-1.5 text-[12px] font-semibold text-primary-700 shadow-sm">
+              <Icon name="flag" size={12} />
+              {goalCount} goal aktif
             </span>
-            <p className="eyebrow text-surface-500">Hari Ini</p>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-success-200 bg-white px-3 py-1.5 text-[12px] font-semibold text-success-700 shadow-sm">
+              <Icon name="check" size={12} />
+              {dashboard.completedTaskCount}/{dashboard.totalTaskCount} task
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-warning-200 bg-white px-3 py-1.5 text-[12px] font-semibold text-warning-700 shadow-sm">
+              <Icon name="clock" size={12} />
+              {formatDuration(dashboard.studyMinutesToday)} hari ini
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-ai-200 bg-white px-3 py-1.5 text-[12px] font-semibold text-ai-700 shadow-sm">
+              <span className="text-[11px] font-bold">{completionPct}%</span>
+              keseluruhan
+            </span>
           </div>
-          <p className="mt-3 text-[15px] font-bold leading-snug text-surface-900">
-            {today.currentSession
-              ? `Mengerjakan: ${today.currentSession.task.name}`
-              : today.focusTasks.length > 0
-                ? `${today.focusTasks.length} task fokus menunggu`
-                : "Belum ada fokus dipilih"}
-          </p>
-          <p className="mt-1 text-[12px] text-surface-500">
-            {formatDuration(today.stats.totalMinutes)} belajar ·{" "}
-            {today.stats.completedTasks} task selesai
-          </p>
 
-          <div className="mt-3 flex items-center justify-between gap-2">
-            <span className="text-[11px] text-surface-400">
-              {today.focusCompleted}/{today.focusTotal} fokus selesai
-            </span>
+          {/* Primary CTA */}
+          <div className="mt-5 flex flex-wrap items-center gap-2">
             <Link href="/today">
-              <Button variant="ghost" size="sm" iconRight="arrowRight">
-                Buka
+              <Button variant="primary" icon="sun" size="sm">
+                Buka Hari Ini
+              </Button>
+            </Link>
+            <Link href="/goals">
+              <Button variant="secondary" icon="flag" size="sm">
+                Lihat Goals
               </Button>
             </Link>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* ── Bento row 2: Stats grid ──────────────────────── */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {/* Goals aktif */}
-        <div className="bento-tile stat-bg-primary p-4">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="eyebrow text-primary-500">Goals aktif</p>
-              <p className="mt-1.5 text-2xl font-bold text-surface-900">{goalCount}</p>
-            </div>
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-600">
-              <Icon name="flag" size={15} />
-            </span>
-          </div>
+      {/* ── Next Action — single source of truth ────────────── */}
+      <section>
+        <div className="mb-3 flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-primary-500" aria-hidden />
+          <p className="eyebrow text-primary-500">Langkah Berikutnya</p>
         </div>
+        <NextActionSpotlight
+          nextAction={dashboard.nextAction}
+          progress={dashboard.totalProgress}
+        />
+      </section>
 
-        {/* Task selesai */}
-        <div className="bento-tile stat-bg-success p-4">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="eyebrow text-success-600">Task selesai</p>
-              <p className="mt-1.5 text-2xl font-bold text-surface-900">
-                {dashboard.completedTaskCount}
-                <span className="text-sm font-normal text-surface-400">
-                  /{dashboard.totalTaskCount}
-                </span>
-              </p>
-            </div>
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-success-100 text-success-600">
-              <Icon name="check" size={15} />
-            </span>
-          </div>
-        </div>
+      {/* ── Smart Insights ────────────────────────────────────── */}
+      {insights.length > 0 && <SmartInsightCard insights={insights} />}
 
-        {/* Belajar hari ini */}
-        <div className="bento-tile stat-bg-warning p-4">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="eyebrow text-warning-600">Belajar hari ini</p>
-              <p className="mt-1.5 text-2xl font-bold text-surface-900">
-                {formatDuration(dashboard.studyMinutesToday)}
-              </p>
-            </div>
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-warning-100 text-warning-600">
-              <Icon name="clock" size={15} />
-            </span>
-          </div>
-        </div>
-
-        {/* Progres keseluruhan — orb besar */}
-        <div className="bento-tile stat-bg-ai p-4 flex items-center gap-3">
-          <FocusOrb
-            value={completionPct}
-            size={56}
-            stroke={5}
-            tone={completionPct === 100 ? "success" : "primary"}
-            label={`Progres keseluruhan ${completionPct} persen`}
-          >
-            <span className="text-sm font-bold text-surface-900">{completionPct}%</span>
-          </FocusOrb>
-          <div>
-            <p className="eyebrow text-ai-600">Progres</p>
-            <p className="mt-0.5 text-[13px] font-semibold text-surface-700">Keseluruhan</p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Review alert ─────────────────────────────────── */}
+      {/* ── Review alert ─────────────────────────────────────── */}
       {dashboard.reviewSummary && (
         <div
           className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 ${
@@ -270,12 +248,12 @@ export default async function Home() {
         </div>
       )}
 
-      {/* ── Goals aktif ──────────────────────────────────── */}
+      {/* ── Goals aktif ──────────────────────────────────────── */}
       <section>
         <div className="flex items-center justify-between gap-3 mb-3">
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary-500" aria-hidden />
-            <p className="eyebrow text-surface-500">Goals aktif</p>
+            <span className="h-1.5 w-1.5 rounded-full bg-ai-500" aria-hidden />
+            <p className="eyebrow text-surface-500">Perjalanan Aktif</p>
           </div>
           <Link
             href="/goals"
@@ -344,11 +322,11 @@ export default async function Home() {
         )}
       </section>
 
-      {/* ── Aktivitas terbaru ─────────────────────────────── */}
+      {/* ── Jejak terbaru (compact) ───────────────────────────── */}
       <section>
         <div className="flex items-center gap-2 mb-3">
           <span className="h-1.5 w-1.5 rounded-full bg-surface-300" aria-hidden />
-          <p className="eyebrow text-surface-400">Jejak</p>
+          <p className="eyebrow text-surface-400">Jejak Terakhir</p>
         </div>
         {dashboard.recentActivity.length === 0 ? (
           <p className="text-[13px] text-surface-400 px-1">

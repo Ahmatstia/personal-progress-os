@@ -13,11 +13,11 @@ type NavItem = {
 };
 
 const primaryNav: NavItem[] = [
-  { href: "/", label: "Mulai", verb: "Start", icon: "compass", color: "text-primary-600" },
-  { href: "/today", label: "Hari Ini", verb: "Do", icon: "sun", color: "text-warning-600" },
+  { href: "/", label: "Beranda", verb: "Orient", icon: "compass", color: "text-primary-600" },
+  { href: "/today", label: "Hari Ini", verb: "Fokus", icon: "sun", color: "text-warning-600" },
   { href: "/goals", label: "Goals", verb: "Plan", icon: "flag", color: "text-ai-600" },
-  { href: "/dashboard", label: "Dashboard", verb: "Progress", icon: "chart", color: "text-success-600" },
-  { href: "/review", label: "Refleksi", verb: "Reflect", icon: "capture", color: "text-info-500" },
+  { href: "/dashboard", label: "Analitik", verb: "Insight", icon: "chart", color: "text-success-600" },
+  { href: "/review", label: "Refleksi", verb: "Review", icon: "capture", color: "text-info-500" },
 ];
 
 const navItemActiveBg: Record<string, string> = {

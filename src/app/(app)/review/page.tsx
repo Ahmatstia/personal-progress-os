@@ -9,6 +9,7 @@ import { ProgressBar } from "@/app/components/ui/Progress";
 import { EmptyState } from "@/app/components/ui/EmptyState";
 import { Icon } from "@/app/components/ui/Icon";
 import { formatDuration } from "@/lib/format";
+import { NotesTimeline, type TimelineEntry } from "@/app/components/core/NotesTimeline";
 
 export const dynamic = "force-dynamic";
 
@@ -32,15 +33,54 @@ export default async function ReviewPage() {
     },
   });
 
-  const reviewed = new Set(
-    (await prisma.review.findMany({
+  const [reviewedList, captures, sessionReflections, allPastReviews] = await Promise.all([
+    prisma.review.findMany({
       where: {
         goal: { userId: user.id },
         periodStart: period.periodStart,
       },
       select: { goalId: true },
-    })).map((item) => item.goalId),
-  );
+    }),
+    prisma.capture.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    }),
+    prisma.session.findMany({
+      where: {
+        userId: user.id,
+        OR: [
+          { obstacle: { not: null } },
+          { understanding: { not: null } },
+        ],
+      },
+      orderBy: { startedAt: "desc" },
+      take: 20,
+      include: {
+        task: {
+          include: {
+            stage: {
+              include: {
+                goal: true,
+              },
+            },
+          },
+        },
+      },
+    }),
+    prisma.review.findMany({
+      where: {
+        goal: { userId: user.id },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 15,
+      include: {
+        goal: true,
+      },
+    }),
+  ]);
+
+  const reviewed = new Set(reviewedList.map((item) => item.goalId));
 
   const rows = await Promise.all(
     goals.map(async (goal) => {
@@ -52,6 +92,42 @@ export default async function ReviewPage() {
 
   const totalMinutes = rows.reduce((s, r) => s + r.metrics.learningMinutes, 0);
   const totalTasks = rows.reduce((s, r) => s + r.metrics.tasksCompleted, 0);
+
+  // Compile timeline entries
+  const timelineEntries: TimelineEntry[] = [
+    ...captures.map((c): TimelineEntry => ({
+      id: `capture-${c.id}`,
+      kind: "capture",
+      title: "Catatan Cepat",
+      content: c.content,
+      timestamp: c.createdAt.toISOString(),
+      entityId: c.id,
+    })),
+    ...sessionReflections.map((s): TimelineEntry => ({
+      id: `session-${s.id}`,
+      kind: "session",
+      title: s.task.name,
+      tag: s.task.stage.goal.name,
+      subtitle: s.understanding !== null ? `Tingkat pemahaman: ${s.understanding}/5` : undefined,
+      content: s.obstacle ? `Hambatan: ${s.obstacle}` : "Sesi belajar selesai dengan evaluasi pemahaman.",
+      timestamp: (s.endedAt ?? s.startedAt).toISOString(),
+      entityId: s.id,
+    })),
+    ...allPastReviews.map((r): TimelineEntry => ({
+      id: `review-${r.id}`,
+      kind: "review",
+      title: `Refleksi: ${r.goal.name}`,
+      tag: `${formatRange(r.periodStart, r.periodEnd)}`,
+      content: [
+        r.wentWell ? `🏆 Berjalan baik: ${r.wentWell}` : "",
+        r.difficulties ? `⚠️ Tantangan: ${r.difficulties}` : "",
+        r.improvements ? `💡 Perbaikan: ${r.improvements}` : "",
+        r.nextFocus ? `🎯 Fokus Berikutnya: ${r.nextFocus}` : "",
+      ].filter(Boolean).join("\n\n") || "Refleksi mingguan selesai tercatat.",
+      timestamp: r.createdAt.toISOString(),
+      entityId: r.id,
+    })),
+  ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
   return (
     <div className="space-y-12">
@@ -148,6 +224,11 @@ export default async function ReviewPage() {
           })}
         </ol>
       )}
+
+      {/* Timeline Catatan & Refleksi */}
+      <div className="border-t border-surface-150 pt-10">
+        <NotesTimeline entries={timelineEntries} />
+      </div>
 
       <footer className="max-w-2xl border-t border-surface-150 pt-6">
         <h2 className="font-semibold text-surface-800">Mengapa review mingguan?</h2>

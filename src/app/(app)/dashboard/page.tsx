@@ -2,8 +2,8 @@ import Link from "next/link";
 import AnalyticsBars from "@/app/components/AnalyticsBars";
 import { AICommandPanel } from "@/app/components/AICommandPanel";
 import { BottleneckInsight } from "@/app/components/core/BottleneckInsight";
-import { NextActionSpotlight } from "@/app/components/core/NextActionSpotlight";
 import { FocusOrb } from "@/app/components/core/FocusOrb";
+import { ActivityHeatmap } from "@/app/components/core/ActivityHeatmap";
 import { getDashboardAnalytics } from "@/services/analytics.service";
 import { getDashboardData } from "@/services/dashboard.service";
 import { requirePageUser } from "@/lib/auth";
@@ -30,7 +30,7 @@ export default async function AnalyticsPage({
   const user = await requirePageUser();
   const { goalId } = await searchParams;
   const [analytics, dashboard] = await Promise.all([
-    getDashboardAnalytics({ days: 30, goalId }, user.id),
+    getDashboardAnalytics({ days: 90, goalId }, user.id),
     getDashboardData(user.id),
   ]);
   const { summary, bottlenecks } = analytics;
@@ -39,9 +39,9 @@ export default async function AnalyticsPage({
     <div className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <PageHeader
-          eyebrow="Dashboard"
-          title="Progres Anda"
-          description="Pandangan jujur tentang 30 hari terakhir kerja nyata."
+          eyebrow="Analitik"
+          title="Data Perjalanan Anda"
+          description="Pandangan jujur tentang 30 hari terakhir — konsistensi, bottleneck, dan tren nyata."
         />
         {goalId && (
           <Link
@@ -56,12 +56,19 @@ export default async function AnalyticsPage({
       <div className="lg:grid lg:grid-cols-[1fr_260px] lg:items-start lg:gap-5">
         {/* Main content */}
         <div className="min-w-0 space-y-5">
-          <NextActionSpotlight
-            nextAction={dashboard.nextAction}
-            progress={dashboard.totalProgress}
-          />
-
           <BottleneckInsight bottlenecks={bottlenecks} />
+
+          {/* Activity Heatmap — 90 hari */}
+          <section className="rounded-2xl border border-surface-150 bg-white p-5 shadow-soft">
+            <div className="mb-4">
+              <p className="eyebrow text-surface-400">Konsistensi</p>
+              <p className="mt-0.5 text-[15px] font-bold text-surface-900">Aktivitas 90 Hari</p>
+              <p className="mt-0.5 text-[12px] text-surface-500">
+                Setiap kotak = satu hari. Warna makin gelap, makin lama fokus.
+              </p>
+            </div>
+            <ActivityHeatmap trends={analytics.trends} days={90} />
+          </section>
 
           {/* Activity trend chart */}
           <section className="rounded-2xl border border-surface-150 bg-white p-4 shadow-soft">
@@ -169,6 +176,61 @@ export default async function AnalyticsPage({
 
         {/* Sidebar */}
         <aside className="mt-5 space-y-4 lg:sticky lg:top-16 lg:mt-0">
+
+          {/* ── Streak Hero Card — paling prominent ── */}
+          <section
+            className={`rounded-2xl border p-4 shadow-soft ${
+              summary.currentStreak >= 7
+                ? "border-warning-200 bg-gradient-to-br from-warning-50 to-warning-100/60"
+                : summary.currentStreak >= 3
+                  ? "border-primary-200 bg-gradient-to-br from-primary-50 to-ai-50/60"
+                  : "border-surface-150 bg-white"
+            }`}
+          >
+            <p className="eyebrow text-surface-400">Konsistensi</p>
+            <div className="mt-2 flex items-end gap-3">
+              <span
+                className={`text-5xl font-bold tracking-tight leading-none ${
+                  summary.currentStreak >= 7
+                    ? "text-warning-600"
+                    : summary.currentStreak >= 3
+                      ? "text-primary-700"
+                      : "text-surface-700"
+                }`}
+              >
+                {summary.currentStreak}
+              </span>
+              <div className="pb-0.5">
+                <p className="text-[13px] font-semibold text-surface-700">hari berturut-turut</p>
+                <p className="text-[11px] text-surface-400">
+                  Rekor terpanjang: {summary.longestStreak} hari
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 flex items-center gap-2">
+              <div className="flex gap-1">
+                {Array.from({ length: 7 }).map((_, i) => {
+                  const active = i < Math.min(summary.currentStreak, 7);
+                  return (
+                    <span
+                      key={i}
+                      className={`h-2 w-2 rounded-full ${
+                        active
+                          ? summary.currentStreak >= 7
+                            ? "bg-warning-500"
+                            : "bg-primary-500"
+                          : "bg-surface-200"
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+              <span className="text-[11px] text-surface-400">
+                {summary.activeDays}/{summary.daysInPeriod} hari aktif (30 hari)
+              </span>
+            </div>
+          </section>
+
           {/* 30-day summary */}
           <section className="rounded-2xl border border-surface-150 bg-white p-4 shadow-soft">
             <div className="flex items-center justify-between gap-4 mb-4">
@@ -220,37 +282,14 @@ export default async function AnalyticsPage({
                 label="Rata-rata sesi"
                 value={`${summary.averageSessionMinutes} mnt`}
               />
-            </dl>
-          </section>
-
-          {/* Consistency card */}
-          <section className="rounded-2xl border border-surface-150 bg-white p-4 shadow-soft">
-            <div className="mb-3">
-              <p className="eyebrow text-surface-400">Ritme</p>
-              <p className="mt-0.5 text-[14px] font-bold text-surface-900">Konsistensi</p>
-            </div>
-            <dl className="space-y-0">
-              {[
-                { label: "Hari aktif", value: `${summary.activeDays}/${summary.daysInPeriod}` },
-                { label: "Rekor saat ini", value: `${summary.currentStreak} hari` },
-                { label: "Rekor terpanjang", value: `${summary.longestStreak} hari` },
-                { label: "Rata-rata sesi", value: `${summary.averageSessionMinutes} mnt` },
-                {
-                  label: "Pemahaman",
-                  value:
-                    summary.averageUnderstanding === null
-                      ? "—"
-                      : `${summary.averageUnderstanding}/5`,
-                },
-              ].map((row) => (
-                <div
-                  key={row.label}
-                  className="flex items-center justify-between gap-3 border-b border-surface-100 py-2 last:border-0 last:pb-0 first:pt-0"
-                >
-                  <dt className="text-[12.5px] text-surface-500">{row.label}</dt>
-                  <dd className="text-[12.5px] font-semibold text-surface-800">{row.value}</dd>
-                </div>
-              ))}
+              {summary.averageUnderstanding !== null && (
+                <StatRow
+                  icon="sparkles"
+                  tone="ai"
+                  label="Pemahaman rata-rata"
+                  value={`${summary.averageUnderstanding}/5`}
+                />
+              )}
             </dl>
           </section>
 

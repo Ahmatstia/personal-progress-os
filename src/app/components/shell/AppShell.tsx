@@ -62,10 +62,10 @@ export function GlobalAIDrawer({ open, onClose, context }: GlobalAIDrawerProps) 
 }
 
 const mobileNav: { href: string; label: string; icon: IconName }[] = [
-  { href: "/", label: "Mulai", icon: "compass" },
+  { href: "/", label: "Beranda", icon: "compass" },
   { href: "/today", label: "Hari Ini", icon: "sun" },
   { href: "/goals", label: "Goals", icon: "flag" },
-  { href: "/dashboard", label: "Dashboard", icon: "chart" },
+  { href: "/dashboard", label: "Analitik", icon: "chart" },
   { href: "/review", label: "Refleksi", icon: "capture" },
 ];
 
