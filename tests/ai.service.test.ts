@@ -47,6 +47,6 @@ describe("AI foundation", () => {
     for (const intent of intents) {
       expect(activeCorpus.examples.filter((example) => example.intent === intent).length).toBeGreaterThanOrEqual(20);
     }
-    expect(activeCorpus.examples.every((example) => example.text.trim() && intents.includes(example.intent))).toBe(true);
+    expect(activeCorpus.examples.every((example) => example.text.trim() && (intents as readonly string[]).includes(example.intent))).toBe(true);
   });
 });

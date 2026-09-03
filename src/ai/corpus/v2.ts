@@ -1,7 +1,7 @@
-import type { Intent } from "../intents";
+import type { Intent, V1Intent } from "../intents";
 import { corpusV1, type CorpusExample } from "./v1";
 
-const additions: Record<Intent, string[]> = {
+const additions: Record<V1Intent, string[]> = {
   TODAY: ["hari ini saya mulai dari pekerjaan apa", "tugas utama saya untuk hari ini apa", "boleh tunjukkan rencana kerja hari ini", "yang harus saya selesaikan hari ini apa", "untuk hari ini saya fokus ke mana", "agenda kerja saya hari ini apa", "apa sasaran saya hari ini", "hari ini ada tugas yang belum beres apa", "saya perlu mengatur hari ini", "pagi ini sebaiknya mengerjakan apa"],
   NEXT_ACTION: ["setelah tugas ini langkah saya apa", "aksi paling masuk akal berikutnya apa", "habis menyelesaikan ini saya lanjut ke mana", "tolong pilihkan langkah sesudah ini", "saya harus mengambil tindakan apa berikutnya", "urutan berikut yang perlu saya jalankan apa", "setelah ini saya mengerjakan task yang mana", "apa satu langkah konkret saya sekarang", "boleh tentukan pekerjaan lanjutan", "lanjutan dari pekerjaan ini apa"],
   GOAL_STATUS: ["tujuan belajar saya sekarang statusnya apa", "goal ini sudah berjalan berapa jauh", "apakah target saya masih on track", "tolong cek keadaan tujuan ini", "status pencapaian goal saya saat ini", "target ini sudah mendekati selesai belum", "bagaimana kondisi tujuan yang saya buat", "goal saya tertinggal atau sesuai rencana", "lihat perkembangan satu goal saya", "apakah tujuan ini masih aktif"],

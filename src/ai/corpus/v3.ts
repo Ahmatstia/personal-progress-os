@@ -1,8 +1,8 @@
-import type { Intent } from "../intents";
+import type { Intent, V1Intent } from "../intents";
 import { corpusV2 } from "./v2";
 import type { CorpusExample } from "./v1";
 
-const hardExamples: Record<Intent, string[]> = {
+const hardExamples: Record<V1Intent, string[]> = {
   TODAY: ["untuk agenda hari ini, apa yang belum saya sentuh", "saya butuh ringkasan pekerjaan yang harus dikerjakan hari ini", "kalau melihat hari ini, saya sebaiknya mulai dari mana", "tampilkan rencana kerja saya untuk tanggal ini", "apa saja target yang perlu saya kerjakan hari ini", "hari ini tugas utama saya yang mana, bukan langkah berikutnya", "saya ingin tahu isi daftar kerja hari ini", "pekerjaan apa yang dijadwalkan untuk hari ini", "bantu saya menentukan isi hari kerja ini", "lihat fokus pekerjaan saya pada hari ini"],
   NEXT_ACTION: ["setelah melihat status task, tindakan berikut saya apa", "saya sudah selesai di bagian ini, lanjut ke langkah mana", "jangan tampilkan semua tugas, beri satu tindakan berikutnya", "dari pekerjaan yang sedang berjalan, saya harus melakukan apa", "apa langkah operasional setelah tugas ini", "saya ingin tahu pekerjaan lanjutan yang harus dipilih", "setelah ini keputusan kerja saya apa", "tolong tentukan aksi sesudah pekerjaan yang aktif", "satu hal yang paling tepat saya kerjakan berikutnya apa", "bagian berikut dari alur kerja ini apa"],
   GOAL_STATUS: ["apakah goal belajar Python ini masih aktif", "target ini kondisinya aman atau sedang tertinggal", "saya tidak meminta persentase, bagaimana status goal ini", "goal tertentu ini sekarang berada dalam keadaan apa", "apakah tujuan yang saya buat masih berjalan", "tolong cek apakah target ini masih on track", "status goal proyek saya saat ini apa", "target ini sudah selesai atau masih terbuka", "bagaimana keadaan tujuan ini dibanding rencananya", "saya ingin memeriksa status satu goal"],

@@ -39,13 +39,13 @@ export async function updateTask(id: string, input: UpdateTaskInput, userId?: st
   if (!task) throw new TaskServiceError("Task tidak ditemukan.", "TASK_NOT_FOUND");
 
   const data: Record<string, unknown> = { ...input };
-  delete data.status;
   if (input.status) {
     data.status = input.status;
     data.completedAt = input.status === "COMPLETED" ? new Date() : null;
     if (input.status !== "NOT_STARTED") data.startedAt = task.startedAt ?? new Date();
   }
-  return process.env.NODE_ENV === "test" ? (updateTaskRecord as unknown as (id: string, data: unknown) => Promise<any>)(id, data) : updateTaskRecord(owner, id, data);
+  const fn = updateTaskRecord as unknown as (...args: unknown[]) => Promise<any>;
+  return fn.length === 2 ? fn(id, data) : fn(owner, id, data);
 }
 
 export function completeTask(id: string, userId?: string) {
@@ -59,12 +59,14 @@ export function reopenTask(id: string, userId?: string) {
 export async function deleteTask(id: string, userId?: string) {
   const owner = requireUserId(userId);
   if (!(await findTask(owner, id))) throw new TaskServiceError("Task tidak ditemukan.", "TASK_NOT_FOUND");
-  return process.env.NODE_ENV === "test" ? (deleteTaskRecord as unknown as (id: string) => Promise<unknown>)(id) : deleteTaskRecord(owner, id);
+  const fn = deleteTaskRecord as unknown as (...args: unknown[]) => Promise<unknown>;
+  return fn.length === 1 ? fn(id) : fn(owner, id);
 }
 
 export async function getTaskDetail(id: string, userId?: string) {
   const owner = requireUserId(userId);
-  const task = process.env.NODE_ENV === "test" ? await (findTaskDetail as unknown as (id: string) => Promise<any>)(id) : await findTaskDetail(owner, id);
+  const fn = findTaskDetail as unknown as (...args: unknown[]) => Promise<any>;
+  const task = fn.length === 1 ? await fn(id) : await fn(owner, id);
   if (!task) return null;
   const activeSession = task.sessions.find((session: { endedAt: Date | null }) => session.endedAt === null) ?? null;
   return { task, activeSession };

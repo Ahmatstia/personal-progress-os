@@ -1,24 +1,36 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { secret } from "@/lib/auth";
 import type { ConfidenceLevel } from "./intents";
 
-export function canRead(confidenceLevel: ConfidenceLevel) {
+export function canRead(confidenceLevel: ConfidenceLevel): boolean {
   return confidenceLevel !== "LOW";
 }
 
-export function canWrite(confidenceLevel: ConfidenceLevel, confirmed: boolean) {
+export function canWrite(confidenceLevel: ConfidenceLevel, confirmed: boolean): boolean {
   return confidenceLevel !== "LOW" && confirmed;
 }
 
 const CONFIRMATION_TTL_MS = 10 * 60 * 1000;
 
-// Token konfirmasi satu-kali (stateless): HMAC dari `intent:expires:userId` yang
-// terikat pada intent tertentu, pengguna, dan masa berlaku singkat. Konfirmasi
-// tulis AI hanya dipercaya bila token ini valid — bukan sekadar `confirmed: true`
-// dari client.
-export function createConfirmationToken(intent: string, userId?: string) {
+function computePayloadHash(args?: Record<string, unknown>): string {
+  if (!args || Object.keys(args).length === 0) return "";
+  return createHash("sha256").update(JSON.stringify(args)).digest("base64url").slice(0, 16);
+}
+
+/**
+ * Creates an HMAC confirmation token.
+ * In V2, optionally binds the payload argument hash so the token cannot be reused for different target parameters.
+ */
+export function createConfirmationToken(
+  intent: string,
+  userId?: string,
+  args?: Record<string, unknown>
+): { token: string; expiresAt: string } {
   const expires = Date.now() + CONFIRMATION_TTL_MS;
-  const payload = `${intent}:${expires}:${userId ?? ""}`;
+  const argHash = computePayloadHash(args);
+  const payload = argHash
+    ? `${intent}:${expires}:${userId ?? ""}:${argHash}`
+    : `${intent}:${expires}:${userId ?? ""}`;
   const signature = createHmac("sha256", secret()).update(payload).digest("base64url");
   return {
     token: `${payload}.${signature}`,
@@ -26,17 +38,39 @@ export function createConfirmationToken(intent: string, userId?: string) {
   };
 }
 
-export function verifyConfirmationToken(token: string | undefined, intent: string, userId?: string) {
+/**
+ * Verifies the HMAC confirmation token.
+ * Ensures intent, expiration, userId, and optional payload argument hash match precisely.
+ */
+export function verifyConfirmationToken(
+  token: string | undefined,
+  intent: string,
+  userId?: string,
+  args?: Record<string, unknown>
+): boolean {
   if (!token) return false;
   const separator = token.lastIndexOf(".");
   if (separator <= 0) return false;
+
   const payload = token.slice(0, separator);
   const received = token.slice(separator + 1);
-  const [tokenIntent, tokenExpires, tokenUser] = payload.split(":");
+  const parts = payload.split(":");
+  if (parts.length < 3) return false;
+
+  const [tokenIntent, tokenExpires, tokenUser, tokenArgHash] = parts;
+
   if (tokenIntent !== intent) return false;
   if (tokenUser !== (userId ?? "")) return false;
+
   const expires = Number(tokenExpires);
   if (!Number.isFinite(expires) || expires <= Date.now()) return false;
+
+  // If token has argHash bound, verify argument match
+  if (tokenArgHash && args) {
+    const expectedArgHash = computePayloadHash(args);
+    if (tokenArgHash !== expectedArgHash) return false;
+  }
+
   const expected = createHmac("sha256", secret()).update(payload).digest("base64url");
   const a = Buffer.from(received);
   const b = Buffer.from(expected);

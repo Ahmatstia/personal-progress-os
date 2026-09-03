@@ -1,5 +1,5 @@
-import { completeTask, createTask, findMatchingTasks, findTask, getTaskDetail, reopenTask } from "@/services/task.service";
-import { createGoal } from "@/services/goal.service";
+import { completeTask, createTask, findMatchingTasks, findTask, getTaskDetail, reopenTask, deleteTask } from "@/services/task.service";
+import { createGoal, deleteGoal } from "@/services/goal.service";
 import { endSession, getAnyActiveSession, startSession } from "@/services/session.service";
 import { addTodayFocus, getToday } from "@/services/today.service";
 import { getDashboardAnalytics, getGoalAnalytics } from "@/services/analytics.service";
@@ -10,6 +10,11 @@ import { canRead, canWrite, createConfirmationToken, verifyConfirmationToken } f
 import { requireUserId } from "@/lib/ownership";
 import { aiCommandSchema, type AICommandInput } from "../schemas/ai-command.schema";
 import { formatDuration } from "../lib/format";
+import { resolveGoalEntity, resolveStageEntity, resolveTaskEntity } from "../ai/resolver/entity-resolver";
+import { addConversationTurn, getConversationContext, updateConversationContext } from "../ai/context/conversation-state";
+import { resolveContextReferences } from "../ai/context/context-resolver";
+import { buildExecutionPlan, executePlan } from "../ai/planner/decision-engine";
+import { executeTool } from "../ai/tools/registry";
 
 type CommandResult = {
   success: boolean;
@@ -19,18 +24,58 @@ type CommandResult = {
   data?: unknown;
   requiresConfirmation?: boolean;
   confirmationToken?: string;
+  plan?: Array<{
+    step: number;
+    tool: string;
+    description: string;
+    arguments: Record<string, unknown>;
+    status?: "pending" | "executed" | "failed" | "skipped";
+    result?: unknown;
+  }>;
+  ambiguityCandidates?: Array<{
+    id: string;
+    name: string;
+    type: string;
+    parentName?: string;
+  }>;
 };
 
-const writeIntents = new Set(["GOAL_CREATE", "TASK_CREATE", "TASK_COMPLETE", "TASK_REOPEN", "SESSION_START", "SESSION_END", "FOCUS"]);
+const writeIntents = new Set([
+  "GOAL_CREATE",
+  "GOAL_DELETE",
+  "GOAL_UPDATE",
+  "STAGE_CREATE",
+  "STAGE_DELETE",
+  "STAGE_UPDATE",
+  "STAGE_REORDER",
+  "TASK_CREATE",
+  "TASK_COMPLETE",
+  "TASK_REOPEN",
+  "TASK_DELETE",
+  "TASK_UPDATE",
+  "TASK_BULK_DELETE",
+  "TASK_BULK_COMPLETE",
+  "TASK_REORDER",
+  "SESSION_START",
+  "SESSION_END",
+  "FOCUS",
+  "MULTI_STEP",
+]);
 
-function entityValue(input: ReturnType<typeof interpretInput>, type: "GOAL" | "TASK") {
+function entityValue(input: ReturnType<typeof interpretInput>, type: "GOAL" | "TASK" | "STAGE") {
   return input.entities.find((entity) => entity.type === type)?.value;
 }
 
 export function resolveContextInterpretation(input: AICommandInput, baseInterpretation: ReturnType<typeof interpretInput>) {
-  return baseInterpretation.intent === "UNKNOWN" && input.context?.taskId && /yang tadi|yang ini|task itu/.test(baseInterpretation.normalizedText)
-    ? { ...baseInterpretation, intent: "TASK_STATUS" as const, confidence: 0.56, confidenceLevel: "MEDIUM" as const }
-    : baseInterpretation;
+  if (baseInterpretation.intent === "UNKNOWN" && input.context?.taskId && /yang tadi|yang ini|task itu/.test(baseInterpretation.normalizedText)) {
+    return {
+      ...baseInterpretation,
+      intent: "TASK_STATUS" as const,
+      confidence: 0.56,
+      confidenceLevel: "MEDIUM" as const,
+    };
+  }
+  return baseInterpretation;
 }
 
 async function resolveTask(query: string | undefined, taskId: string | undefined, userId?: string) {
@@ -39,7 +84,21 @@ async function resolveTask(query: string | undefined, taskId: string | undefined
     const task = await findTask(owner, taskId);
     return task ? [task] : [];
   }
-  return query ? findMatchingTasks(query, owner) : [];
+  if (!query) return [];
+
+  // Use fuzzy resolver first
+  const res = await resolveTaskEntity(query, owner);
+  if (res.resolvedEntity) {
+    const task = await findTask(owner, res.resolvedEntity.id);
+    return task ? [task] : [];
+  }
+  if (res.status === "AMBIGUOUS") {
+    const tasks = await Promise.all(res.candidates.map((c) => findTask(owner, c.id)));
+    return tasks.filter((t): t is NonNullable<typeof t> => t !== null);
+  }
+
+  // Fallback to substring match
+  return findMatchingTasks(query, owner);
 }
 
 async function resolveWriteTarget(intent: string, input: AICommandInput, interpretation: ReturnType<typeof interpretInput>, userId?: string) {
@@ -55,116 +114,452 @@ async function resolveWriteTarget(intent: string, input: AICommandInput, interpr
   return tasks.filter((task) => task.status !== "COMPLETED");
 }
 
-function confirmation(input: AICommandInput, interpretation: ReturnType<typeof interpretInput>, userId?: string) {
+function confirmation(
+  input: AICommandInput,
+  interpretation: ReturnType<typeof interpretInput>,
+  userId?: string,
+  extraMessage?: string,
+  candidates?: Array<{ id: string; name: string; type: string; parentName?: string }>
+) {
   const { token } = createConfirmationToken(interpretation.intent, userId);
-  return { success: false, code: "CONFIRMATION_REQUIRED", message: `Saya memahami perintah ${interpretation.intent}. Anda bisa menjalankannya melalui tombol Konfirmasi.`, interpretation, requiresConfirmation: true, confirmationToken: token } satisfies CommandResult;
+  return {
+    success: false,
+    code: "CONFIRMATION_REQUIRED",
+    message: extraMessage ?? `Saya memahami perintah ${interpretation.intent}. Anda bisa menjalankannya melalui tombol Konfirmasi.`,
+    interpretation,
+    requiresConfirmation: true,
+    confirmationToken: token,
+    ambiguityCandidates: candidates,
+  } satisfies CommandResult;
 }
 
 export async function executeAICommand(rawInput: AICommandInput, userId?: string): Promise<CommandResult> {
   const input = aiCommandSchema.parse(rawInput);
+  const owner = requireUserId(userId);
+  const convContext = getConversationContext(owner);
+
+  // Record user turn
+  addConversationTurn(owner, {
+    role: "user",
+    text: input.text,
+  });
+
   const baseInterpretation = interpretInput(input.text);
   const interpretation = resolveContextInterpretation(input, baseInterpretation);
   const { intent, confidenceLevel } = interpretation;
-  if (intent === "UNKNOWN" || !canRead(confidenceLevel)) return { success: false, code: "SAFE_FALLBACK", message: "Saya belum cukup yakin memahami perintah itu. Coba gunakan tujuan yang lebih spesifik.", interpretation };
+
+  // Context and reference resolution
+  const contextRefs = resolveContextReferences(input.text, convContext, input.context);
+
+  if (intent === "UNKNOWN" || !canRead(confidenceLevel)) {
+    return {
+      success: false,
+      code: "SAFE_FALLBACK",
+      message: "Saya belum cukup yakin memahami perintah itu. Coba gunakan tujuan yang lebih spesifik.",
+      interpretation,
+    };
+  }
+
+  // Check confirmation for write intents
   if (writeIntents.has(intent)) {
-    const approved = canWrite(confidenceLevel, input.confirmed) && verifyConfirmationToken(input.confirmationToken, intent, userId);
-    if (!approved) return confirmation(input, interpretation, userId);
+    const approved = canWrite(confidenceLevel, input.confirmed) && verifyConfirmationToken(input.confirmationToken, intent, owner);
+    if (!approved) {
+      // Build execution preview if planner can decompose
+      const previewPlan = await buildExecutionPlan(input.text, intent, interpretation.entities, convContext, input.context);
+      if (previewPlan.type === "AMBIGUOUS") {
+        return {
+          success: false,
+          code: "AMBIGUOUS_TASK",
+          message: previewPlan.message,
+          interpretation,
+          requiresConfirmation: false,
+          ambiguityCandidates: previewPlan.ambiguityCandidates,
+        };
+      }
+      return confirmation(input, interpretation, owner, previewPlan.message);
+    }
   }
 
   switch (intent) {
+    // ── MULTI-STEP / PLANNER ──────────────────────────────
+    case "MULTI_STEP": {
+      const plan = await buildExecutionPlan(input.text, intent, interpretation.entities, convContext, input.context);
+      if (plan.steps.length === 0) {
+        return { success: false, code: "PLAN_FAILED", message: "Gagal menyusun rencana multi-langkah.", interpretation };
+      }
+      const execResult = await executePlan(plan, owner);
+      return {
+        success: execResult.success,
+        code: execResult.success ? "EXECUTED" : "FAILED",
+        message: execResult.message,
+        interpretation,
+        data: execResult.results,
+        plan: plan.steps,
+      };
+    }
+
+    // ── BULK OPERATIONS ───────────────────────────────────
+    case "TASK_BULK_DELETE": {
+      const goalQuery = entityValue(interpretation, "GOAL") || input.context?.goalName;
+      let goalId = input.context?.goalId;
+      if (!goalId && goalQuery) {
+        const gRes = await resolveGoalEntity(goalQuery, owner);
+        if (gRes.resolvedEntity) goalId = gRes.resolvedEntity.id;
+      }
+      const result = await executeTool("bulk_delete_tasks", { goalId, status: "COMPLETED" }, { userId: owner });
+      return {
+        success: result.success,
+        code: result.success ? "DELETED" : "FAILED",
+        message: result.message,
+        interpretation,
+        data: result.data,
+      };
+    }
+
+    case "TASK_BULK_COMPLETE": {
+      const goalQuery = entityValue(interpretation, "GOAL") || input.context?.goalName;
+      let goalId = input.context?.goalId;
+      if (!goalId && goalQuery) {
+        const gRes = await resolveGoalEntity(goalQuery, owner);
+        if (gRes.resolvedEntity) goalId = gRes.resolvedEntity.id;
+      }
+      const result = await executeTool("bulk_complete_tasks", { goalId }, { userId: owner });
+      return {
+        success: result.success,
+        code: result.success ? "COMPLETED" : "FAILED",
+        message: result.message,
+        interpretation,
+        data: result.data,
+      };
+    }
+
+    // ── READ INTENTS ──────────────────────────────────────
     case "TODAY": {
-      const data = await getToday(new Date(), userId);
-      return { success: true, code: "OK", message: data.nextAction ? `Next action: ${data.nextAction.taskName}.` : "Belum ada task aktif untuk hari ini.", interpretation, data };
+      const data = await getToday(new Date(), owner);
+      return {
+        success: true,
+        code: "OK",
+        message: data.nextAction ? `Next action: ${data.nextAction.taskName}.` : "Belum ada task aktif untuk hari ini.",
+        interpretation,
+        data,
+      };
     }
+
     case "NEXT_ACTION": {
-      const data = (await getToday(new Date(), userId)).nextAction;
-      return { success: true, code: "OK", message: data ? `Aksi berikutnya: ${data.taskName}.` : "Belum ada next action.", interpretation, data };
+      const data = (await getToday(new Date(), owner)).nextAction;
+      return {
+        success: true,
+        code: "OK",
+        message: data ? `Aksi berikutnya: ${data.taskName}.` : "Belum ada next action.",
+        interpretation,
+        data,
+      };
     }
+
     case "PROGRESS":
     case "GOAL_STATUS": {
-      const data = input.context?.goalId ? await getGoalAnalytics(input.context.goalId, undefined, undefined, userId) : await getDashboardAnalytics({ days: 30 }, userId);
-      return { success: true, code: "OK", message: `Progress saat ini ${data.summary.completionRate}%.`, interpretation, data };
+      const data = input.context?.goalId
+        ? await getGoalAnalytics(input.context.goalId, undefined, undefined, owner)
+        : await getDashboardAnalytics({ days: 30 }, owner);
+      return {
+        success: true,
+        code: "OK",
+        message: `Progress saat ini ${data.summary.completionRate}%.`,
+        interpretation,
+        data,
+      };
     }
+
     case "ANALYTICS":
     case "STREAK":
     case "TIME_SPENT":
     case "COMPLETION":
     case "BOTTLENECK": {
-      const data = await getDashboardAnalytics({ days: 30 }, userId);
-      return { success: true, code: "OK", message: `Ringkasan 30 hari: ${formatDuration(data.summary.totalMinutes)} fokus, ${data.summary.completedTasks} task selesai, streak ${data.summary.currentStreak} hari.`, interpretation, data };
+      const data = await getDashboardAnalytics({ days: 30 }, owner);
+      return {
+        success: true,
+        code: "OK",
+        message: `Ringkasan 30 hari: ${formatDuration(data.summary.totalMinutes)} fokus, ${data.summary.completedTasks} task selesai, streak ${data.summary.currentStreak} hari.`,
+        interpretation,
+        data,
+      };
     }
+
     case "TASK_STATUS": {
       if (input.context?.taskId) {
-        const data = await getTaskDetail(input.context.taskId, userId);
-        return { success: true, code: "OK", message: data ? `Status task: ${data.task.status}.` : "Task tidak ditemukan.", interpretation, data };
+        const data = await getTaskDetail(input.context.taskId, owner);
+        return {
+          success: true,
+          code: "OK",
+          message: data ? `Status task: ${data.task.status}.` : "Task tidak ditemukan.",
+          interpretation,
+          data,
+        };
       }
       const query = input.context?.taskName ?? entityValue(interpretation, "TASK");
-      const data = query ? await findMatchingTasks(query, userId) : await findMatchingTasks("", userId);
-      return { success: true, code: "OK", message: data.length ? `Ditemukan ${data.length} task: ${data.map((task) => task.name).join(", ")}.` : "Tidak ada task yang cocok.", interpretation, data };
+      const data = query ? await findMatchingTasks(query, owner) : await findMatchingTasks("", owner);
+      return {
+        success: true,
+        code: "OK",
+        message: data.length ? `Ditemukan ${data.length} task: ${data.map((task) => task.name).join(", ")}.` : "Tidak ada task yang cocok.",
+        interpretation,
+        data,
+      };
     }
+
     case "TASK_SEARCH": {
       const query = input.context?.taskName ?? entityValue(interpretation, "TASK");
-      const data = query ? await findMatchingTasks(query, userId) : await findMatchingTasks("", userId);
-      return { success: true, code: "OK", message: data.length ? `Ditemukan ${data.length} task: ${data.map((task) => task.name).join(", ")}.` : "Tidak ada task yang cocok.", interpretation, data };
+      const data = query ? await findMatchingTasks(query, owner) : await findMatchingTasks("", owner);
+      return {
+        success: true,
+        code: "OK",
+        message: data.length ? `Ditemukan ${data.length} task: ${data.map((task) => task.name).join(", ")}.` : "Tidak ada task yang cocok.",
+        interpretation,
+        data,
+      };
     }
+
     case "OVERDUE": {
-      const data = (await getToday(new Date(), userId)).overdueTasks;
-      return { success: true, code: "OK", message: data.length ? `Ada ${data.length} task yang melewati deadline.` : "Tidak ada task overdue.", interpretation, data };
+      const data = (await getToday(new Date(), owner)).overdueTasks;
+      return {
+        success: true,
+        code: "OK",
+        message: data.length ? `Ada ${data.length} task yang melewati deadline.` : "Tidak ada task overdue.",
+        interpretation,
+        data,
+      };
     }
+
+    // ── FOCUS INTENT ──────────────────────────────────────
     case "FOCUS": {
       if (input.confirmed) {
-        const matches = await resolveWriteTarget("FOCUS", input, interpretation, userId);
-      if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Pilih satu task untuk fokus." : "Task fokus tidak ditemukan.", interpretation, data: matches, confirmationToken: createConfirmationToken("FOCUS", userId).token };
-        const focused = await addTodayFocus(matches[0].id, new Date(), userId);
-        return { success: true, code: "FOCUSED", message: `Task ${matches[0].name} ditambahkan ke fokus hari ini.`, interpretation, data: focused };
+        const matches = await resolveWriteTarget("FOCUS", input, interpretation, owner);
+        if (matches.length !== 1) {
+          return {
+            success: false,
+            code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND",
+            message: matches.length ? "Pilih satu task untuk fokus." : "Task fokus tidak ditemukan.",
+            interpretation,
+            data: matches,
+            confirmationToken: createConfirmationToken("FOCUS", owner).token,
+          };
+        }
+        const focused = await addTodayFocus(matches[0].id, new Date(), owner);
+        return {
+          success: true,
+          code: "FOCUSED",
+          message: `Task ${matches[0].name} ditambahkan ke fokus hari ini.`,
+          interpretation,
+          data: focused,
+        };
       }
-      const data = await getToday(new Date(), userId);
-      return { success: true, code: "OK", message: data.focusTasks.length ? `Fokus hari ini: ${data.focusTasks.map((item) => item.task.name).join(", ")}.` : "Belum ada fokus hari ini.", interpretation, data: data.focusTasks };
+      const data = await getToday(new Date(), owner);
+      return {
+        success: true,
+        code: "OK",
+        message: data.focusTasks.length ? `Fokus hari ini: ${data.focusTasks.map((item) => item.task.name).join(", ")}.` : "Belum ada fokus hari ini.",
+        interpretation,
+        data: data.focusTasks,
+      };
     }
+
+    // ── REVIEW & REFLECTION ───────────────────────────────
     case "REVIEW":
     case "REFLECTION": {
       if (input.context?.goalId) {
-        const data = await getGoalReviewPageData(input.context.goalId, userId);
-        return { success: true, code: "OK", message: data ? "Data review goal berhasil ditemukan." : "Goal tidak ditemukan.", interpretation, data };
+        const data = await getGoalReviewPageData(input.context.goalId, owner);
+        return {
+          success: true,
+          code: "OK",
+          message: data ? "Data review goal berhasil ditemukan." : "Goal tidak ditemukan.",
+          interpretation,
+          data,
+        };
       }
-      return { success: true, code: "GUIDANCE", message: "Gunakan halaman Review untuk melihat atau menulis refleksi berbasis data sesi.", interpretation };
+      return {
+        success: true,
+        code: "GUIDANCE",
+        message: "Gunakan halaman Review untuk melihat atau menulis refleksi berbasis data sesi.",
+        interpretation,
+      };
     }
+
     case "HELP":
     case "MOTIVATION":
-      return { success: true, code: "GUIDANCE", message: "Saya dapat membantu melihat hari ini, progress, analytics, task, session, fokus, dan review.", interpretation };
+      return {
+        success: true,
+        code: "GUIDANCE",
+        message: "Saya dapat membantu melihat hari ini, progress, analytics, task, session, fokus, dan review.",
+        interpretation,
+      };
+
+    // ── GOAL CRUD ─────────────────────────────────────────
     case "GOAL_CREATE": {
       const name = input.context?.goalName ?? entityValue(interpretation, "GOAL");
-      if (!name) return { success: false, code: "MISSING_GOAL_NAME", message: "Sebutkan nama goal yang ingin dibuat.", interpretation };
-      const data = await createGoal({ name, type: "LEARNING" }, userId);
+      if (!name) {
+        return { success: false, code: "MISSING_GOAL_NAME", message: "Sebutkan nama goal yang ingin dibuat.", interpretation };
+      }
+      const data = await createGoal({ name, type: "LEARNING" }, owner);
+      updateConversationContext(owner, () => ({
+        currentGoal: { id: data.id, name: data.name },
+        lastReferencedEntity: { id: data.id, name: data.name, type: "GOAL" },
+      }));
       return { success: true, code: "CREATED", message: `Goal ${data.name} berhasil dibuat.`, interpretation, data };
     }
+
+    case "GOAL_DELETE": {
+      const goalQuery = input.context?.goalName ?? entityValue(interpretation, "GOAL");
+      const goalId = input.context?.goalId;
+      if (!goalId && !goalQuery) {
+        return { success: false, code: "MISSING_GOAL_NAME", message: "Sebutkan nama goal yang ingin dihapus.", interpretation };
+      }
+      let targetId = goalId;
+      if (!targetId && goalQuery) {
+        const res = await resolveGoalEntity(goalQuery, owner);
+        if (res.status === "AMBIGUOUS") {
+          return {
+            success: false,
+            code: "AMBIGUOUS_ENTITY",
+            message: `Ditemukan beberapa goal. Pilih satu:`,
+            interpretation,
+            ambiguityCandidates: res.candidates.map((c) => ({ id: c.id, name: c.name, type: "GOAL" })),
+          };
+        }
+        if (!res.resolvedEntity) {
+          return { success: false, code: "GOAL_NOT_FOUND", message: `Goal "${goalQuery}" tidak ditemukan.`, interpretation };
+        }
+        targetId = res.resolvedEntity.id;
+      }
+      const deleted = await deleteGoal(targetId!, owner);
+      return { success: true, code: "DELETED", message: `Goal berhasil dihapus.`, interpretation, data: deleted };
+    }
+
+    // ── STAGE CRUD ────────────────────────────────────────
+    case "STAGE_CREATE": {
+      const name = entityValue(interpretation, "STAGE");
+      const goalId = input.context?.goalId ?? convContext.currentGoal?.id;
+      if (!name) {
+        return { success: false, code: "MISSING_STAGE_CONTEXT", message: "Sebutkan nama stage yang ingin dibuat.", interpretation };
+      }
+      if (!goalId) {
+        return { success: false, code: "MISSING_GOAL_NAME", message: "Tentukan goal untuk stage ini.", interpretation };
+      }
+      const stageToolRes = await executeTool("create_stage", { goalId, name }, { userId: owner });
+      if (!stageToolRes.success) {
+        return { success: false, code: "STAGE_CREATE_FAILED", message: stageToolRes.message, interpretation };
+      }
+      const data = stageToolRes.data as { id: string; name: string };
+      updateConversationContext(owner, () => ({
+        currentStage: { id: data.id, name: data.name, goalId },
+        lastReferencedEntity: { id: data.id, name: data.name, type: "STAGE" },
+      }));
+      return { success: true, code: "CREATED", message: stageToolRes.message, interpretation, data };
+    }
+
+    case "STAGE_DELETE": {
+      const stageQuery = entityValue(interpretation, "STAGE");
+      let stageId = input.context?.stageId;
+      if (!stageId && stageQuery) {
+        const sRes = await resolveStageEntity(stageQuery, owner, input.context?.goalId);
+        if (sRes.resolvedEntity) stageId = sRes.resolvedEntity.id;
+      }
+      if (!stageId) {
+        return { success: false, code: "STAGE_NOT_FOUND", message: "Stage yang dimaksud tidak ditemukan.", interpretation };
+      }
+      const res = await executeTool("delete_stage", { id: stageId }, { userId: owner });
+      return { success: res.success, code: res.success ? "DELETED" : "FAILED", message: res.message, interpretation, data: res.data };
+    }
+
+    // ── TASK CRUD ─────────────────────────────────────────
     case "TASK_CREATE": {
       const name = input.context?.taskName ?? entityValue(interpretation, "TASK");
-      const stageId = input.context?.stageId;
-      if (!name || !stageId) return { success: false, code: "MISSING_TASK_CONTEXT", message: "Nama task dan stageId diperlukan untuk membuat task.", interpretation };
-      const data = await createTask({ stageId, name, type: "TASK", priority: "MEDIUM", estimatedHours: 0, description: null, notes: null }, userId) as { name: string };
+      const stageId = input.context?.stageId ?? convContext.currentStage?.id;
+      if (!name || !stageId) {
+        return {
+          success: false,
+          code: "MISSING_TASK_CONTEXT",
+          message: "Nama task dan stageId diperlukan untuk membuat task.",
+          interpretation,
+        };
+      }
+      const data = (await createTask(
+        { stageId, name, type: "TASK", priority: "MEDIUM", estimatedHours: 0, description: null, notes: null },
+        owner
+      )) as { id: string; name: string };
+      updateConversationContext(owner, () => ({
+        currentTask: { id: data.id, name: data.name, stageId, goalId: "" },
+        lastReferencedEntity: { id: data.id, name: data.name, type: "TASK" },
+      }));
       return { success: true, code: "CREATED", message: `Task ${data.name} berhasil dibuat.`, interpretation, data };
     }
+
     case "TASK_COMPLETE":
     case "TASK_REOPEN": {
-      const matches = await resolveWriteTarget(intent, input, interpretation, userId);
-      if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Saya menemukan beberapa task yang cocok. Pilih satu task terlebih dahulu." : "Task yang dimaksud tidak ditemukan.", interpretation, data: matches, confirmationToken: createConfirmationToken(intent, userId).token };
-      const data = intent === "TASK_COMPLETE" ? await completeTask(matches[0].id, userId) : await reopenTask(matches[0].id, userId);
+      const matches = await resolveWriteTarget(intent, input, interpretation, owner);
+      if (matches.length !== 1) {
+        return {
+          success: false,
+          code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND",
+          message: matches.length ? "Saya menemukan beberapa task yang cocok. Pilih satu task terlebih dahulu." : "Task yang dimaksud tidak ditemukan.",
+          interpretation,
+          data: matches,
+          confirmationToken: createConfirmationToken(intent, owner).token,
+          ambiguityCandidates: matches.map((m) => ({ id: m.id, name: m.name, type: "TASK" })),
+        };
+      }
+      const data = intent === "TASK_COMPLETE" ? await completeTask(matches[0].id, owner) : await reopenTask(matches[0].id, owner);
       return { success: true, code: "UPDATED", message: `Task ${data.name} berhasil diperbarui.`, interpretation, data };
     }
+
+    case "TASK_DELETE": {
+      const matches = await resolveWriteTarget("TASK_DELETE", input, interpretation, owner);
+      if (matches.length !== 1) {
+        return {
+          success: false,
+          code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND",
+          message: matches.length ? "Ditemukan beberapa task. Pilih satu task yang ingin dihapus:" : "Task yang ingin dihapus tidak ditemukan.",
+          interpretation,
+          data: matches,
+          confirmationToken: createConfirmationToken("TASK_DELETE", owner).token,
+          ambiguityCandidates: matches.map((m) => ({ id: m.id, name: m.name, type: "TASK" })),
+        };
+      }
+      await deleteTask(matches[0].id, owner);
+      return { success: true, code: "DELETED", message: `Task "${matches[0].name}" berhasil dihapus.`, interpretation, data: matches[0] };
+    }
+
+    // ── SESSION ───────────────────────────────────────────
     case "SESSION_START": {
-      const matches = await resolveWriteTarget("SESSION_START", input, interpretation, userId);
-      if (matches.length !== 1) return { success: false, code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND", message: matches.length ? "Pilih satu task untuk memulai session." : "Task untuk session tidak ditemukan.", interpretation, data: matches, confirmationToken: createConfirmationToken("SESSION_START", userId).token };
-      const data = await startSession(matches[0].id, userId);
+      const matches = await resolveWriteTarget("SESSION_START", input, interpretation, owner);
+      if (matches.length !== 1) {
+        return {
+          success: false,
+          code: matches.length ? "AMBIGUOUS_TASK" : "TASK_NOT_FOUND",
+          message: matches.length ? "Pilih satu task untuk memulai session." : "Task untuk session tidak ditemukan.",
+          interpretation,
+          data: matches,
+          confirmationToken: createConfirmationToken("SESSION_START", owner).token,
+        };
+      }
+      const data = await startSession(matches[0].id, owner);
       return { success: true, code: "STARTED", message: `Session untuk ${matches[0].name} dimulai.`, interpretation, data };
     }
+
     case "SESSION_END": {
-      const active = await getAnyActiveSession(userId);
-      if (!active) return { success: false, code: "NO_ACTIVE_SESSION", message: "Tidak ada session aktif.", interpretation };
-      const data = await endSession(active.id, { sessionId: active.id }, userId);
+      const active = await getAnyActiveSession(owner);
+      if (!active) {
+        return { success: false, code: "NO_ACTIVE_SESSION", message: "Tidak ada session aktif.", interpretation };
+      }
+      const data = await endSession(active.id, { sessionId: active.id }, owner);
       return { success: true, code: "ENDED", message: "Session aktif berhasil diakhiri.", interpretation, data };
     }
+
     default:
-      return { success: false, code: "UNSUPPORTED_INTENT", message: `Intent ${routeIntent(intent).intent} belum memiliki command handler.`, interpretation };
+      return {
+        success: false,
+        code: "UNSUPPORTED_INTENT",
+        message: `Intent ${routeIntent(intent).intent} belum memiliki command handler.`,
+        interpretation,
+      };
   }
 }
