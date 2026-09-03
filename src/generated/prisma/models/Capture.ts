@@ -356,6 +356,7 @@ export type CaptureCreateOrConnectWithoutUserInput = {
 
 export type CaptureCreateManyUserInputEnvelope = {
   data: Prisma.CaptureCreateManyUserInput | Prisma.CaptureCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type CaptureUpsertWithWhereUniqueWithoutUserInput = {
@@ -1124,6 +1125,7 @@ export type CaptureCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many Captures.
    */
   data: Prisma.CaptureCreateManyInput | Prisma.CaptureCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1142,6 +1144,7 @@ export type CaptureCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many Captures.
    */
   data: Prisma.CaptureCreateManyInput | Prisma.CaptureCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

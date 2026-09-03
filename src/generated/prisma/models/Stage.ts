@@ -576,6 +576,7 @@ export type StageCreateOrConnectWithoutGoalInput = {
 
 export type StageCreateManyGoalInputEnvelope = {
   data: Prisma.StageCreateManyGoalInput | Prisma.StageCreateManyGoalInput[]
+  skipDuplicates?: boolean
 }
 
 export type StageUpsertWithWhereUniqueWithoutGoalInput = {
@@ -697,6 +698,7 @@ export type StageCreateOrConnectWithoutUserInput = {
 
 export type StageCreateManyUserInputEnvelope = {
   data: Prisma.StageCreateManyUserInput | Prisma.StageCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type StageUpsertWithWhereUniqueWithoutUserInput = {
@@ -1582,6 +1584,7 @@ export type StageCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Stages.
    */
   data: Prisma.StageCreateManyInput | Prisma.StageCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1600,6 +1603,7 @@ export type StageCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many Stages.
    */
   data: Prisma.StageCreateManyInput | Prisma.StageCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
