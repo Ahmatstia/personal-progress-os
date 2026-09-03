@@ -66,9 +66,32 @@ export default function TaskItem({
     }
   }
 
+  function startEditing() {
+    setEditName(name);
+    setEditDescription(description ?? "");
+    setEditPriority(priority);
+    setEditHours(String(estimatedHours ?? 0));
+    setEditNotes(notes ?? "");
+    setIsEditing(true);
+  }
+
+  function cancelEditing() {
+    setEditName(name);
+    setEditDescription(description ?? "");
+    setEditPriority(priority);
+    setEditHours(String(estimatedHours ?? 0));
+    setEditNotes(notes ?? "");
+    setIsEditing(false);
+  }
+
   async function saveEdit() {
     if (!editName.trim()) {
       toast("Nama task wajib diisi.", "error");
+      return;
+    }
+    const parsedHours = editHours === "" ? 0 : Number(editHours);
+    if (isNaN(parsedHours) || parsedHours < 0) {
+      toast("Estimasi jam harus berupa angka valid (>= 0).", "error");
       return;
     }
     setIsLoading(true);
@@ -80,7 +103,7 @@ export default function TaskItem({
           name: editName,
           description: editDescription,
           priority: editPriority,
-          estimatedHours: Number(editHours) || 0,
+          estimatedHours: parsedHours,
           notes: editNotes,
         }),
       });
@@ -166,7 +189,7 @@ export default function TaskItem({
         </div>
         <div className="mt-3 flex justify-end gap-2">
           <button
-            onClick={() => setIsEditing(false)}
+            onClick={cancelEditing}
             disabled={isLoading}
             className="rounded-lg border border-surface-200 px-3 py-2 text-xs font-medium text-surface-600 hover:bg-surface-100"
           >
@@ -233,7 +256,7 @@ export default function TaskItem({
           <Icon name="arrowRight" size={16} />
         </Link>
         <button
-          onClick={() => setIsEditing(true)}
+          onClick={startEditing}
           disabled={isLoading}
           aria-label={`Edit ${name}`}
           className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-surface-100 hover:text-surface-800"

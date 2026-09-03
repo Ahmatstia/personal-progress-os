@@ -6,7 +6,6 @@ import { Dialog } from "./ui/Dialog";
 import { Button } from "./ui/Button";
 import { useToast } from "./ui/Toast";
 import { useConfirm } from "./ui/Confirm";
-import { Icon } from "./ui/Icon";
 
 type Props = {
   id: string;
@@ -74,13 +73,25 @@ export default function TaskActions({ id, name, description, priority, estimated
     }
   }
 
+  function startEditing() {
+    setValues({
+      name,
+      description: description ?? "",
+      priority,
+      estimatedHours: String(estimatedHours ?? 0),
+      notes: notes ?? "",
+    });
+    setError("");
+    setEditing(true);
+  }
+
   return (
     <div className="flex items-center gap-2">
       <Button
         variant="secondary"
         icon="edit"
         size="sm"
-        onClick={() => setEditing(true)}
+        onClick={startEditing}
         disabled={loading}
       >
         Edit detail

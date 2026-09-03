@@ -33,7 +33,7 @@ import {
   reopenTask,
   updateTask,
 } from "../src/services/task.service";
-import { taskPrioritySchema, taskStatusSchema } from "../src/schemas/task.schema";
+import { taskPrioritySchema, taskStatusSchema, updateTaskSchema } from "../src/schemas/task.schema";
 
 describe("task.service", () => {
   beforeEach(() => {
@@ -51,6 +51,25 @@ describe("task.service", () => {
   it("updates editable task fields", async () => {
     await updateTask("task-1", { name: "Updated", priority: "LOW", estimatedHours: 3 });
     expect(state.task).toMatchObject({ name: "Updated", priority: "LOW", estimatedHours: 3 });
+  });
+
+  it("does not default estimatedHours to 0 when omitted in updateTaskSchema", () => {
+    const parsed = updateTaskSchema.safeParse({ name: "Keep Hours" });
+    expect(parsed.success).toBe(true);
+    if (parsed.success) {
+      expect(parsed.data.estimatedHours).toBeUndefined();
+    }
+  });
+
+  it("preserves estimatedHours during partial updates like status change", async () => {
+    state.task = {
+      ...state.task,
+      name: "Task with hours",
+      estimatedHours: 4.5,
+    } as typeof state.task & { estimatedHours: number };
+
+    await updateTask("task-1", { status: "IN_PROGRESS" });
+    expect((state.task as typeof state.task & { estimatedHours: number }).estimatedHours).toBe(4.5);
   });
 
   it("completes a task and records completedAt", async () => {
