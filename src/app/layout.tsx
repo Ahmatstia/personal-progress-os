@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
+import { NavigationProgressBar } from "@/app/components/core/NavigationProgressBar";
 import "./globals.css";
 
 const inter = Inter({
@@ -20,7 +22,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={inter.variable}>
-      <body>{children}</body>
+      <body>
+        <Suspense fallback={null}>
+          <NavigationProgressBar />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }
