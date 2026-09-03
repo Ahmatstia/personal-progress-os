@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Dialog } from "./ui/Dialog";
@@ -8,21 +8,72 @@ import { Button } from "./ui/Button";
 import { Icon } from "./ui/Icon";
 import { useToast } from "./ui/Toast";
 
+const goalTypes = [
+  { value: "LEARNING", label: "Learning (Belajar)" },
+  { value: "PROJECT", label: "Project (Proyek)" },
+  { value: "PERSONAL", label: "Personal (Pribadi)" },
+  { value: "HEALTH", label: "Health (Kesehatan)" },
+  { value: "CAREER", label: "Career (Karir)" },
+  { value: "OTHER", label: "Other (Lainnya)" },
+];
+
+const goalStatuses = [
+  { value: "ACTIVE", label: "Aktif (Sedang Berjalan)" },
+  { value: "PAUSED", label: "Ditunda (Paused)" },
+  { value: "COMPLETED", label: "Selesai (Completed)" },
+  { value: "ARCHIVED", label: "Diarsipkan (Archived)" },
+];
+
+function formatDateForInput(date: Date | string | null | undefined): string {
+  if (!date) return "";
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "";
+  return d.toISOString().split("T")[0];
+}
+
 export default function GoalActionsMenu({
   goalId,
   goalName,
+  initialData,
 }: {
   goalId: string;
   goalName: string;
+  initialData?: {
+    name: string;
+    description?: string | null;
+    type?: string;
+    status?: string;
+    targetDate?: Date | string | null;
+  };
 }) {
   const router = useRouter();
   const { toast } = useToast();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Edit form state
+  const [name, setName] = useState(initialData?.name ?? goalName);
+  const [type, setType] = useState(initialData?.type ?? "LEARNING");
+  const [status, setStatus] = useState(initialData?.status ?? "ACTIVE");
+  const [targetDate, setTargetDate] = useState(formatDateForInput(initialData?.targetDate));
+  const [description, setDescription] = useState(initialData?.description ?? "");
+
+  // Sync state if initialData changes
+  useEffect(() => {
+    if (initialData) {
+      setName(initialData.name ?? goalName);
+      setType(initialData.type ?? "LEARNING");
+      setStatus(initialData.status ?? "ACTIVE");
+      setTargetDate(formatDateForInput(initialData.targetDate));
+      setDescription(initialData.description ?? "");
+    }
+  }, [initialData, goalName]);
+
+  // Close menu on outside click
   useEffect(() => {
     if (!menuOpen) return;
     function handler(e: MouseEvent) {
@@ -34,6 +85,7 @@ export default function GoalActionsMenu({
     return () => document.removeEventListener("mousedown", handler);
   }, [menuOpen]);
 
+  // Close menu on Escape
   useEffect(() => {
     if (!menuOpen) return;
     function handler(e: KeyboardEvent) {
@@ -42,6 +94,39 @@ export default function GoalActionsMenu({
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [menuOpen]);
+
+  async function handleEditSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!name.trim()) {
+      toast("Nama goal wajib diisi.", "error");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch(`/api/goals/${goalId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          type,
+          status,
+          targetDate: targetDate ? targetDate : null,
+          description: description.trim() || null,
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error?.message ?? "Gagal memperbarui goal.");
+      toast("Goal berhasil diperbarui.", "success");
+      setEditOpen(false);
+      router.refresh();
+    } catch (val) {
+      setError(val instanceof Error ? val.message : "Gagal memperbarui goal.");
+      toast(val instanceof Error ? val.message : "Gagal memperbarui goal.", "error");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function remove() {
     setLoading(true);
@@ -79,8 +164,22 @@ export default function GoalActionsMenu({
         {menuOpen && (
           <div
             role="menu"
-            className="absolute right-0 top-full z-30 mt-1.5 min-w-[180px] rounded-xl border border-surface-150 bg-white py-1.5 shadow-pop animate-in-soft"
+            className="absolute right-0 top-full z-30 mt-1.5 min-w-[200px] rounded-xl border border-surface-150 bg-white py-1.5 shadow-pop animate-in-soft"
           >
+            {/* Edit Goal Action */}
+            <button
+              role="menuitem"
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                setEditOpen(true);
+              }}
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-surface-700 hover:bg-primary-50 hover:text-primary-700 transition-colors"
+            >
+              <Icon name="edit" size={14} className="text-primary-600" />
+              Edit goal & detail
+            </button>
+
             <Link
               href={`/goals/${goalId}/reviews`}
               role="menuitem"
@@ -102,6 +201,7 @@ export default function GoalActionsMenu({
             <div className="my-1 h-px bg-surface-100" aria-hidden />
             <button
               role="menuitem"
+              type="button"
               onClick={() => {
                 setMenuOpen(false);
                 setDeleteOpen(true);
@@ -115,6 +215,92 @@ export default function GoalActionsMenu({
         )}
       </div>
 
+      {/* ── Edit Goal Dialog ──────────────────────────────────── */}
+      <Dialog
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        title={`Edit Goal: ${name}`}
+        description="Perbarui informasi, status, atau target waktu perjalanan ini."
+      >
+        <form onSubmit={handleEditSubmit} className="space-y-4">
+          {error && <p className="text-sm text-danger-600">{error}</p>}
+
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Nama Goal</span>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Nama goal Anda"
+              required
+              className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+            />
+          </label>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-surface-700">Tipe Goal</span>
+              <select
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
+              >
+                {goalTypes.map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-surface-700">Status</span>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
+              >
+                {goalStatuses.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Target Tanggal Selesai</span>
+            <input
+              type="date"
+              value={targetDate}
+              onChange={(e) => setTargetDate(e.target.value)}
+              className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Deskripsi Goal</span>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Ceritakan tujuan dan visi dari goal ini..."
+              rows={3}
+              className="w-full resize-none rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+            />
+          </label>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <Button variant="secondary" onClick={() => setEditOpen(false)} type="button" disabled={loading}>
+              Batal
+            </Button>
+            <Button type="submit" icon="check" loading={loading}>
+              Simpan Perubahan
+            </Button>
+          </div>
+        </form>
+      </Dialog>
+
+      {/* ── Delete Confirmation Dialog ────────────────────────── */}
       <Dialog
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}

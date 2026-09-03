@@ -231,7 +231,17 @@ export default async function GoalPage({ params }: GoalPageProps) {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <StageForm goalId={goal.id} nextOrder={goal.stages.length} />
-            <GoalActionsMenu goalId={goal.id} goalName={goal.name} />
+            <GoalActionsMenu
+              goalId={goal.id}
+              goalName={goal.name}
+              initialData={{
+                name: goal.name,
+                description: goal.description,
+                type: goal.type,
+                status: goal.status,
+                targetDate: goal.targetDate,
+              }}
+            />
           </div>
         </div>
 
