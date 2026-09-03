@@ -176,53 +176,71 @@ export default async function ReviewPage() {
           />
         </div>
       ) : (
-        <ol className="divide-y divide-surface-150">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {rows.map(({ goal, metrics, review, progress }, index) => {
             const done = !!review;
             return (
-              <li key={goal.id} className="py-8 sm:py-10">
-                <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-3">
+              <div
+                key={goal.id}
+                className={`flex flex-col justify-between rounded-2xl border p-5 shadow-soft transition-all hover:shadow-[var(--shadow-card-hover)] ${
+                  done
+                    ? "border-success-200 bg-gradient-to-br from-success-50/40 to-white"
+                    : "border-surface-200 bg-white"
+                }`}
+              >
+                <div>
+                  <div className="flex items-start justify-between gap-3 mb-2.5">
+                    <div className="flex items-center gap-2">
                       <span
-                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-                          done ? "bg-success-500 text-white" : "bg-surface-200 text-surface-600"
+                        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                          done ? "bg-success-500 text-white" : "bg-surface-100 text-surface-600"
                         }`}
                       >
-                        {done ? <Icon name="check" size={15} strokeWidth={3} /> : <span className="font-mono">{index + 1}</span>}
+                        {done ? <Icon name="check" size={13} strokeWidth={3} /> : index + 1}
                       </span>
-                      <div className="min-w-0">
-                        <p className="text-[11px] font-semibold uppercase tracking-wider text-surface-400">{goal.type}</p>
-                        <Link
-                          href={`/goals/${goal.id}`}
-                          className="block truncate text-xl font-bold text-surface-900 transition hover:text-primary-700 sm:text-2xl"
-                        >
-                          {goal.name}
-                        </Link>
-                      </div>
+                      <span className="chip bg-surface-100 text-surface-500 text-[10px] font-semibold uppercase">
+                        {goal.type}
+                      </span>
                     </div>
-                    <p className="mt-3 text-sm text-surface-500">
-                      {formatDuration(metrics.learningMinutes)} fokus · {metrics.tasksCompleted} task selesai minggu ini
-                    </p>
+                    {done && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-success-100 px-2 py-0.5 text-[10.5px] font-bold text-success-700">
+                        ✓ Sudah direview
+                      </span>
+                    )}
                   </div>
 
-                  <div className="shrink-0 sm:flex sm:items-center sm:gap-6">
-                    {progress < 100 && (
-                      <div className="hidden w-24 sm:block">
-                        <ProgressBar value={progress} size="sm" tone={done ? "success" : "primary"} />
-                      </div>
-                    )}
-                    <Link href={`/goals/${goal.id}/reviews`}>
-                      <Button size="sm" variant={done ? "secondary" : "ai"} icon={done ? "check" : "sparkles"}>
-                        {done ? "Sunting review" : "Tulis review"}
-                      </Button>
-                    </Link>
-                  </div>
+                  <Link
+                    href={`/goals/${goal.id}`}
+                    className="block font-bold text-surface-900 text-[16px] hover:text-primary-700 transition-colors line-clamp-2"
+                  >
+                    {goal.name}
+                  </Link>
+
+                  <p className="mt-2 text-[12px] text-surface-500">
+                    {formatDuration(metrics.learningMinutes)} fokus · {metrics.tasksCompleted} task selesai minggu ini
+                  </p>
+
+                  {progress < 100 && (
+                    <div className="mt-3">
+                      <ProgressBar value={progress} size="sm" tone={done ? "success" : "primary"} />
+                    </div>
+                  )}
                 </div>
-              </li>
+
+                <div className="mt-4 pt-3 border-t border-surface-100 flex items-center justify-between">
+                  <span className="text-[11px] text-surface-400">
+                    Progres goal: <strong className="text-surface-700">{progress}%</strong>
+                  </span>
+                  <Link href={`/goals/${goal.id}/reviews`}>
+                    <Button size="sm" variant={done ? "secondary" : "ai"} icon={done ? "check" : "sparkles"}>
+                      {done ? "Sunting review" : "Tulis review"}
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             );
           })}
-        </ol>
+        </div>
       )}
 
       {/* Timeline Catatan & Refleksi */}

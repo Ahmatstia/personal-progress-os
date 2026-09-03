@@ -1,4 +1,4 @@
-﻿import { Icon } from "@/app/components/ui/Icon";
+import { Icon } from "@/app/components/ui/Icon";
 import type { IconName } from "@/app/components/ui/Icon";
 
 export type Insight = {
@@ -45,7 +45,7 @@ export function SmartInsightCard({ insights }: { insights: Insight[] }) {
         <span className="h-1.5 w-1.5 rounded-full bg-ai-500" aria-hidden />
         <p className="eyebrow text-ai-500">Insight Harian</p>
       </div>
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="flex flex-col gap-2.5">
         {insights.map((insight) => {
           const s = typeStyle[insight.type];
           return (

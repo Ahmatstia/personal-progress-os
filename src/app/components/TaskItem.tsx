@@ -212,66 +212,86 @@ export default function TaskItem({
   return (
     <>
       <div
-        className={`group flex items-center gap-3 rounded-xl border px-3.5 py-3 transition ${
-        completed ? "border-success-200 bg-success-50/50" : "border-surface-200 bg-surface-0 shadow-soft"
-      }`}
-    >
-      <button
-        type="button"
-        onClick={toggleTask}
-        disabled={isLoading}
-        aria-label={completed ? `Buka kembali ${name}` : `Ubah status ${name}`}
-        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition ${
+        className={`group flex flex-col justify-between rounded-xl border p-3.5 transition-all hover:border-surface-300 hover:shadow-soft ${
           completed
-            ? "border-success-500 bg-success-500 text-white"
-            : "border-surface-300 bg-surface-0 hover:border-primary-400"
+            ? "border-success-200 bg-success-50/50"
+            : "border-surface-200 bg-surface-0 shadow-soft"
         }`}
       >
-        {completed && <Icon name="check" size={12} strokeWidth={3} />}
-      </button>
-
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <Link
-            href={`/tasks/${id}`}
-            className={`truncate text-sm font-medium transition ${
-              completed ? "text-surface-400 line-through" : "text-surface-800 hover:text-primary-700"
+        <div className="flex items-start gap-2.5">
+          <button
+            type="button"
+            onClick={toggleTask}
+            disabled={isLoading}
+            aria-label={completed ? `Buka kembali ${name}` : `Ubah status ${name}`}
+            className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+              completed
+                ? "border-success-500 bg-success-500 text-white shadow-xs"
+                : "border-surface-300 bg-surface-0 hover:border-primary-500"
             }`}
           >
-            {name}
-          </Link>
-          {completed ? <StatusBadge status="COMPLETED" /> : <PriorityBadge priority={priority} />}
-        </div>
-        <p className="mt-0.5 truncate text-xs text-surface-500">
-          {formatHours(actualHours)} dipakai · {formatHours(estimatedHours)} estimasi
-        </p>
-      </div>
+            {completed && <Icon name="check" size={11} strokeWidth={3} />}
+          </button>
 
-      <div className="flex shrink-0 items-center gap-0.5">
-        <Link
-          href={`/tasks/${id}`}
-          aria-label={`Buka ${name}`}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-surface-100 hover:text-primary-600"
-        >
-          <Icon name="arrowRight" size={16} />
-        </Link>
-        <button
-          onClick={startEditing}
-          disabled={isLoading}
-          aria-label={`Edit ${name}`}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-surface-100 hover:text-surface-800"
-        >
-          <Icon name="edit" size={15} />
-        </button>
-        <button
-          onClick={deleteTask}
-          disabled={isLoading}
-          aria-label={`Hapus ${name}`}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-500 hover:bg-danger-50 hover:text-danger-600"
-        >
-          <Icon name="trash" size={15} />
-        </button>
-      </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-1.5 mb-1">
+              <Link
+                href={`/tasks/${id}`}
+                className={`text-[13px] font-semibold transition-colors line-clamp-2 ${
+                  completed
+                    ? "text-surface-400 line-through"
+                    : "text-surface-800 group-hover:text-primary-700"
+                }`}
+              >
+                {name}
+              </Link>
+            </div>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {completed ? (
+                <StatusBadge status="COMPLETED" />
+              ) : (
+                <PriorityBadge priority={priority} />
+              )}
+              {estimatedHours > 0 && (
+                <span className="text-[10.5px] text-surface-400">
+                  ~{estimatedHours}j {actualHours > 0 ? `(${actualHours}j real)` : ""}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Card bottom actions */}
+        <div className="mt-3 flex items-center justify-between border-t border-surface-100 pt-2 text-[11px] text-surface-400">
+          <span className="truncate max-w-[140px]">
+            {actualHours > 0 ? `${formatHours(actualHours)} fokus` : "Belum ada sesi"}
+          </span>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={startEditing}
+              disabled={isLoading}
+              aria-label={`Edit ${name}`}
+              className="flex h-7 w-7 items-center justify-center rounded-lg text-surface-400 hover:bg-surface-100 hover:text-surface-800 transition-colors"
+            >
+              <Icon name="edit" size={13} />
+            </button>
+            <button
+              onClick={deleteTask}
+              disabled={isLoading}
+              aria-label={`Hapus ${name}`}
+              className="flex h-7 w-7 items-center justify-center rounded-lg text-surface-400 hover:bg-danger-50 hover:text-danger-600 transition-colors"
+            >
+              <Icon name="trash" size={13} />
+            </button>
+            <Link
+              href={`/tasks/${id}`}
+              aria-label={`Buka ${name}`}
+              className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface-50 text-surface-600 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+            >
+              <Icon name="arrowRight" size={13} />
+            </Link>
+          </div>
+        </div>
       </div>
       {confirmDialog}
     </>

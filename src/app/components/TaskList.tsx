@@ -72,7 +72,7 @@ export default function TaskList({ tasks }: { tasks: Task[] }) {
           Tidak ada task yang cocok dengan filter ini.
         </p>
       ) : (
-        <div className="space-y-2">{filtered.map((task) => <TaskItem key={task.id} {...task} />)}</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">{filtered.map((task) => <TaskItem key={task.id} {...task} />)}</div>
       )}
     </div>
   );

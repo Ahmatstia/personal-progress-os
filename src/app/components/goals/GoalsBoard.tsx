@@ -95,92 +95,94 @@ function GoalCardRow({ goal }: { goal: GoalCard }) {
   return (
     <Link
       href={`/goals/${goal.id}`}
-      className="group relative block overflow-hidden rounded-2xl border border-surface-150 bg-white shadow-soft transition-all hover:border-primary-200 hover:shadow-[var(--shadow-card-hover)] card-interactive"
+      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-surface-150 bg-white shadow-soft transition-all hover:border-primary-300 hover:shadow-[var(--shadow-card-hover)] card-interactive"
     >
-      {/* Left gradient accent */}
+      {/* Top gradient accent line */}
       <span
         aria-hidden="true"
-        className={`absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-gradient-to-b ${grad}`}
+        className={`absolute inset-x-0 top-0 h-1 rounded-t-2xl bg-gradient-to-r ${grad}`}
       />
 
-      <div className="px-5 py-4 pl-6">
+      <div className="p-5 flex flex-col justify-between h-full">
         {/* Header row */}
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-2 min-w-0">
-            <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${cfg.bg} ${cfg.text}`}>
-              <Icon name={cfg.icon} size={14} />
-            </span>
-            <span className={`chip border ${cfg.bg} ${cfg.text} ${cfg.border}`}>
-              {goal.type}
-            </span>
-            <StatusBadge status={goal.status} />
-            {goal.targetDateLabel && (
-              <span className="chip bg-surface-50 text-surface-500 border border-surface-150">
-                <Icon name="clock" size={10} />
-                {goal.targetDateLabel}
+        <div>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+              <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg ${cfg.bg} ${cfg.text}`}>
+                <Icon name={cfg.icon} size={12} />
               </span>
+              <span className={`chip border text-[10px] ${cfg.bg} ${cfg.text} ${cfg.border}`}>
+                {goal.type}
+              </span>
+              <StatusBadge status={goal.status} />
+            </div>
+            <FocusOrb
+              value={goal.progress}
+              size={44}
+              stroke={4.5}
+              tone={done ? "success" : "primary"}
+              label={`Progres ${goal.name} ${goal.progress} persen`}
+            >
+              <span className="text-[11px] font-bold text-surface-900">{goal.progress}%</span>
+            </FocusOrb>
+          </div>
+
+          {/* Goal name */}
+          <h2 className="mt-3 text-[15px] font-bold tracking-tight text-surface-900 transition-colors group-hover:text-primary-700 line-clamp-2">
+            {goal.name}
+          </h2>
+
+          {/* Target date if available */}
+          {goal.targetDateLabel && (
+            <p className="mt-1 flex items-center gap-1 text-[11px] text-surface-400">
+              <Icon name="clock" size={11} /> Target: {goal.targetDateLabel}
+            </p>
+          )}
+
+          {/* Progress bar */}
+          <div className="mt-3.5">
+            <ProgressBar value={goal.progress} size="sm" tone={done ? "success" : "primary"} />
+          </div>
+
+          {/* Journey waypoints preview */}
+          {goal.waypoints.length > 0 && (
+            <div className="mt-3">
+              <JourneyRoute
+                waypoints={goal.waypoints}
+                size="sm"
+                label={`Peta ${goal.name}`}
+              />
+            </div>
+          )}
+
+          {/* Current Stage & Next Task */}
+          <div className="mt-3 rounded-xl bg-surface-50 p-2.5 space-y-1 text-[11.5px]">
+            <div className="flex items-center justify-between text-surface-600">
+              <span className="text-[10px] font-semibold uppercase text-surface-400">
+                {done ? "Status" : `Stage ${goal.currentStageIndex + 1 || "—"}`}
+              </span>
+              <span className="font-semibold text-surface-800 truncate max-w-[160px]">
+                {done ? "Selesai 🎉" : (goal.currentStageName ?? "Belum ada")}
+              </span>
+            </div>
+            {goal.nextTaskName && !done && (
+              <div className="flex items-center justify-between text-surface-500 pt-1 border-t border-surface-200/60">
+                <span className="text-[10px] text-surface-400">Next:</span>
+                <span className="truncate max-w-[180px] font-medium text-surface-700">
+                  {goal.nextTaskName}
+                </span>
+              </div>
             )}
           </div>
-          <FocusOrb
-            value={goal.progress}
-            size={52}
-            stroke={5}
-            tone={done ? "success" : "primary"}
-            label={`Progres ${goal.name} ${goal.progress} persen`}
-          >
-            <span className="text-[12px] font-bold text-surface-900">{goal.progress}%</span>
-          </FocusOrb>
         </div>
-
-        {/* Goal name */}
-        <h2 className="mt-2.5 text-[16px] font-bold tracking-tight text-surface-900 transition-colors group-hover:text-primary-700">
-          {goal.name}
-        </h2>
-
-        {/* Progress bar */}
-        <div className="mt-3">
-          <ProgressBar value={goal.progress} size="sm" tone={done ? "success" : "primary"} />
-        </div>
-
-        {/* Journey waypoints */}
-        {goal.waypoints.length > 0 && (
-          <div className="mt-3">
-            <JourneyRoute
-              waypoints={goal.waypoints}
-              size={goal.waypoints.length <= 6 ? "md" : "sm"}
-              label={`Peta ${goal.name}`}
-            />
-          </div>
-        )}
 
         {/* Footer meta */}
-        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 pt-3 border-t border-surface-100">
-          <div className="min-w-0">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-surface-400">
-              {done ? "Status" : `Stage ${(goal.currentStageIndex + 1) || "—"}`}
-            </p>
-            <p className="truncate text-[12.5px] font-medium text-surface-700">
-              {done ? "Selesai 🎉" : (goal.currentStageName ?? "Belum ada stage")}
-            </p>
-          </div>
-          {goal.nextTaskName && !done && (
-            <>
-              <span className="hidden h-5 w-px shrink-0 bg-surface-200 sm:block" aria-hidden />
-              <div className="min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-surface-400">
-                  Task berikutnya
-                </p>
-                <p className="truncate text-[12.5px] font-medium text-surface-700">
-                  {goal.nextTaskName}
-                </p>
-              </div>
-            </>
-          )}
-          <span className="ml-auto flex shrink-0 items-center gap-1 text-[11px] font-semibold text-primary-600 opacity-0 transition-opacity group-hover:opacity-100">
-            Lanjutkan <Icon name="arrowRight" size={12} />
-          </span>
-          <span className="shrink-0 text-[11px] text-surface-400">
+        <div className="mt-4 flex items-center justify-between pt-3 border-t border-surface-100 text-[11px] text-surface-400">
+          <span>
             {goal.totalStages} stage · {goal.completedTasks}/{goal.totalTasks} task
+          </span>
+          <span className="flex items-center gap-1 font-semibold text-primary-600 transition-transform group-hover:translate-x-0.5">
+            Buka <Icon name="arrowRight" size={11} />
           </span>
         </div>
       </div>
@@ -281,7 +283,7 @@ export function GoalsBoard({
             Belum ada goal aktif. Buat satu untuk memulai.
           </p>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {activeGoals.map((goal) => (
               <GoalCardRow key={goal.id} goal={goal} />
             ))}

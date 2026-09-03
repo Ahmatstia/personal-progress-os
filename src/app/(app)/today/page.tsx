@@ -162,90 +162,91 @@ export default async function TodayPage() {
 
         <FocusPanel focus={today.focusTasks} available={today.availableTasks} />
 
-        {/* Completed today */}
-        <section className="rounded-2xl border border-surface-150 bg-white p-4">
-          <div className="flex items-center justify-between gap-3 mb-3">
+        {/* Completed today — Grid */}
+        <section className="rounded-2xl border border-surface-150 bg-white p-5 shadow-soft">
+          <div className="flex items-center justify-between gap-3 mb-3.5">
             <div className="flex items-center gap-2">
               <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-success-50 text-success-600">
                 <Icon name="check" size={13} strokeWidth={2.5} />
               </span>
-              <p className="text-[13px] font-semibold text-surface-800">Yang sudah beres</p>
+              <p className="text-[14px] font-bold text-surface-900">Yang sudah beres</p>
             </div>
             {today.completedTasks.length > 0 && (
-              <span className="chip bg-success-100 text-success-700">
-                {today.stats.completedTasks}
+              <span className="chip bg-success-100 text-success-700 font-semibold">
+                {today.stats.completedTasks} selesai
               </span>
             )}
           </div>
           {today.completedTasks.length === 0 ? (
-            <p className="text-[13px] text-surface-400">
-              Belum ada yang selesai — momentum dimulai dari satu task.
+            <p className="text-[12.5px] text-surface-400">
+              Belum ada yang selesai hari ini — momentum dimulai dari satu task kecil.
             </p>
           ) : (
-            <ul className="divide-y divide-surface-100">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {today.completedTasks.map((task) => (
-                <li key={task.id} className="flex items-center gap-3 py-2.5">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success-500 text-white">
-                    <Icon name="check" size={11} strokeWidth={3} />
+                <div
+                  key={task.id}
+                  className="flex items-center gap-2.5 rounded-xl border border-success-150 bg-gradient-to-r from-success-50/40 to-white px-3 py-2.5 shadow-xs"
+                >
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success-500 text-white shadow-xs">
+                    <Icon name="check" size={10} strokeWidth={3} />
                   </span>
                   <div className="min-w-0 flex-1">
                     <Link
                       href={`/tasks/${task.id}`}
-                      className="block truncate text-[13px] font-medium text-surface-800 hover:text-primary-700 transition-colors"
+                      className="block truncate text-[12.5px] font-semibold text-surface-800 hover:text-primary-700 transition-colors"
                     >
                       {task.name}
                     </Link>
-                    <p className="mt-0.5 truncate text-[11px] text-surface-400">
+                    <p className="truncate text-[10.5px] text-surface-400">
                       {task.stage.goal.name}
                     </p>
                   </div>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </section>
 
-        {/* Captures */}
-        <section className="rounded-2xl border border-surface-150 bg-white p-4">
-          <div className="flex items-center justify-between gap-3 mb-3">
+        {/* Captures — Grid */}
+        <section className="rounded-2xl border border-surface-150 bg-white p-5 shadow-soft">
+          <div className="flex items-center justify-between gap-3 mb-3.5">
             <div className="flex items-center gap-2">
               <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-primary-50 text-primary-600">
                 <Icon name="inbox" size={13} />
               </span>
-              <p className="text-[13px] font-semibold text-surface-800">Catatan terbaru</p>
+              <p className="text-[14px] font-bold text-surface-900">Catatan terbaru</p>
             </div>
             <span className="chip bg-surface-100 text-surface-500">
               {recentCaptures.length}
             </span>
           </div>
           {recentCaptures.length === 0 ? (
-            <p className="text-[13px] text-surface-400">
-              Belum ada catatan. Gunakan Catat cepat untuk merekam ide.
+            <p className="text-[12.5px] text-surface-400">
+              Belum ada catatan. Gunakan Catat cepat untuk merekam ide & pemikiran.
             </p>
           ) : (
-            <ul className="divide-y divide-surface-100">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {recentCaptures.map((capture) => (
-                <li
+                <div
                   key={capture.id}
-                  className="flex items-start justify-between gap-3 py-2.5"
+                  className="flex flex-col justify-between rounded-xl border border-surface-150 bg-surface-50/60 p-3 shadow-xs hover:border-surface-250 transition-all"
                 >
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[13px] leading-relaxed text-surface-800">
-                      {capture.content}
-                    </p>
-                    <p className="mt-0.5 text-[11px] text-surface-400">
-                      {formatCaptureTime(capture.createdAt)}
-                    </p>
+                  <p className="text-[12.5px] leading-relaxed text-surface-800 line-clamp-3">
+                    {capture.content}
+                  </p>
+                  <div className="mt-2.5 flex items-center justify-between border-t border-surface-150/60 pt-1.5 text-[10.5px] text-surface-400">
+                    <span>{formatCaptureTime(capture.createdAt)}</span>
+                    <HistoryDeleteButton
+                      path={`/api/captures/${capture.id}`}
+                      message="Hapus catatan ini?"
+                      toastMessage="Catatan dihapus."
+                      aria-label="Hapus catatan"
+                    />
                   </div>
-                  <HistoryDeleteButton
-                    path={`/api/captures/${capture.id}`}
-                    message="Hapus catatan ini?"
-                    toastMessage="Catatan dihapus."
-                    aria-label="Hapus catatan"
-                  />
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </section>
       </div>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { Icon } from "@/app/components/ui/Icon";
@@ -96,64 +96,66 @@ export function NotesTimeline({ entries }: { entries: TimelineEntry[] }) {
         </div>
       </div>
 
-      {/* List */}
+      {/* Grid of note cards */}
       {filtered.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-surface-200 p-8 text-center">
           <p className="text-[13px] text-surface-400">Belum ada catatan dalam kategori ini.</p>
         </div>
       ) : (
-        <div className="relative pl-6 before:absolute before:bottom-0 before:left-2.5 before:top-2 before:w-0.5 before:bg-surface-200">
-          <div className="space-y-4">
-            {filtered.map((item) => {
-              const cfg = kindStyle[item.kind];
-              return (
-                <div key={item.id} className="relative group">
-                  {/* Timeline dot */}
-                  <span
-                    className={`absolute -left-6 top-3 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border bg-white shadow-xs ${cfg.text}`}
-                  >
-                    <Icon name={cfg.icon} size={11} />
-                  </span>
-
-                  {/* Card */}
-                  <div className="rounded-xl border border-surface-150 bg-white p-4 shadow-soft transition-all hover:border-surface-250 hover:shadow-[var(--shadow-card-hover)]">
-                    <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10px] font-semibold ${cfg.bg} ${cfg.text}`}>
-                          {cfg.label}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filtered.map((item) => {
+            const cfg = kindStyle[item.kind];
+            return (
+              <div
+                key={item.id}
+                className="group flex flex-col justify-between rounded-2xl border border-surface-150 bg-white p-4 shadow-soft transition-all hover:border-surface-300 hover:shadow-[var(--shadow-card-hover)]"
+              >
+                <div>
+                  <div className="flex items-start justify-between gap-2 mb-2.5">
+                    <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+                      <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10.5px] font-bold ${cfg.bg} ${cfg.text}`}>
+                        <Icon name={cfg.icon} size={11} />
+                        {cfg.label}
+                      </span>
+                      {item.tag && (
+                        <span className="truncate max-w-[150px] text-[11px] font-semibold text-surface-500">
+                          {item.tag}
                         </span>
-                        {item.tag && (
-                          <span className="text-[11px] font-medium text-surface-400">
-                            · {item.tag}
-                          </span>
-                        )}
-                        <h3 className="text-[13.5px] font-semibold text-surface-900">{item.title}</h3>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[11px] text-surface-400">{formatDate(item.timestamp)}</span>
-                        {item.kind === "capture" && (
-                          <HistoryDeleteButton
-                            path={`/api/captures/${item.entityId}`}
-                            message="Hapus catatan ini?"
-                            toastMessage="Catatan dihapus."
-                            aria-label="Hapus catatan"
-                          />
-                        )}
-                      </div>
+                      )}
                     </div>
-
-                    {item.subtitle && (
-                      <p className="text-[12px] font-medium text-surface-600 mb-1.5">{item.subtitle}</p>
-                    )}
-
-                    <p className="text-[13px] leading-relaxed text-surface-700 whitespace-pre-wrap">
-                      {item.content}
-                    </p>
+                    <span className="shrink-0 text-[10.5px] text-surface-400">
+                      {formatDate(item.timestamp)}
+                    </span>
                   </div>
+
+                  <h3 className="text-[13.5px] font-bold text-surface-900 leading-snug">
+                    {item.title}
+                  </h3>
+
+                  {item.subtitle && (
+                    <p className="mt-1 text-[11.5px] font-medium text-surface-500">
+                      {item.subtitle}
+                    </p>
+                  )}
+
+                  <p className="mt-2.5 text-[12.5px] leading-relaxed text-surface-700 whitespace-pre-wrap line-clamp-6">
+                    {item.content}
+                  </p>
                 </div>
-              );
-            })}
-          </div>
+
+                {item.kind === "capture" && (
+                  <div className="mt-3 flex justify-end pt-2 border-t border-surface-100">
+                    <HistoryDeleteButton
+                      path={`/api/captures/${item.entityId}`}
+                      message="Hapus catatan ini?"
+                      toastMessage="Catatan dihapus."
+                      aria-label="Hapus catatan"
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </section>

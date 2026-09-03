@@ -190,20 +190,27 @@ export default async function Home() {
         </div>
       </header>
 
-      {/* ── Next Action — single source of truth ────────────── */}
-      <section>
-        <div className="mb-3 flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary-500" aria-hidden />
-          <p className="eyebrow text-primary-500">Langkah Berikutnya</p>
-        </div>
-        <NextActionSpotlight
-          nextAction={dashboard.nextAction}
-          progress={dashboard.totalProgress}
-        />
-      </section>
+      {/* ── Bento Row: Next Action & Smart Insights ──────────── */}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:items-start">
+        {/* Next Action — spans 7 cols if insights exist, else 12 */}
+        <section className={insights.length > 0 ? "lg:col-span-7" : "lg:col-span-12"}>
+          <div className="mb-3 flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary-500" aria-hidden />
+            <p className="eyebrow text-primary-500">Langkah Berikutnya</p>
+          </div>
+          <NextActionSpotlight
+            nextAction={dashboard.nextAction}
+            progress={dashboard.totalProgress}
+          />
+        </section>
 
-      {/* ── Smart Insights ────────────────────────────────────── */}
-      {insights.length > 0 && <SmartInsightCard insights={insights} />}
+        {/* Smart Insights — spans 5 cols */}
+        {insights.length > 0 && (
+          <div className="lg:col-span-5">
+            <SmartInsightCard insights={insights} />
+          </div>
+        )}
+      </div>
 
       {/* ── Review alert ─────────────────────────────────────── */}
       {dashboard.reviewSummary && (
@@ -248,7 +255,7 @@ export default async function Home() {
         </div>
       )}
 
-      {/* ── Goals aktif ──────────────────────────────────────── */}
+      {/* ── Goals aktif — Responsive 3-Column Grid ──────────── */}
       <section>
         <div className="flex items-center justify-between gap-3 mb-3">
           <div className="flex items-center gap-2">
@@ -278,43 +285,55 @@ export default async function Home() {
             variant="dashed"
           />
         ) : (
-          <div className="space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {dashboard.activeGoals.map((goal) => {
               const progress = calculateGoalProgress(goal.stages);
               const tasks = goal.stages.flatMap((stage) => stage.tasks);
               const completed = tasks.filter((task) => task.status === "COMPLETED").length;
+              const currentStage = goal.stages.find((s) => s.tasks.some((t) => t.status !== "COMPLETED")) ?? goal.stages[0];
+
               return (
                 <Link
                   key={goal.id}
                   href={`/goals/${goal.id}`}
-                  className="group flex items-center gap-4 rounded-xl border border-surface-150 bg-white px-4 py-3 transition-all hover:border-primary-200 hover:shadow-[var(--shadow-card-hover)] card-interactive"
+                  className="group flex flex-col justify-between rounded-2xl border border-surface-150 bg-white p-4 shadow-soft transition-all hover:border-primary-300 hover:shadow-[var(--shadow-card-hover)] card-interactive"
                 >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="chip bg-surface-100 text-surface-500">
+                  <div>
+                    {/* Header tags */}
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="chip bg-surface-100 text-surface-600 text-[10px] font-semibold">
                         {goal.type}
                       </span>
-                      <span className="text-[11px] text-surface-400">
+                      <span className="text-[11px] font-semibold text-surface-400">
                         {completed}/{tasks.length} task
                       </span>
                     </div>
-                    <p className="truncate text-[14px] font-semibold text-surface-800 group-hover:text-primary-700 transition-colors">
+
+                    {/* Goal title */}
+                    <p className="text-[14px] font-bold text-surface-900 group-hover:text-primary-700 transition-colors line-clamp-2">
                       {goal.name}
                     </p>
+
+                    {/* Active stage info */}
+                    {currentStage && (
+                      <p className="mt-1.5 text-[11.5px] text-surface-500 truncate">
+                        Stage: <span className="font-medium text-surface-700">{currentStage.name}</span>
+                      </p>
+                    )}
                   </div>
-                  <div className="flex w-36 shrink-0 items-center gap-2">
-                    <div className="flex-1">
-                      <ProgressBar value={progress} size="sm" />
+
+                  {/* Progress bar & bottom meta */}
+                  <div className="mt-4 pt-3 border-t border-surface-100">
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <span className="text-[10.5px] font-semibold uppercase tracking-wider text-surface-400">
+                        Progres
+                      </span>
+                      <span className="text-[12px] font-bold text-primary-700">
+                        {progress}%
+                      </span>
                     </div>
-                    <span className="w-9 shrink-0 text-right text-[13px] font-bold text-primary-700">
-                      {progress}%
-                    </span>
+                    <ProgressBar value={progress} size="sm" />
                   </div>
-                  <Icon
-                    name="arrowRight"
-                    size={14}
-                    className="shrink-0 text-surface-300 group-hover:text-primary-500 transition-colors"
-                  />
                 </Link>
               );
             })}
@@ -322,7 +341,7 @@ export default async function Home() {
         )}
       </section>
 
-      {/* ── Jejak terbaru (compact) ───────────────────────────── */}
+      {/* ── Jejak terbaru — Responsive 3-Column Grid ──────────── */}
       <section>
         <div className="flex items-center gap-2 mb-3">
           <span className="h-1.5 w-1.5 rounded-full bg-surface-300" aria-hidden />
@@ -333,11 +352,11 @@ export default async function Home() {
             Belum ada aktivitas. Mulai sesi pertama untuk membangun momentum.
           </p>
         ) : (
-          <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
             {dashboard.recentActivity.slice(0, 6).map((item) => (
               <div
                 key={item.id}
-                className="group flex items-center gap-3 rounded-xl border border-surface-100 bg-white px-3 py-2.5 hover:border-surface-200 hover:shadow-soft transition-all"
+                className="group flex items-center gap-3 rounded-xl border border-surface-150 bg-white px-3.5 py-2.5 hover:border-surface-250 hover:shadow-soft transition-all"
               >
                 <span
                   className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
@@ -360,12 +379,12 @@ export default async function Home() {
                   />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-medium text-surface-800">
+                  <p className="truncate text-[12.5px] font-semibold text-surface-800">
                     {item.label}
                   </p>
                   <p className="truncate text-[11px] text-surface-400">{item.detail}</p>
                 </div>
-                <span className="shrink-0 text-[11px] text-surface-400">
+                <span className="shrink-0 text-[10.5px] text-surface-400">
                   {formatDate(item.timestamp)}
                 </span>
                 {item.kind !== "task" && (
