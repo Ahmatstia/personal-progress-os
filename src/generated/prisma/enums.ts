@@ -9,7 +9,177 @@
 * 🟢 You can import this file directly.
 */
 
+export const Theme = {
+  LIGHT: 'LIGHT',
+  DARK: 'DARK',
+  SYSTEM: 'SYSTEM'
+} as const
+
+export type Theme = (typeof Theme)[keyof typeof Theme]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const Priority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type Priority = (typeof Priority)[keyof typeof Priority]
+
+
+export const GoalStatus = {
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type GoalStatus = (typeof GoalStatus)[keyof typeof GoalStatus]
+
+
+export const GoalType = {
+  LEARNING: 'LEARNING',
+  ACHIEVEMENT: 'ACHIEVEMENT',
+  HABIT: 'HABIT',
+  MAINTENANCE: 'MAINTENANCE'
+} as const
+
+export type GoalType = (typeof GoalType)[keyof typeof GoalType]
+
+
+export const ObjectiveStatus = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ObjectiveStatus = (typeof ObjectiveStatus)[keyof typeof ObjectiveStatus]
+
+
+export const ProjectStatus = {
+  PLANNING: 'PLANNING',
+  ACTIVE: 'ACTIVE',
+  ON_HOLD: 'ON_HOLD',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
+
+
+export const StageStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+} as const
+
+export type StageStatus = (typeof StageStatus)[keyof typeof StageStatus]
+
+
+export const MilestoneStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type MilestoneStatus = (typeof MilestoneStatus)[keyof typeof MilestoneStatus]
+
+
+export const TaskStatus = {
+  BACKLOG: 'BACKLOG',
+  TODO: 'TODO',
+  IN_PROGRESS: 'IN_PROGRESS',
+  BLOCKED: 'BLOCKED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
+
+
+export const TaskType = {
+  TASK: 'TASK',
+  LEARNING: 'LEARNING',
+  BUG: 'BUG',
+  IMPROVEMENT: 'IMPROVEMENT'
+} as const
+
+export type TaskType = (typeof TaskType)[keyof typeof TaskType]
+
+
+export const CaptureStatus = {
+  PENDING: 'PENDING',
+  PROCESSED: 'PROCESSED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type CaptureStatus = (typeof CaptureStatus)[keyof typeof CaptureStatus]
+
+
+export const CaptureCategory = {
+  IDEA: 'IDEA',
+  TASK_CANDIDATE: 'TASK_CANDIDATE',
+  NOTE: 'NOTE',
+  REMINDER: 'REMINDER'
+} as const
+
+export type CaptureCategory = (typeof CaptureCategory)[keyof typeof CaptureCategory]
+
+
+export const EventType = {
+  PERSONAL: 'PERSONAL',
+  WORK: 'WORK',
+  BLOCKED: 'BLOCKED',
+  REMINDER: 'REMINDER',
+  TASK_DEADLINE: 'TASK_DEADLINE'
+} as const
+
+export type EventType = (typeof EventType)[keyof typeof EventType]
+
+
+export const RecurrenceType = {
+  NONE: 'NONE',
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY'
+} as const
+
+export type RecurrenceType = (typeof RecurrenceType)[keyof typeof RecurrenceType]
+
+
+export const ActivityCategory = {
+  WORK: 'WORK',
+  LEARNING: 'LEARNING',
+  HEALTH_FITNESS: 'HEALTH_FITNESS',
+  PERSONAL: 'PERSONAL',
+  REST: 'REST',
+  CHORE: 'CHORE'
+} as const
+
+export type ActivityCategory = (typeof ActivityCategory)[keyof typeof ActivityCategory]
+
+
+export const NotificationType = {
+  TASK_DUE: 'TASK_DUE',
+  DAILY_FOCUS_REMINDER: 'DAILY_FOCUS_REMINDER',
+  WEEKLY_REVIEW_REMINDER: 'WEEKLY_REVIEW_REMINDER',
+  CALENDAR_EVENT: 'CALENDAR_EVENT',
+  MILESTONE_DEADLINE: 'MILESTONE_DEADLINE',
+  SYSTEM: 'SYSTEM'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const NotificationSeverity = {
+  INFO: 'INFO',
+  WARNING: 'WARNING',
+  URGENT: 'URGENT'
+} as const
+
+export type NotificationSeverity = (typeof NotificationSeverity)[keyof typeof NotificationSeverity]

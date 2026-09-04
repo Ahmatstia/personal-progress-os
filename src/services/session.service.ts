@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createSession,
   endSession as endSessionRecord,
@@ -19,6 +20,7 @@ export class SessionServiceError extends Error {
     public readonly code: "TASK_NOT_FOUND" | "ACTIVE_SESSION_EXISTS" | "SESSION_NOT_FOUND" | "SESSION_ALREADY_ENDED",
   ) {
     super(message);
+    this.name = "SessionServiceError";
   }
 }
 
@@ -33,6 +35,7 @@ export async function startSession(taskId: string, userId?: string) {
     throw new SessionServiceError("Task tidak ditemukan.", "TASK_NOT_FOUND");
   }
 
+  // Pre-check for friendly validation error
   if (await findActiveSessionByTaskId(taskId, owner)) {
     throw new SessionServiceError(
       "Task ini sudah memiliki session aktif.",
@@ -50,12 +53,23 @@ export async function startSession(taskId: string, userId?: string) {
     );
   }
 
-  const session = await createSession(taskId, owner);
-  if (task.status === "NOT_STARTED") {
-    await markTaskInProgress(owner, taskId, task.startedAt ?? session.startedAt);
+  try {
+    const session = await createSession(taskId, owner);
+    const taskStatus = task.status as string;
+    if (taskStatus === "TODO" || taskStatus === "NOT_STARTED") {
+      await markTaskInProgress(owner, taskId, task.startedAt ?? session.startedAt);
+    }
+    return session;
+  } catch (err: any) {
+    // Database-level constraint catch for concurrency protection
+    if (err?.code === "P2002" || err?.message?.includes("idx_unique_active_session_per_user")) {
+      throw new SessionServiceError(
+        "Masih ada sesi lain yang sedang berjalan. Akhiri sesi tersebut terlebih dahulu.",
+        "ACTIVE_SESSION_EXISTS",
+      );
+    }
+    throw err;
   }
-
-  return session;
 }
 
 export function getActiveSession(taskId: string, userId?: string) {
@@ -100,20 +114,21 @@ export async function endSession(sessionId: string, data: EndSessionInput, userI
     obstacle: data.obstacle || undefined,
     nextAction: data.nextAction || undefined,
   };
-  const completedSession = await endSessionRecord(owner, sessionId, endData);
 
-  await updateTaskActualHours(session.taskId, owner);
-  return completedSession;
+  const updated = await endSessionRecord(owner, sessionId, endData);
+  await recomputeTaskActualHours(session.taskId, owner);
+  return updated;
 }
 
 export async function deleteSession(sessionId: string, userId?: string) {
   const owner = requireUserId(userId);
-  const session = await findSessionById(sessionId, owner);
+  const session = await findSessionById(owner, sessionId);
   if (!session) {
     throw new SessionServiceError("Session tidak ditemukan.", "SESSION_NOT_FOUND");
   }
-  const wasCompleted = !!session.endedAt;
-  await deleteSessionById(owner, sessionId);
-  if (wasCompleted) await updateTaskActualHours(session.taskId, owner);
-  return session;
+  const deleted = await deleteSessionById(owner, sessionId);
+  if (session.taskId) {
+    await recomputeTaskActualHours(session.taskId, owner);
+  }
+  return deleted;
 }

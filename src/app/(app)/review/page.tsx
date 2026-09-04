@@ -106,8 +106,8 @@ export default async function ReviewPage() {
     ...sessionReflections.map((s): TimelineEntry => ({
       id: `session-${s.id}`,
       kind: "session",
-      title: s.task.name,
-      tag: s.task.stage.goal.name,
+      title: s.task.title,
+      tag: s.task.stage?.goal.title,
       subtitle: s.understanding !== null ? `Tingkat pemahaman: ${s.understanding}/5` : undefined,
       content: s.obstacle ? `Hambatan: ${s.obstacle}` : "Sesi belajar selesai dengan evaluasi pemahaman.",
       timestamp: (s.endedAt ?? s.startedAt).toISOString(),
@@ -116,7 +116,7 @@ export default async function ReviewPage() {
     ...allPastReviews.map((r): TimelineEntry => ({
       id: `review-${r.id}`,
       kind: "review",
-      title: `Refleksi: ${r.goal.name}`,
+      title: `Refleksi: ${r.goal.title}`,
       tag: `${formatRange(r.periodStart, r.periodEnd)}`,
       content: [
         r.wentWell ? `🏆 Berjalan baik: ${r.wentWell}` : "",
@@ -213,7 +213,7 @@ export default async function ReviewPage() {
                     href={`/goals/${goal.id}`}
                     className="block font-bold text-surface-900 text-[16px] hover:text-primary-700 transition-colors line-clamp-2"
                   >
-                    {goal.name}
+                    {goal.title}
                   </Link>
 
                   <p className="mt-2 text-[12px] text-surface-500">

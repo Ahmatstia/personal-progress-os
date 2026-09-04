@@ -126,11 +126,11 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
         id: task.id,
         goalId: goal.id,
         stageId: stage.id,
-        name: task.name,
+        name: task.title,
         status: task.status,
         priority: task.priority,
         estimatedHours: task.estimatedHours,
-        goalName: goal.name,
+        goalName: goal.title,
         stageName: stage.name,
         createdAt: task.createdAt,
         startedAt: task.startedAt,
@@ -186,7 +186,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
     ...sessions.map((session) => ({
       id: `session-${session.id}`,
       kind: "session" as const,
-      label: session.task.name,
+      label: session.task.title,
       detail: formatMinutes(
         session.durationMinutes ??
           calculateSessionDurationMinutes(

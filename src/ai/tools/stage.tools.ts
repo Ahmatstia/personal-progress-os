@@ -40,7 +40,7 @@ export const createStageTool: Tool<{ goalId: string; name: string; description?:
       success: true,
       toolName: "create_stage",
       type: "WRITE",
-      message: `Stage "${stage.name}" berhasil dibuat pada goal "${goal.name}".`,
+      message: `Stage "${stage.name}" berhasil dibuat pada goal "${goal.title}".`,
       data: { id: stage.id, name: stage.name, goalId: stage.goalId },
       verified: true,
     };
@@ -117,7 +117,7 @@ export const findStageTool: Tool<{ goalId?: string; query?: string }, Array<{ id
       data: stages.map((s) => ({
         id: s.id,
         name: s.name,
-        goalName: s.goal.name,
+        goalName: s.goal.title,
         taskCount: s._count.tasks,
       })),
     };

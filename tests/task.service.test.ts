@@ -14,7 +14,7 @@ const state = vi.hoisted(() => ({
 }));
 
 vi.mock("@/repositories/task.repository", () => ({
-  findStageForTask: vi.fn(async () => ({ id: "stage-1" })),
+  findStageForTask: vi.fn(async () => ({ id: "stage-1", goalId: "goal-1", userId: "test-user" })),
   createTask: vi.fn(async (data: object) => ({ id: "task-new", ...data })),
   findTask: vi.fn(async () => state.task),
   updateTask: vi.fn(async (_id: string, data: Record<string, unknown>) => {
@@ -45,7 +45,7 @@ describe("task.service", () => {
 
   it("creates a task with the default workflow status", async () => {
     const task = await createTask({ stageId: "stage-1", name: "New task", description: null, type: "TASK", priority: "HIGH", estimatedHours: 2, notes: null });
-    expect(task).toMatchObject({ status: "NOT_STARTED", priority: "HIGH" });
+    expect(task).toMatchObject({ status: "TODO", priority: "HIGH" });
   });
 
   it("updates editable task fields", async () => {
@@ -85,8 +85,9 @@ describe("task.service", () => {
   });
 
   it("validates priority and status values", () => {
-    expect(taskPrioritySchema.safeParse("URGENT").success).toBe(false);
+    expect(taskPrioritySchema.safeParse("INVALID").success).toBe(false);
     expect(taskStatusSchema.safeParse("DONE").success).toBe(false);
+    expect(taskPrioritySchema.safeParse("URGENT").success).toBe(true);
     expect(taskPrioritySchema.safeParse("HIGH").success).toBe(true);
   });
 

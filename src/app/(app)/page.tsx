@@ -125,7 +125,7 @@ export default async function Home() {
 
   // Determine today's status message
   const todayStatus = today.currentSession
-    ? `Sedang mengerjakan: ${today.currentSession.task.name}`
+    ? `Sedang mengerjakan: ${today.currentSession.task.title}`
     : today.focusTasks.length > 0
       ? `${today.focusTasks.length} task terpilih untuk hari ini`
       : dashboard.nextAction
@@ -311,7 +311,7 @@ export default async function Home() {
 
                     {/* Goal title */}
                     <p className="text-[14px] font-bold text-surface-900 group-hover:text-primary-700 transition-colors line-clamp-2">
-                      {goal.name}
+                      {goal.title}
                     </p>
 
                     {/* Active stage info */}

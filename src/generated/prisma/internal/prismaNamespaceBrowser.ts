@@ -51,14 +51,22 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  User: 'User',
+  UserPreference: 'UserPreference',
+  Area: 'Area',
   Goal: 'Goal',
+  Objective: 'Objective',
+  Project: 'Project',
   Stage: 'Stage',
+  Milestone: 'Milestone',
   Task: 'Task',
   Session: 'Session',
-  Review: 'Review',
   DailyFocus: 'DailyFocus',
+  Review: 'Review',
+  CalendarEvent: 'CalendarEvent',
+  Activity: 'Activity',
   Capture: 'Capture',
-  User: 'User'
+  Notification: 'Notification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -77,19 +85,105 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const GoalScalarFieldEnum = {
+export const UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  name: 'name',
+  avatarUrl: 'avatarUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const UserPreferenceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  theme: 'theme',
+  weekStartDay: 'weekStartDay',
+  dailyFocusLimit: 'dailyFocusLimit',
+  enableNotifications: 'enableNotifications',
+  enableAiAssistance: 'enableAiAssistance',
+  timezone: 'timezone',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserPreferenceScalarFieldEnum = (typeof UserPreferenceScalarFieldEnum)[keyof typeof UserPreferenceScalarFieldEnum]
+
+
+export const AreaScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   name: 'name',
   description: 'description',
+  color: 'color',
+  icon: 'icon',
+  order: 'order',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AreaScalarFieldEnum = (typeof AreaScalarFieldEnum)[keyof typeof AreaScalarFieldEnum]
+
+
+export const GoalScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  areaId: 'areaId',
+  title: 'title',
+  description: 'description',
   type: 'type',
   status: 'status',
+  priority: 'priority',
   targetDate: 'targetDate',
+  completedAt: 'completedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type GoalScalarFieldEnum = (typeof GoalScalarFieldEnum)[keyof typeof GoalScalarFieldEnum]
+
+
+export const ObjectiveScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  goalId: 'goalId',
+  title: 'title',
+  description: 'description',
+  targetValue: 'targetValue',
+  currentValue: 'currentValue',
+  unit: 'unit',
+  status: 'status',
+  dueDate: 'dueDate',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ObjectiveScalarFieldEnum = (typeof ObjectiveScalarFieldEnum)[keyof typeof ObjectiveScalarFieldEnum]
+
+
+export const ProjectScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  goalId: 'goalId',
+  areaId: 'areaId',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  startDate: 'startDate',
+  targetDate: 'targetDate',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
 
 
 export const StageScalarFieldEnum = {
@@ -99,6 +193,7 @@ export const StageScalarFieldEnum = {
   name: 'name',
   description: 'description',
   order: 'order',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -106,17 +201,40 @@ export const StageScalarFieldEnum = {
 export type StageScalarFieldEnum = (typeof StageScalarFieldEnum)[keyof typeof StageScalarFieldEnum]
 
 
+export const MilestoneScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  order: 'order',
+  status: 'status',
+  dueDate: 'dueDate',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MilestoneScalarFieldEnum = (typeof MilestoneScalarFieldEnum)[keyof typeof MilestoneScalarFieldEnum]
+
+
 export const TaskScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  stageId: 'stageId',
-  name: 'name',
+  title: 'title',
   description: 'description',
   type: 'type',
   priority: 'priority',
   status: 'status',
+  stageId: 'stageId',
+  milestoneId: 'milestoneId',
+  projectId: 'projectId',
+  areaId: 'areaId',
+  goalId: 'goalId',
   estimatedHours: 'estimatedHours',
   actualHours: 'actualHours',
+  dueDate: 'dueDate',
+  scheduledDate: 'scheduledDate',
   startedAt: 'startedAt',
   completedAt: 'completedAt',
   notes: 'notes',
@@ -144,6 +262,18 @@ export const SessionScalarFieldEnum = {
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
 
 
+export const DailyFocusScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  date: 'date',
+  taskId: 'taskId',
+  order: 'order',
+  createdAt: 'createdAt'
+} as const
+
+export type DailyFocusScalarFieldEnum = (typeof DailyFocusScalarFieldEnum)[keyof typeof DailyFocusScalarFieldEnum]
+
+
 export const ReviewScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -163,37 +293,79 @@ export const ReviewScalarFieldEnum = {
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
-export const DailyFocusScalarFieldEnum = {
+export const CalendarEventScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  date: 'date',
+  title: 'title',
+  description: 'description',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  isAllDay: 'isAllDay',
+  eventType: 'eventType',
+  recurrence: 'recurrence',
+  location: 'location',
   taskId: 'taskId',
-  order: 'order',
-  createdAt: 'createdAt'
+  projectId: 'projectId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
-export type DailyFocusScalarFieldEnum = (typeof DailyFocusScalarFieldEnum)[keyof typeof DailyFocusScalarFieldEnum]
+export type CalendarEventScalarFieldEnum = (typeof CalendarEventScalarFieldEnum)[keyof typeof CalendarEventScalarFieldEnum]
+
+
+export const ActivityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  category: 'category',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  durationMinutes: 'durationMinutes',
+  productivityRating: 'productivityRating',
+  energyLevel: 'energyLevel',
+  notes: 'notes',
+  taskId: 'taskId',
+  projectId: 'projectId',
+  areaId: 'areaId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
 
 
 export const CaptureScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   content: 'content',
-  createdAt: 'createdAt'
+  status: 'status',
+  category: 'category',
+  convertedTaskId: 'convertedTaskId',
+  convertedGoalId: 'convertedGoalId',
+  processedAt: 'processedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type CaptureScalarFieldEnum = (typeof CaptureScalarFieldEnum)[keyof typeof CaptureScalarFieldEnum]
 
 
-export const UserScalarFieldEnum = {
+export const NotificationScalarFieldEnum = {
   id: 'id',
-  email: 'email',
-  name: 'name',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  userId: 'userId',
+  title: 'title',
+  message: 'message',
+  type: 'type',
+  severity: 'severity',
+  isRead: 'isRead',
+  readAt: 'readAt',
+  linkUrl: 'linkUrl',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  createdAt: 'createdAt'
 } as const
 
-export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
 export const SortOrder = {

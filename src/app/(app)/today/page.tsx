@@ -43,16 +43,16 @@ export default async function TodayPage() {
   const sessionTask = today.currentSession
     ? {
         id: today.currentSession.taskId,
-        name: today.currentSession.task.name,
-        goalName: today.currentSession.task.stage.goal.name,
-        stageName: today.currentSession.task.stage.name,
+        name: today.currentSession.task.title,
+        goalName: today.currentSession.task.stage?.goal.title,
+        stageName: today.currentSession.task.stage?.name,
       }
     : primaryFocus
       ? {
           id: primaryFocus.id,
-          name: primaryFocus.name,
-          goalName: primaryFocus.stage.goal.name,
-          stageName: primaryFocus.stage.name,
+          name: primaryFocus.title,
+          goalName: primaryFocus.stage?.goal.title,
+          stageName: primaryFocus.stage?.name,
         }
       : ranked
         ? {
@@ -83,9 +83,10 @@ export default async function TodayPage() {
 
   const quickStartTasks = today.availableTasks.map((t) => ({
     id: t.id,
-    name: t.name,
-    goalName: t.stage.goal.name,
-    stageName: t.stage.name,
+    title: t.title,
+    name: t.title,
+    goalName: t.stage?.goal.title ?? "",
+    stageName: t.stage?.name ?? "",
     priority: t.priority,
     estimatedHours: t.estimatedHours,
   }));
@@ -196,10 +197,10 @@ export default async function TodayPage() {
                       href={`/tasks/${task.id}`}
                       className="block truncate text-[12.5px] font-semibold text-surface-800 hover:text-primary-700 transition-colors"
                     >
-                      {task.name}
+                      {task.title}
                     </Link>
                     <p className="truncate text-[10.5px] text-surface-400">
-                      {task.stage.goal.name}
+                      {task.stage?.goal.title}
                     </p>
                   </div>
                 </div>

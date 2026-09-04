@@ -123,14 +123,14 @@ export async function resolveTaskEntity(
 
   const scored: EntityMatchCandidate[] = allTasks
     .map((task) => {
-      const score = computeSimilarity(normQuery, task.name);
+      const score = computeSimilarity(normQuery, task.title);
       return {
         id: task.id,
-        name: task.name,
+        name: task.title,
         type: "TASK" as const,
         score,
-        parentName: `${task.stage.goal.name} / ${task.stage.name}`,
-        parentId: task.stageId,
+        parentName: `${task.stage?.goal?.title ?? ""} / ${task.stage?.name ?? ""}`,
+        parentId: task.stageId ?? undefined,
         data: task,
       };
     })
@@ -206,9 +206,9 @@ export async function resolveGoalEntity(query: string, userId: string): Promise<
   const scored: EntityMatchCandidate[] = goals
     .map((goal) => ({
       id: goal.id,
-      name: goal.name,
+      name: goal.title,
       type: "GOAL" as const,
-      score: computeSimilarity(normQuery, goal.name),
+      score: computeSimilarity(normQuery, goal.title),
       data: goal,
     }))
     .filter((c) => c.score >= 0.4)
@@ -256,7 +256,7 @@ export async function resolveStageEntity(
       name: stage.name,
       type: "STAGE" as const,
       score: computeSimilarity(normQuery, stage.name),
-      parentName: stage.goal.name,
+      parentName: stage.goal.title,
       parentId: stage.goalId,
       data: stage,
     }))

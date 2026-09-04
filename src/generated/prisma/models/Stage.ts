@@ -41,6 +41,7 @@ export type StageMinAggregateOutputType = {
   name: string | null
   description: string | null
   order: number | null
+  status: $Enums.StageStatus | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -52,6 +53,7 @@ export type StageMaxAggregateOutputType = {
   name: string | null
   description: string | null
   order: number | null
+  status: $Enums.StageStatus | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -63,6 +65,7 @@ export type StageCountAggregateOutputType = {
   name: number
   description: number
   order: number
+  status: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -84,6 +87,7 @@ export type StageMinAggregateInputType = {
   name?: true
   description?: true
   order?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -95,6 +99,7 @@ export type StageMaxAggregateInputType = {
   name?: true
   description?: true
   order?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -106,6 +111,7 @@ export type StageCountAggregateInputType = {
   name?: true
   description?: true
   order?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -204,6 +210,7 @@ export type StageGroupByOutputType = {
   name: string
   description: string | null
   order: number
+  status: $Enums.StageStatus
   createdAt: Date
   updatedAt: Date
   _count: StageCountAggregateOutputType | null
@@ -238,11 +245,12 @@ export type StageWhereInput = {
   name?: Prisma.StringFilter<"Stage"> | string
   description?: Prisma.StringNullableFilter<"Stage"> | string | null
   order?: Prisma.IntFilter<"Stage"> | number
+  status?: Prisma.EnumStageStatusFilter<"Stage"> | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFilter<"Stage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Stage"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   goal?: Prisma.XOR<Prisma.GoalScalarRelationFilter, Prisma.GoalWhereInput>
   tasks?: Prisma.TaskListRelationFilter
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type StageOrderByWithRelationInput = {
@@ -252,11 +260,12 @@ export type StageOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
   goal?: Prisma.GoalOrderByWithRelationInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
-  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type StageWhereUniqueInput = Prisma.AtLeast<{
@@ -269,11 +278,12 @@ export type StageWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Stage"> | string
   description?: Prisma.StringNullableFilter<"Stage"> | string | null
   order?: Prisma.IntFilter<"Stage"> | number
+  status?: Prisma.EnumStageStatusFilter<"Stage"> | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFilter<"Stage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Stage"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   goal?: Prisma.XOR<Prisma.GoalScalarRelationFilter, Prisma.GoalWhereInput>
   tasks?: Prisma.TaskListRelationFilter
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type StageOrderByWithAggregationInput = {
@@ -283,6 +293,7 @@ export type StageOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StageCountOrderByAggregateInput
@@ -302,6 +313,7 @@ export type StageScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Stage"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Stage"> | string | null
   order?: Prisma.IntWithAggregatesFilter<"Stage"> | number
+  status?: Prisma.EnumStageStatusWithAggregatesFilter<"Stage"> | $Enums.StageStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Stage"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Stage"> | Date | string
 }
@@ -311,20 +323,22 @@ export type StageCreateInput = {
   name: string
   description?: string | null
   order?: number
+  status?: $Enums.StageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStagesInput
   goal: Prisma.GoalCreateNestedOneWithoutStagesInput
   tasks?: Prisma.TaskCreateNestedManyWithoutStageInput
-  user?: Prisma.UserCreateNestedOneWithoutStagesInput
 }
 
 export type StageUncheckedCreateInput = {
   id?: string
-  userId?: string
+  userId: string
   goalId: string
   name: string
   description?: string | null
   order?: number
+  status?: $Enums.StageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutStageInput
@@ -335,11 +349,12 @@ export type StageUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStagesNestedInput
   goal?: Prisma.GoalUpdateOneRequiredWithoutStagesNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutStageNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutStagesNestedInput
 }
 
 export type StageUncheckedUpdateInput = {
@@ -349,6 +364,7 @@ export type StageUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutStageNestedInput
@@ -356,11 +372,12 @@ export type StageUncheckedUpdateInput = {
 
 export type StageCreateManyInput = {
   id?: string
-  userId?: string
+  userId: string
   goalId: string
   name: string
   description?: string | null
   order?: number
+  status?: $Enums.StageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -370,6 +387,7 @@ export type StageUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -381,6 +399,7 @@ export type StageUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -402,6 +421,7 @@ export type StageCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -417,6 +437,7 @@ export type StageMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -428,6 +449,7 @@ export type StageMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -436,73 +458,9 @@ export type StageSumOrderByAggregateInput = {
   order?: Prisma.SortOrder
 }
 
-export type StageScalarRelationFilter = {
-  is?: Prisma.StageWhereInput
-  isNot?: Prisma.StageWhereInput
-}
-
-export type StageCreateNestedManyWithoutGoalInput = {
-  create?: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput> | Prisma.StageCreateWithoutGoalInput[] | Prisma.StageUncheckedCreateWithoutGoalInput[]
-  connectOrCreate?: Prisma.StageCreateOrConnectWithoutGoalInput | Prisma.StageCreateOrConnectWithoutGoalInput[]
-  createMany?: Prisma.StageCreateManyGoalInputEnvelope
-  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
-}
-
-export type StageUncheckedCreateNestedManyWithoutGoalInput = {
-  create?: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput> | Prisma.StageCreateWithoutGoalInput[] | Prisma.StageUncheckedCreateWithoutGoalInput[]
-  connectOrCreate?: Prisma.StageCreateOrConnectWithoutGoalInput | Prisma.StageCreateOrConnectWithoutGoalInput[]
-  createMany?: Prisma.StageCreateManyGoalInputEnvelope
-  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
-}
-
-export type StageUpdateManyWithoutGoalNestedInput = {
-  create?: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput> | Prisma.StageCreateWithoutGoalInput[] | Prisma.StageUncheckedCreateWithoutGoalInput[]
-  connectOrCreate?: Prisma.StageCreateOrConnectWithoutGoalInput | Prisma.StageCreateOrConnectWithoutGoalInput[]
-  upsert?: Prisma.StageUpsertWithWhereUniqueWithoutGoalInput | Prisma.StageUpsertWithWhereUniqueWithoutGoalInput[]
-  createMany?: Prisma.StageCreateManyGoalInputEnvelope
-  set?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
-  disconnect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
-  delete?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
-  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
-  update?: Prisma.StageUpdateWithWhereUniqueWithoutGoalInput | Prisma.StageUpdateWithWhereUniqueWithoutGoalInput[]
-  updateMany?: Prisma.StageUpdateManyWithWhereWithoutGoalInput | Prisma.StageUpdateManyWithWhereWithoutGoalInput[]
-  deleteMany?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
-}
-
-export type StageUncheckedUpdateManyWithoutGoalNestedInput = {
-  create?: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput> | Prisma.StageCreateWithoutGoalInput[] | Prisma.StageUncheckedCreateWithoutGoalInput[]
-  connectOrCreate?: Prisma.StageCreateOrConnectWithoutGoalInput | Prisma.StageCreateOrConnectWithoutGoalInput[]
-  upsert?: Prisma.StageUpsertWithWhereUniqueWithoutGoalInput | Prisma.StageUpsertWithWhereUniqueWithoutGoalInput[]
-  createMany?: Prisma.StageCreateManyGoalInputEnvelope
-  set?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
-  disconnect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
-  delete?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
-  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
-  update?: Prisma.StageUpdateWithWhereUniqueWithoutGoalInput | Prisma.StageUpdateWithWhereUniqueWithoutGoalInput[]
-  updateMany?: Prisma.StageUpdateManyWithWhereWithoutGoalInput | Prisma.StageUpdateManyWithWhereWithoutGoalInput[]
-  deleteMany?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type StageCreateNestedOneWithoutTasksInput = {
-  create?: Prisma.XOR<Prisma.StageCreateWithoutTasksInput, Prisma.StageUncheckedCreateWithoutTasksInput>
-  connectOrCreate?: Prisma.StageCreateOrConnectWithoutTasksInput
-  connect?: Prisma.StageWhereUniqueInput
-}
-
-export type StageUpdateOneRequiredWithoutTasksNestedInput = {
-  create?: Prisma.XOR<Prisma.StageCreateWithoutTasksInput, Prisma.StageUncheckedCreateWithoutTasksInput>
-  connectOrCreate?: Prisma.StageCreateOrConnectWithoutTasksInput
-  upsert?: Prisma.StageUpsertWithoutTasksInput
-  connect?: Prisma.StageWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.StageUpdateToOneWithWhereWithoutTasksInput, Prisma.StageUpdateWithoutTasksInput>, Prisma.StageUncheckedUpdateWithoutTasksInput>
+export type StageNullableScalarRelationFilter = {
+  is?: Prisma.StageWhereInput | null
+  isNot?: Prisma.StageWhereInput | null
 }
 
 export type StageCreateNestedManyWithoutUserInput = {
@@ -547,126 +505,66 @@ export type StageUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
 }
 
-export type StageCreateWithoutGoalInput = {
-  id?: string
-  name: string
-  description?: string | null
-  order?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  tasks?: Prisma.TaskCreateNestedManyWithoutStageInput
-  user?: Prisma.UserCreateNestedOneWithoutStagesInput
+export type StageCreateNestedManyWithoutGoalInput = {
+  create?: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput> | Prisma.StageCreateWithoutGoalInput[] | Prisma.StageUncheckedCreateWithoutGoalInput[]
+  connectOrCreate?: Prisma.StageCreateOrConnectWithoutGoalInput | Prisma.StageCreateOrConnectWithoutGoalInput[]
+  createMany?: Prisma.StageCreateManyGoalInputEnvelope
+  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
 }
 
-export type StageUncheckedCreateWithoutGoalInput = {
-  id?: string
-  userId?: string
-  name: string
-  description?: string | null
-  order?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutStageInput
+export type StageUncheckedCreateNestedManyWithoutGoalInput = {
+  create?: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput> | Prisma.StageCreateWithoutGoalInput[] | Prisma.StageUncheckedCreateWithoutGoalInput[]
+  connectOrCreate?: Prisma.StageCreateOrConnectWithoutGoalInput | Prisma.StageCreateOrConnectWithoutGoalInput[]
+  createMany?: Prisma.StageCreateManyGoalInputEnvelope
+  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
 }
 
-export type StageCreateOrConnectWithoutGoalInput = {
-  where: Prisma.StageWhereUniqueInput
-  create: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput>
+export type StageUpdateManyWithoutGoalNestedInput = {
+  create?: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput> | Prisma.StageCreateWithoutGoalInput[] | Prisma.StageUncheckedCreateWithoutGoalInput[]
+  connectOrCreate?: Prisma.StageCreateOrConnectWithoutGoalInput | Prisma.StageCreateOrConnectWithoutGoalInput[]
+  upsert?: Prisma.StageUpsertWithWhereUniqueWithoutGoalInput | Prisma.StageUpsertWithWhereUniqueWithoutGoalInput[]
+  createMany?: Prisma.StageCreateManyGoalInputEnvelope
+  set?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  disconnect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  delete?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  update?: Prisma.StageUpdateWithWhereUniqueWithoutGoalInput | Prisma.StageUpdateWithWhereUniqueWithoutGoalInput[]
+  updateMany?: Prisma.StageUpdateManyWithWhereWithoutGoalInput | Prisma.StageUpdateManyWithWhereWithoutGoalInput[]
+  deleteMany?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
 }
 
-export type StageCreateManyGoalInputEnvelope = {
-  data: Prisma.StageCreateManyGoalInput | Prisma.StageCreateManyGoalInput[]
-  skipDuplicates?: boolean
+export type StageUncheckedUpdateManyWithoutGoalNestedInput = {
+  create?: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput> | Prisma.StageCreateWithoutGoalInput[] | Prisma.StageUncheckedCreateWithoutGoalInput[]
+  connectOrCreate?: Prisma.StageCreateOrConnectWithoutGoalInput | Prisma.StageCreateOrConnectWithoutGoalInput[]
+  upsert?: Prisma.StageUpsertWithWhereUniqueWithoutGoalInput | Prisma.StageUpsertWithWhereUniqueWithoutGoalInput[]
+  createMany?: Prisma.StageCreateManyGoalInputEnvelope
+  set?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  disconnect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  delete?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  connect?: Prisma.StageWhereUniqueInput | Prisma.StageWhereUniqueInput[]
+  update?: Prisma.StageUpdateWithWhereUniqueWithoutGoalInput | Prisma.StageUpdateWithWhereUniqueWithoutGoalInput[]
+  updateMany?: Prisma.StageUpdateManyWithWhereWithoutGoalInput | Prisma.StageUpdateManyWithWhereWithoutGoalInput[]
+  deleteMany?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
 }
 
-export type StageUpsertWithWhereUniqueWithoutGoalInput = {
-  where: Prisma.StageWhereUniqueInput
-  update: Prisma.XOR<Prisma.StageUpdateWithoutGoalInput, Prisma.StageUncheckedUpdateWithoutGoalInput>
-  create: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput>
+export type EnumStageStatusFieldUpdateOperationsInput = {
+  set?: $Enums.StageStatus
 }
 
-export type StageUpdateWithWhereUniqueWithoutGoalInput = {
-  where: Prisma.StageWhereUniqueInput
-  data: Prisma.XOR<Prisma.StageUpdateWithoutGoalInput, Prisma.StageUncheckedUpdateWithoutGoalInput>
+export type StageCreateNestedOneWithoutTasksInput = {
+  create?: Prisma.XOR<Prisma.StageCreateWithoutTasksInput, Prisma.StageUncheckedCreateWithoutTasksInput>
+  connectOrCreate?: Prisma.StageCreateOrConnectWithoutTasksInput
+  connect?: Prisma.StageWhereUniqueInput
 }
 
-export type StageUpdateManyWithWhereWithoutGoalInput = {
-  where: Prisma.StageScalarWhereInput
-  data: Prisma.XOR<Prisma.StageUpdateManyMutationInput, Prisma.StageUncheckedUpdateManyWithoutGoalInput>
-}
-
-export type StageScalarWhereInput = {
-  AND?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
-  OR?: Prisma.StageScalarWhereInput[]
-  NOT?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
-  id?: Prisma.StringFilter<"Stage"> | string
-  userId?: Prisma.StringFilter<"Stage"> | string
-  goalId?: Prisma.StringFilter<"Stage"> | string
-  name?: Prisma.StringFilter<"Stage"> | string
-  description?: Prisma.StringNullableFilter<"Stage"> | string | null
-  order?: Prisma.IntFilter<"Stage"> | number
-  createdAt?: Prisma.DateTimeFilter<"Stage"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Stage"> | Date | string
-}
-
-export type StageCreateWithoutTasksInput = {
-  id?: string
-  name: string
-  description?: string | null
-  order?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  goal: Prisma.GoalCreateNestedOneWithoutStagesInput
-  user?: Prisma.UserCreateNestedOneWithoutStagesInput
-}
-
-export type StageUncheckedCreateWithoutTasksInput = {
-  id?: string
-  userId?: string
-  goalId: string
-  name: string
-  description?: string | null
-  order?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type StageCreateOrConnectWithoutTasksInput = {
-  where: Prisma.StageWhereUniqueInput
-  create: Prisma.XOR<Prisma.StageCreateWithoutTasksInput, Prisma.StageUncheckedCreateWithoutTasksInput>
-}
-
-export type StageUpsertWithoutTasksInput = {
-  update: Prisma.XOR<Prisma.StageUpdateWithoutTasksInput, Prisma.StageUncheckedUpdateWithoutTasksInput>
-  create: Prisma.XOR<Prisma.StageCreateWithoutTasksInput, Prisma.StageUncheckedCreateWithoutTasksInput>
-  where?: Prisma.StageWhereInput
-}
-
-export type StageUpdateToOneWithWhereWithoutTasksInput = {
-  where?: Prisma.StageWhereInput
-  data: Prisma.XOR<Prisma.StageUpdateWithoutTasksInput, Prisma.StageUncheckedUpdateWithoutTasksInput>
-}
-
-export type StageUpdateWithoutTasksInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  order?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  goal?: Prisma.GoalUpdateOneRequiredWithoutStagesNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutStagesNestedInput
-}
-
-export type StageUncheckedUpdateWithoutTasksInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  goalId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  order?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type StageUpdateOneWithoutTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.StageCreateWithoutTasksInput, Prisma.StageUncheckedCreateWithoutTasksInput>
+  connectOrCreate?: Prisma.StageCreateOrConnectWithoutTasksInput
+  upsert?: Prisma.StageUpsertWithoutTasksInput
+  disconnect?: Prisma.StageWhereInput | boolean
+  delete?: Prisma.StageWhereInput | boolean
+  connect?: Prisma.StageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StageUpdateToOneWithWhereWithoutTasksInput, Prisma.StageUpdateWithoutTasksInput>, Prisma.StageUncheckedUpdateWithoutTasksInput>
 }
 
 export type StageCreateWithoutUserInput = {
@@ -674,6 +572,7 @@ export type StageCreateWithoutUserInput = {
   name: string
   description?: string | null
   order?: number
+  status?: $Enums.StageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   goal: Prisma.GoalCreateNestedOneWithoutStagesInput
@@ -686,6 +585,7 @@ export type StageUncheckedCreateWithoutUserInput = {
   name: string
   description?: string | null
   order?: number
+  status?: $Enums.StageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutStageInput
@@ -717,44 +617,131 @@ export type StageUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.StageUpdateManyMutationInput, Prisma.StageUncheckedUpdateManyWithoutUserInput>
 }
 
-export type StageCreateManyGoalInput = {
+export type StageScalarWhereInput = {
+  AND?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
+  OR?: Prisma.StageScalarWhereInput[]
+  NOT?: Prisma.StageScalarWhereInput | Prisma.StageScalarWhereInput[]
+  id?: Prisma.StringFilter<"Stage"> | string
+  userId?: Prisma.StringFilter<"Stage"> | string
+  goalId?: Prisma.StringFilter<"Stage"> | string
+  name?: Prisma.StringFilter<"Stage"> | string
+  description?: Prisma.StringNullableFilter<"Stage"> | string | null
+  order?: Prisma.IntFilter<"Stage"> | number
+  status?: Prisma.EnumStageStatusFilter<"Stage"> | $Enums.StageStatus
+  createdAt?: Prisma.DateTimeFilter<"Stage"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Stage"> | Date | string
+}
+
+export type StageCreateWithoutGoalInput = {
   id?: string
-  userId?: string
   name: string
   description?: string | null
   order?: number
+  status?: $Enums.StageStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStagesInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutStageInput
+}
+
+export type StageUncheckedCreateWithoutGoalInput = {
+  id?: string
+  userId: string
+  name: string
+  description?: string | null
+  order?: number
+  status?: $Enums.StageStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutStageInput
+}
+
+export type StageCreateOrConnectWithoutGoalInput = {
+  where: Prisma.StageWhereUniqueInput
+  create: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput>
+}
+
+export type StageCreateManyGoalInputEnvelope = {
+  data: Prisma.StageCreateManyGoalInput | Prisma.StageCreateManyGoalInput[]
+  skipDuplicates?: boolean
+}
+
+export type StageUpsertWithWhereUniqueWithoutGoalInput = {
+  where: Prisma.StageWhereUniqueInput
+  update: Prisma.XOR<Prisma.StageUpdateWithoutGoalInput, Prisma.StageUncheckedUpdateWithoutGoalInput>
+  create: Prisma.XOR<Prisma.StageCreateWithoutGoalInput, Prisma.StageUncheckedCreateWithoutGoalInput>
+}
+
+export type StageUpdateWithWhereUniqueWithoutGoalInput = {
+  where: Prisma.StageWhereUniqueInput
+  data: Prisma.XOR<Prisma.StageUpdateWithoutGoalInput, Prisma.StageUncheckedUpdateWithoutGoalInput>
+}
+
+export type StageUpdateManyWithWhereWithoutGoalInput = {
+  where: Prisma.StageScalarWhereInput
+  data: Prisma.XOR<Prisma.StageUpdateManyMutationInput, Prisma.StageUncheckedUpdateManyWithoutGoalInput>
+}
+
+export type StageCreateWithoutTasksInput = {
+  id?: string
+  name: string
+  description?: string | null
+  order?: number
+  status?: $Enums.StageStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStagesInput
+  goal: Prisma.GoalCreateNestedOneWithoutStagesInput
+}
+
+export type StageUncheckedCreateWithoutTasksInput = {
+  id?: string
+  userId: string
+  goalId: string
+  name: string
+  description?: string | null
+  order?: number
+  status?: $Enums.StageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
-export type StageUpdateWithoutGoalInput = {
+export type StageCreateOrConnectWithoutTasksInput = {
+  where: Prisma.StageWhereUniqueInput
+  create: Prisma.XOR<Prisma.StageCreateWithoutTasksInput, Prisma.StageUncheckedCreateWithoutTasksInput>
+}
+
+export type StageUpsertWithoutTasksInput = {
+  update: Prisma.XOR<Prisma.StageUpdateWithoutTasksInput, Prisma.StageUncheckedUpdateWithoutTasksInput>
+  create: Prisma.XOR<Prisma.StageCreateWithoutTasksInput, Prisma.StageUncheckedCreateWithoutTasksInput>
+  where?: Prisma.StageWhereInput
+}
+
+export type StageUpdateToOneWithWhereWithoutTasksInput = {
+  where?: Prisma.StageWhereInput
+  data: Prisma.XOR<Prisma.StageUpdateWithoutTasksInput, Prisma.StageUncheckedUpdateWithoutTasksInput>
+}
+
+export type StageUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tasks?: Prisma.TaskUpdateManyWithoutStageNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutStagesNestedInput
+  goal?: Prisma.GoalUpdateOneRequiredWithoutStagesNestedInput
 }
 
-export type StageUncheckedUpdateWithoutGoalInput = {
+export type StageUncheckedUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  goalId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutStageNestedInput
-}
-
-export type StageUncheckedUpdateManyWithoutGoalInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -765,6 +752,7 @@ export type StageCreateManyUserInput = {
   name: string
   description?: string | null
   order?: number
+  status?: $Enums.StageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -774,6 +762,7 @@ export type StageUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   goal?: Prisma.GoalUpdateOneRequiredWithoutStagesNestedInput
@@ -786,6 +775,7 @@ export type StageUncheckedUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutStageNestedInput
@@ -797,6 +787,53 @@ export type StageUncheckedUpdateManyWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StageCreateManyGoalInput = {
+  id?: string
+  userId: string
+  name: string
+  description?: string | null
+  order?: number
+  status?: $Enums.StageStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StageUpdateWithoutGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStagesNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutStageNestedInput
+}
+
+export type StageUncheckedUpdateWithoutGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutStageNestedInput
+}
+
+export type StageUncheckedUpdateManyWithoutGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStageStatusFieldUpdateOperationsInput | $Enums.StageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -839,11 +876,12 @@ export type StageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   name?: boolean
   description?: boolean
   order?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.Stage$tasksArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.StageCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stage"]>
 
@@ -854,10 +892,11 @@ export type StageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   name?: boolean
   description?: boolean
   order?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stage"]>
 
 export type StageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -867,10 +906,11 @@ export type StageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   name?: boolean
   description?: boolean
   order?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stage"]>
 
 export type StageSelectScalar = {
@@ -880,32 +920,33 @@ export type StageSelectScalar = {
   name?: boolean
   description?: boolean
   order?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "goalId" | "name" | "description" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["stage"]>
+export type StageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "goalId" | "name" | "description" | "order" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["stage"]>
 export type StageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.Stage$tasksArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.StageCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
 }
 export type StageIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
 }
 
 export type $StagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Stage"
   objects: {
+    user: Prisma.$UserPayload<ExtArgs>
     goal: Prisma.$GoalPayload<ExtArgs>
     tasks: Prisma.$TaskPayload<ExtArgs>[]
-    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -914,6 +955,7 @@ export type $StagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     name: string
     description: string | null
     order: number
+    status: $Enums.StageStatus
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["stage"]>
@@ -1310,9 +1352,9 @@ readonly fields: StageFieldRefs;
  */
 export interface Prisma__StageClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   goal<T extends Prisma.GoalDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GoalDefaultArgs<ExtArgs>>): Prisma.Prisma__GoalClient<runtime.Types.Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   tasks<T extends Prisma.Stage$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Stage$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1348,6 +1390,7 @@ export interface StageFieldRefs {
   readonly name: Prisma.FieldRef<"Stage", 'String'>
   readonly description: Prisma.FieldRef<"Stage", 'String'>
   readonly order: Prisma.FieldRef<"Stage", 'Int'>
+  readonly status: Prisma.FieldRef<"Stage", 'StageStatus'>
   readonly createdAt: Prisma.FieldRef<"Stage", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Stage", 'DateTime'>
 }

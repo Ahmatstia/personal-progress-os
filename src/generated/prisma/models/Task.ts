@@ -39,14 +39,20 @@ export type TaskSumAggregateOutputType = {
 export type TaskMinAggregateOutputType = {
   id: string | null
   userId: string | null
-  stageId: string | null
-  name: string | null
+  title: string | null
   description: string | null
-  type: string | null
-  priority: string | null
-  status: string | null
+  type: $Enums.TaskType | null
+  priority: $Enums.Priority | null
+  status: $Enums.TaskStatus | null
+  stageId: string | null
+  milestoneId: string | null
+  projectId: string | null
+  areaId: string | null
+  goalId: string | null
   estimatedHours: number | null
   actualHours: number | null
+  dueDate: Date | null
+  scheduledDate: Date | null
   startedAt: Date | null
   completedAt: Date | null
   notes: string | null
@@ -57,14 +63,20 @@ export type TaskMinAggregateOutputType = {
 export type TaskMaxAggregateOutputType = {
   id: string | null
   userId: string | null
-  stageId: string | null
-  name: string | null
+  title: string | null
   description: string | null
-  type: string | null
-  priority: string | null
-  status: string | null
+  type: $Enums.TaskType | null
+  priority: $Enums.Priority | null
+  status: $Enums.TaskStatus | null
+  stageId: string | null
+  milestoneId: string | null
+  projectId: string | null
+  areaId: string | null
+  goalId: string | null
   estimatedHours: number | null
   actualHours: number | null
+  dueDate: Date | null
+  scheduledDate: Date | null
   startedAt: Date | null
   completedAt: Date | null
   notes: string | null
@@ -75,14 +87,20 @@ export type TaskMaxAggregateOutputType = {
 export type TaskCountAggregateOutputType = {
   id: number
   userId: number
-  stageId: number
-  name: number
+  title: number
   description: number
   type: number
   priority: number
   status: number
+  stageId: number
+  milestoneId: number
+  projectId: number
+  areaId: number
+  goalId: number
   estimatedHours: number
   actualHours: number
+  dueDate: number
+  scheduledDate: number
   startedAt: number
   completedAt: number
   notes: number
@@ -105,14 +123,20 @@ export type TaskSumAggregateInputType = {
 export type TaskMinAggregateInputType = {
   id?: true
   userId?: true
-  stageId?: true
-  name?: true
+  title?: true
   description?: true
   type?: true
   priority?: true
   status?: true
+  stageId?: true
+  milestoneId?: true
+  projectId?: true
+  areaId?: true
+  goalId?: true
   estimatedHours?: true
   actualHours?: true
+  dueDate?: true
+  scheduledDate?: true
   startedAt?: true
   completedAt?: true
   notes?: true
@@ -123,14 +147,20 @@ export type TaskMinAggregateInputType = {
 export type TaskMaxAggregateInputType = {
   id?: true
   userId?: true
-  stageId?: true
-  name?: true
+  title?: true
   description?: true
   type?: true
   priority?: true
   status?: true
+  stageId?: true
+  milestoneId?: true
+  projectId?: true
+  areaId?: true
+  goalId?: true
   estimatedHours?: true
   actualHours?: true
+  dueDate?: true
+  scheduledDate?: true
   startedAt?: true
   completedAt?: true
   notes?: true
@@ -141,14 +171,20 @@ export type TaskMaxAggregateInputType = {
 export type TaskCountAggregateInputType = {
   id?: true
   userId?: true
-  stageId?: true
-  name?: true
+  title?: true
   description?: true
   type?: true
   priority?: true
   status?: true
+  stageId?: true
+  milestoneId?: true
+  projectId?: true
+  areaId?: true
+  goalId?: true
   estimatedHours?: true
   actualHours?: true
+  dueDate?: true
+  scheduledDate?: true
   startedAt?: true
   completedAt?: true
   notes?: true
@@ -246,14 +282,20 @@ export type TaskGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type TaskGroupByOutputType = {
   id: string
   userId: string
-  stageId: string
-  name: string
+  title: string
   description: string | null
-  type: string
-  priority: string
-  status: string
+  type: $Enums.TaskType
+  priority: $Enums.Priority
+  status: $Enums.TaskStatus
+  stageId: string | null
+  milestoneId: string | null
+  projectId: string | null
+  areaId: string | null
+  goalId: string | null
   estimatedHours: number
   actualHours: number
+  dueDate: Date | null
+  scheduledDate: Date | null
   startedAt: Date | null
   completedAt: Date | null
   notes: string | null
@@ -287,45 +329,69 @@ export type TaskWhereInput = {
   NOT?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
   id?: Prisma.StringFilter<"Task"> | string
   userId?: Prisma.StringFilter<"Task"> | string
-  stageId?: Prisma.StringFilter<"Task"> | string
-  name?: Prisma.StringFilter<"Task"> | string
+  title?: Prisma.StringFilter<"Task"> | string
   description?: Prisma.StringNullableFilter<"Task"> | string | null
-  type?: Prisma.StringFilter<"Task"> | string
-  priority?: Prisma.StringFilter<"Task"> | string
-  status?: Prisma.StringFilter<"Task"> | string
+  type?: Prisma.EnumTaskTypeFilter<"Task"> | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFilter<"Task"> | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+  stageId?: Prisma.StringNullableFilter<"Task"> | string | null
+  milestoneId?: Prisma.StringNullableFilter<"Task"> | string | null
+  projectId?: Prisma.StringNullableFilter<"Task"> | string | null
+  areaId?: Prisma.StringNullableFilter<"Task"> | string | null
+  goalId?: Prisma.StringNullableFilter<"Task"> | string | null
   estimatedHours?: Prisma.FloatFilter<"Task"> | number
   actualHours?: Prisma.FloatFilter<"Task"> | number
+  dueDate?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  scheduledDate?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   startedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   notes?: Prisma.StringNullableFilter<"Task"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
-  stage?: Prisma.XOR<Prisma.StageScalarRelationFilter, Prisma.StageWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  stage?: Prisma.XOR<Prisma.StageNullableScalarRelationFilter, Prisma.StageWhereInput> | null
+  milestone?: Prisma.XOR<Prisma.MilestoneNullableScalarRelationFilter, Prisma.MilestoneWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  area?: Prisma.XOR<Prisma.AreaNullableScalarRelationFilter, Prisma.AreaWhereInput> | null
+  goal?: Prisma.XOR<Prisma.GoalNullableScalarRelationFilter, Prisma.GoalWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   dailyFocuses?: Prisma.DailyFocusListRelationFilter
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  calendarEvents?: Prisma.CalendarEventListRelationFilter
+  activities?: Prisma.ActivityListRelationFilter
 }
 
 export type TaskOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  stageId?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  stageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  milestoneId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  areaId?: Prisma.SortOrderInput | Prisma.SortOrder
+  goalId?: Prisma.SortOrderInput | Prisma.SortOrder
   estimatedHours?: Prisma.SortOrder
   actualHours?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  scheduledDate?: Prisma.SortOrderInput | Prisma.SortOrder
   startedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
   stage?: Prisma.StageOrderByWithRelationInput
+  milestone?: Prisma.MilestoneOrderByWithRelationInput
+  project?: Prisma.ProjectOrderByWithRelationInput
+  area?: Prisma.AreaOrderByWithRelationInput
+  goal?: Prisma.GoalOrderByWithRelationInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   dailyFocuses?: Prisma.DailyFocusOrderByRelationAggregateInput
-  user?: Prisma.UserOrderByWithRelationInput
+  calendarEvents?: Prisma.CalendarEventOrderByRelationAggregateInput
+  activities?: Prisma.ActivityOrderByRelationAggregateInput
 }
 
 export type TaskWhereUniqueInput = Prisma.AtLeast<{
@@ -334,36 +400,54 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.TaskWhereInput[]
   NOT?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
   userId?: Prisma.StringFilter<"Task"> | string
-  stageId?: Prisma.StringFilter<"Task"> | string
-  name?: Prisma.StringFilter<"Task"> | string
+  title?: Prisma.StringFilter<"Task"> | string
   description?: Prisma.StringNullableFilter<"Task"> | string | null
-  type?: Prisma.StringFilter<"Task"> | string
-  priority?: Prisma.StringFilter<"Task"> | string
-  status?: Prisma.StringFilter<"Task"> | string
+  type?: Prisma.EnumTaskTypeFilter<"Task"> | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFilter<"Task"> | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+  stageId?: Prisma.StringNullableFilter<"Task"> | string | null
+  milestoneId?: Prisma.StringNullableFilter<"Task"> | string | null
+  projectId?: Prisma.StringNullableFilter<"Task"> | string | null
+  areaId?: Prisma.StringNullableFilter<"Task"> | string | null
+  goalId?: Prisma.StringNullableFilter<"Task"> | string | null
   estimatedHours?: Prisma.FloatFilter<"Task"> | number
   actualHours?: Prisma.FloatFilter<"Task"> | number
+  dueDate?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  scheduledDate?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   startedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   notes?: Prisma.StringNullableFilter<"Task"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
-  stage?: Prisma.XOR<Prisma.StageScalarRelationFilter, Prisma.StageWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  stage?: Prisma.XOR<Prisma.StageNullableScalarRelationFilter, Prisma.StageWhereInput> | null
+  milestone?: Prisma.XOR<Prisma.MilestoneNullableScalarRelationFilter, Prisma.MilestoneWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  area?: Prisma.XOR<Prisma.AreaNullableScalarRelationFilter, Prisma.AreaWhereInput> | null
+  goal?: Prisma.XOR<Prisma.GoalNullableScalarRelationFilter, Prisma.GoalWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   dailyFocuses?: Prisma.DailyFocusListRelationFilter
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  calendarEvents?: Prisma.CalendarEventListRelationFilter
+  activities?: Prisma.ActivityListRelationFilter
 }, "id">
 
 export type TaskOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  stageId?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  stageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  milestoneId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  areaId?: Prisma.SortOrderInput | Prisma.SortOrder
+  goalId?: Prisma.SortOrderInput | Prisma.SortOrder
   estimatedHours?: Prisma.SortOrder
   actualHours?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  scheduledDate?: Prisma.SortOrderInput | Prisma.SortOrder
   startedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -382,14 +466,20 @@ export type TaskScalarWhereWithAggregatesInput = {
   NOT?: Prisma.TaskScalarWhereWithAggregatesInput | Prisma.TaskScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Task"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Task"> | string
-  stageId?: Prisma.StringWithAggregatesFilter<"Task"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Task"> | string
+  title?: Prisma.StringWithAggregatesFilter<"Task"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
-  type?: Prisma.StringWithAggregatesFilter<"Task"> | string
-  priority?: Prisma.StringWithAggregatesFilter<"Task"> | string
-  status?: Prisma.StringWithAggregatesFilter<"Task"> | string
+  type?: Prisma.EnumTaskTypeWithAggregatesFilter<"Task"> | $Enums.TaskType
+  priority?: Prisma.EnumPriorityWithAggregatesFilter<"Task"> | $Enums.Priority
+  status?: Prisma.EnumTaskStatusWithAggregatesFilter<"Task"> | $Enums.TaskStatus
+  stageId?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
+  milestoneId?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
+  projectId?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
+  areaId?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
+  goalId?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
   estimatedHours?: Prisma.FloatWithAggregatesFilter<"Task"> | number
   actualHours?: Prisma.FloatWithAggregatesFilter<"Task"> | number
+  dueDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
+  scheduledDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
   startedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
@@ -399,35 +489,49 @@ export type TaskScalarWhereWithAggregatesInput = {
 
 export type TaskCreateInput = {
   id?: string
-  name: string
+  title: string
   description?: string | null
-  type?: string
-  priority?: string
-  status?: string
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
   estimatedHours?: number
   actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  stage: Prisma.StageCreateNestedOneWithoutTasksInput
+  user: Prisma.UserCreateNestedOneWithoutTasksInput
+  stage?: Prisma.StageCreateNestedOneWithoutTasksInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  area?: Prisma.AreaCreateNestedOneWithoutTasksInput
+  goal?: Prisma.GoalCreateNestedOneWithoutTasksInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
   dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
-  user?: Prisma.UserCreateNestedOneWithoutTasksInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutTaskInput
 }
 
 export type TaskUncheckedCreateInput = {
   id?: string
-  userId?: string
-  stageId: string
-  name: string
+  userId: string
+  title: string
   description?: string | null
-  type?: string
-  priority?: string
-  status?: string
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
   estimatedHours?: number
   actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   notes?: string | null
@@ -435,39 +539,55 @@ export type TaskUncheckedCreateInput = {
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
   dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type TaskUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
   actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  stage?: Prisma.StageUpdateOneRequiredWithoutTasksNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  stage?: Prisma.StageUpdateOneWithoutTasksNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
+  area?: Prisma.AreaUpdateOneWithoutTasksNestedInput
+  goal?: Prisma.GoalUpdateOneWithoutTasksNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
   dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  stageId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
   actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -475,19 +595,27 @@ export type TaskUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
   dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskCreateManyInput = {
   id?: string
-  userId?: string
-  stageId: string
-  name: string
+  userId: string
+  title: string
   description?: string | null
-  type?: string
-  priority?: string
-  status?: string
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
   estimatedHours?: number
   actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   notes?: string | null
@@ -497,13 +625,15 @@ export type TaskCreateManyInput = {
 
 export type TaskUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
   actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -514,14 +644,20 @@ export type TaskUpdateManyMutationInput = {
 export type TaskUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  stageId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
   actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -542,14 +678,20 @@ export type TaskOrderByRelationAggregateInput = {
 export type TaskCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  stageId?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  stageId?: Prisma.SortOrder
+  milestoneId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  areaId?: Prisma.SortOrder
+  goalId?: Prisma.SortOrder
   estimatedHours?: Prisma.SortOrder
   actualHours?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
+  scheduledDate?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -565,14 +707,20 @@ export type TaskAvgOrderByAggregateInput = {
 export type TaskMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  stageId?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  stageId?: Prisma.SortOrder
+  milestoneId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  areaId?: Prisma.SortOrder
+  goalId?: Prisma.SortOrder
   estimatedHours?: Prisma.SortOrder
   actualHours?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
+  scheduledDate?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -583,14 +731,20 @@ export type TaskMaxOrderByAggregateInput = {
 export type TaskMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  stageId?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  stageId?: Prisma.SortOrder
+  milestoneId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  areaId?: Prisma.SortOrder
+  goalId?: Prisma.SortOrder
   estimatedHours?: Prisma.SortOrder
   actualHours?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
+  scheduledDate?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -608,82 +762,9 @@ export type TaskScalarRelationFilter = {
   isNot?: Prisma.TaskWhereInput
 }
 
-export type TaskCreateNestedManyWithoutStageInput = {
-  create?: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput> | Prisma.TaskCreateWithoutStageInput[] | Prisma.TaskUncheckedCreateWithoutStageInput[]
-  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutStageInput | Prisma.TaskCreateOrConnectWithoutStageInput[]
-  createMany?: Prisma.TaskCreateManyStageInputEnvelope
-  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
-}
-
-export type TaskUncheckedCreateNestedManyWithoutStageInput = {
-  create?: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput> | Prisma.TaskCreateWithoutStageInput[] | Prisma.TaskUncheckedCreateWithoutStageInput[]
-  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutStageInput | Prisma.TaskCreateOrConnectWithoutStageInput[]
-  createMany?: Prisma.TaskCreateManyStageInputEnvelope
-  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
-}
-
-export type TaskUpdateManyWithoutStageNestedInput = {
-  create?: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput> | Prisma.TaskCreateWithoutStageInput[] | Prisma.TaskUncheckedCreateWithoutStageInput[]
-  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutStageInput | Prisma.TaskCreateOrConnectWithoutStageInput[]
-  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutStageInput | Prisma.TaskUpsertWithWhereUniqueWithoutStageInput[]
-  createMany?: Prisma.TaskCreateManyStageInputEnvelope
-  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
-  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
-  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
-  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
-  update?: Prisma.TaskUpdateWithWhereUniqueWithoutStageInput | Prisma.TaskUpdateWithWhereUniqueWithoutStageInput[]
-  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutStageInput | Prisma.TaskUpdateManyWithWhereWithoutStageInput[]
-  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
-}
-
-export type TaskUncheckedUpdateManyWithoutStageNestedInput = {
-  create?: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput> | Prisma.TaskCreateWithoutStageInput[] | Prisma.TaskUncheckedCreateWithoutStageInput[]
-  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutStageInput | Prisma.TaskCreateOrConnectWithoutStageInput[]
-  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutStageInput | Prisma.TaskUpsertWithWhereUniqueWithoutStageInput[]
-  createMany?: Prisma.TaskCreateManyStageInputEnvelope
-  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
-  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
-  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
-  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
-  update?: Prisma.TaskUpdateWithWhereUniqueWithoutStageInput | Prisma.TaskUpdateWithWhereUniqueWithoutStageInput[]
-  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutStageInput | Prisma.TaskUpdateManyWithWhereWithoutStageInput[]
-  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
-}
-
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type TaskCreateNestedOneWithoutSessionsInput = {
-  create?: Prisma.XOR<Prisma.TaskCreateWithoutSessionsInput, Prisma.TaskUncheckedCreateWithoutSessionsInput>
-  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutSessionsInput
-  connect?: Prisma.TaskWhereUniqueInput
-}
-
-export type TaskUpdateOneRequiredWithoutSessionsNestedInput = {
-  create?: Prisma.XOR<Prisma.TaskCreateWithoutSessionsInput, Prisma.TaskUncheckedCreateWithoutSessionsInput>
-  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutSessionsInput
-  upsert?: Prisma.TaskUpsertWithoutSessionsInput
-  connect?: Prisma.TaskWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutSessionsInput, Prisma.TaskUpdateWithoutSessionsInput>, Prisma.TaskUncheckedUpdateWithoutSessionsInput>
-}
-
-export type TaskCreateNestedOneWithoutDailyFocusesInput = {
-  create?: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
-  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutDailyFocusesInput
-  connect?: Prisma.TaskWhereUniqueInput
-}
-
-export type TaskUpdateOneRequiredWithoutDailyFocusesNestedInput = {
-  create?: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
-  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutDailyFocusesInput
-  upsert?: Prisma.TaskUpsertWithoutDailyFocusesInput
-  connect?: Prisma.TaskWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutDailyFocusesInput, Prisma.TaskUpdateWithoutDailyFocusesInput>, Prisma.TaskUncheckedUpdateWithoutDailyFocusesInput>
+export type TaskNullableScalarRelationFilter = {
+  is?: Prisma.TaskWhereInput | null
+  isNot?: Prisma.TaskWhereInput | null
 }
 
 export type TaskCreateNestedManyWithoutUserInput = {
@@ -728,304 +809,327 @@ export type TaskUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskCreateWithoutStageInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type?: string
-  priority?: string
-  status?: string
-  estimatedHours?: number
-  actualHours?: number
-  startedAt?: Date | string | null
-  completedAt?: Date | string | null
-  notes?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
-  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
-  user?: Prisma.UserCreateNestedOneWithoutTasksInput
+export type TaskCreateNestedManyWithoutAreaInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutAreaInput, Prisma.TaskUncheckedCreateWithoutAreaInput> | Prisma.TaskCreateWithoutAreaInput[] | Prisma.TaskUncheckedCreateWithoutAreaInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutAreaInput | Prisma.TaskCreateOrConnectWithoutAreaInput[]
+  createMany?: Prisma.TaskCreateManyAreaInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
-export type TaskUncheckedCreateWithoutStageInput = {
-  id?: string
-  userId?: string
-  name: string
-  description?: string | null
-  type?: string
-  priority?: string
-  status?: string
-  estimatedHours?: number
-  actualHours?: number
-  startedAt?: Date | string | null
-  completedAt?: Date | string | null
-  notes?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
-  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+export type TaskUncheckedCreateNestedManyWithoutAreaInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutAreaInput, Prisma.TaskUncheckedCreateWithoutAreaInput> | Prisma.TaskCreateWithoutAreaInput[] | Prisma.TaskUncheckedCreateWithoutAreaInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutAreaInput | Prisma.TaskCreateOrConnectWithoutAreaInput[]
+  createMany?: Prisma.TaskCreateManyAreaInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
-export type TaskCreateOrConnectWithoutStageInput = {
-  where: Prisma.TaskWhereUniqueInput
-  create: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput>
+export type TaskUpdateManyWithoutAreaNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutAreaInput, Prisma.TaskUncheckedCreateWithoutAreaInput> | Prisma.TaskCreateWithoutAreaInput[] | Prisma.TaskUncheckedCreateWithoutAreaInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutAreaInput | Prisma.TaskCreateOrConnectWithoutAreaInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutAreaInput | Prisma.TaskUpsertWithWhereUniqueWithoutAreaInput[]
+  createMany?: Prisma.TaskCreateManyAreaInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutAreaInput | Prisma.TaskUpdateWithWhereUniqueWithoutAreaInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutAreaInput | Prisma.TaskUpdateManyWithWhereWithoutAreaInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskCreateManyStageInputEnvelope = {
-  data: Prisma.TaskCreateManyStageInput | Prisma.TaskCreateManyStageInput[]
-  skipDuplicates?: boolean
+export type TaskUncheckedUpdateManyWithoutAreaNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutAreaInput, Prisma.TaskUncheckedCreateWithoutAreaInput> | Prisma.TaskCreateWithoutAreaInput[] | Prisma.TaskUncheckedCreateWithoutAreaInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutAreaInput | Prisma.TaskCreateOrConnectWithoutAreaInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutAreaInput | Prisma.TaskUpsertWithWhereUniqueWithoutAreaInput[]
+  createMany?: Prisma.TaskCreateManyAreaInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutAreaInput | Prisma.TaskUpdateWithWhereUniqueWithoutAreaInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutAreaInput | Prisma.TaskUpdateManyWithWhereWithoutAreaInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskUpsertWithWhereUniqueWithoutStageInput = {
-  where: Prisma.TaskWhereUniqueInput
-  update: Prisma.XOR<Prisma.TaskUpdateWithoutStageInput, Prisma.TaskUncheckedUpdateWithoutStageInput>
-  create: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput>
+export type TaskCreateNestedManyWithoutGoalInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutGoalInput, Prisma.TaskUncheckedCreateWithoutGoalInput> | Prisma.TaskCreateWithoutGoalInput[] | Prisma.TaskUncheckedCreateWithoutGoalInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutGoalInput | Prisma.TaskCreateOrConnectWithoutGoalInput[]
+  createMany?: Prisma.TaskCreateManyGoalInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
-export type TaskUpdateWithWhereUniqueWithoutStageInput = {
-  where: Prisma.TaskWhereUniqueInput
-  data: Prisma.XOR<Prisma.TaskUpdateWithoutStageInput, Prisma.TaskUncheckedUpdateWithoutStageInput>
+export type TaskUncheckedCreateNestedManyWithoutGoalInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutGoalInput, Prisma.TaskUncheckedCreateWithoutGoalInput> | Prisma.TaskCreateWithoutGoalInput[] | Prisma.TaskUncheckedCreateWithoutGoalInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutGoalInput | Prisma.TaskCreateOrConnectWithoutGoalInput[]
+  createMany?: Prisma.TaskCreateManyGoalInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
-export type TaskUpdateManyWithWhereWithoutStageInput = {
-  where: Prisma.TaskScalarWhereInput
-  data: Prisma.XOR<Prisma.TaskUpdateManyMutationInput, Prisma.TaskUncheckedUpdateManyWithoutStageInput>
+export type TaskUpdateManyWithoutGoalNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutGoalInput, Prisma.TaskUncheckedCreateWithoutGoalInput> | Prisma.TaskCreateWithoutGoalInput[] | Prisma.TaskUncheckedCreateWithoutGoalInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutGoalInput | Prisma.TaskCreateOrConnectWithoutGoalInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutGoalInput | Prisma.TaskUpsertWithWhereUniqueWithoutGoalInput[]
+  createMany?: Prisma.TaskCreateManyGoalInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutGoalInput | Prisma.TaskUpdateWithWhereUniqueWithoutGoalInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutGoalInput | Prisma.TaskUpdateManyWithWhereWithoutGoalInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskScalarWhereInput = {
-  AND?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
-  OR?: Prisma.TaskScalarWhereInput[]
-  NOT?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
-  id?: Prisma.StringFilter<"Task"> | string
-  userId?: Prisma.StringFilter<"Task"> | string
-  stageId?: Prisma.StringFilter<"Task"> | string
-  name?: Prisma.StringFilter<"Task"> | string
-  description?: Prisma.StringNullableFilter<"Task"> | string | null
-  type?: Prisma.StringFilter<"Task"> | string
-  priority?: Prisma.StringFilter<"Task"> | string
-  status?: Prisma.StringFilter<"Task"> | string
-  estimatedHours?: Prisma.FloatFilter<"Task"> | number
-  actualHours?: Prisma.FloatFilter<"Task"> | number
-  startedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
-  completedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
-  notes?: Prisma.StringNullableFilter<"Task"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
+export type TaskUncheckedUpdateManyWithoutGoalNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutGoalInput, Prisma.TaskUncheckedCreateWithoutGoalInput> | Prisma.TaskCreateWithoutGoalInput[] | Prisma.TaskUncheckedCreateWithoutGoalInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutGoalInput | Prisma.TaskCreateOrConnectWithoutGoalInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutGoalInput | Prisma.TaskUpsertWithWhereUniqueWithoutGoalInput[]
+  createMany?: Prisma.TaskCreateManyGoalInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutGoalInput | Prisma.TaskUpdateWithWhereUniqueWithoutGoalInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutGoalInput | Prisma.TaskUpdateManyWithWhereWithoutGoalInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskCreateWithoutSessionsInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type?: string
-  priority?: string
-  status?: string
-  estimatedHours?: number
-  actualHours?: number
-  startedAt?: Date | string | null
-  completedAt?: Date | string | null
-  notes?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  stage: Prisma.StageCreateNestedOneWithoutTasksInput
-  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
-  user?: Prisma.UserCreateNestedOneWithoutTasksInput
+export type TaskCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput> | Prisma.TaskCreateWithoutProjectInput[] | Prisma.TaskUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutProjectInput | Prisma.TaskCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.TaskCreateManyProjectInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
-export type TaskUncheckedCreateWithoutSessionsInput = {
-  id?: string
-  userId?: string
-  stageId: string
-  name: string
-  description?: string | null
-  type?: string
-  priority?: string
-  status?: string
-  estimatedHours?: number
-  actualHours?: number
-  startedAt?: Date | string | null
-  completedAt?: Date | string | null
-  notes?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+export type TaskUncheckedCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput> | Prisma.TaskCreateWithoutProjectInput[] | Prisma.TaskUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutProjectInput | Prisma.TaskCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.TaskCreateManyProjectInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
-export type TaskCreateOrConnectWithoutSessionsInput = {
-  where: Prisma.TaskWhereUniqueInput
-  create: Prisma.XOR<Prisma.TaskCreateWithoutSessionsInput, Prisma.TaskUncheckedCreateWithoutSessionsInput>
+export type TaskUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput> | Prisma.TaskCreateWithoutProjectInput[] | Prisma.TaskUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutProjectInput | Prisma.TaskCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutProjectInput | Prisma.TaskUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.TaskCreateManyProjectInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutProjectInput | Prisma.TaskUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutProjectInput | Prisma.TaskUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskUpsertWithoutSessionsInput = {
-  update: Prisma.XOR<Prisma.TaskUpdateWithoutSessionsInput, Prisma.TaskUncheckedUpdateWithoutSessionsInput>
-  create: Prisma.XOR<Prisma.TaskCreateWithoutSessionsInput, Prisma.TaskUncheckedCreateWithoutSessionsInput>
-  where?: Prisma.TaskWhereInput
+export type TaskUncheckedUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput> | Prisma.TaskCreateWithoutProjectInput[] | Prisma.TaskUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutProjectInput | Prisma.TaskCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutProjectInput | Prisma.TaskUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.TaskCreateManyProjectInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutProjectInput | Prisma.TaskUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutProjectInput | Prisma.TaskUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskUpdateToOneWithWhereWithoutSessionsInput = {
-  where?: Prisma.TaskWhereInput
-  data: Prisma.XOR<Prisma.TaskUpdateWithoutSessionsInput, Prisma.TaskUncheckedUpdateWithoutSessionsInput>
+export type TaskCreateNestedManyWithoutStageInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput> | Prisma.TaskCreateWithoutStageInput[] | Prisma.TaskUncheckedCreateWithoutStageInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutStageInput | Prisma.TaskCreateOrConnectWithoutStageInput[]
+  createMany?: Prisma.TaskCreateManyStageInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
-export type TaskUpdateWithoutSessionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  stage?: Prisma.StageUpdateOneRequiredWithoutTasksNestedInput
-  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+export type TaskUncheckedCreateNestedManyWithoutStageInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput> | Prisma.TaskCreateWithoutStageInput[] | Prisma.TaskUncheckedCreateWithoutStageInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutStageInput | Prisma.TaskCreateOrConnectWithoutStageInput[]
+  createMany?: Prisma.TaskCreateManyStageInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
-export type TaskUncheckedUpdateWithoutSessionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  stageId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+export type TaskUpdateManyWithoutStageNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput> | Prisma.TaskCreateWithoutStageInput[] | Prisma.TaskUncheckedCreateWithoutStageInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutStageInput | Prisma.TaskCreateOrConnectWithoutStageInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutStageInput | Prisma.TaskUpsertWithWhereUniqueWithoutStageInput[]
+  createMany?: Prisma.TaskCreateManyStageInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutStageInput | Prisma.TaskUpdateWithWhereUniqueWithoutStageInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutStageInput | Prisma.TaskUpdateManyWithWhereWithoutStageInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskCreateWithoutDailyFocusesInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type?: string
-  priority?: string
-  status?: string
-  estimatedHours?: number
-  actualHours?: number
-  startedAt?: Date | string | null
-  completedAt?: Date | string | null
-  notes?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  stage: Prisma.StageCreateNestedOneWithoutTasksInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
-  user?: Prisma.UserCreateNestedOneWithoutTasksInput
+export type TaskUncheckedUpdateManyWithoutStageNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput> | Prisma.TaskCreateWithoutStageInput[] | Prisma.TaskUncheckedCreateWithoutStageInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutStageInput | Prisma.TaskCreateOrConnectWithoutStageInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutStageInput | Prisma.TaskUpsertWithWhereUniqueWithoutStageInput[]
+  createMany?: Prisma.TaskCreateManyStageInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutStageInput | Prisma.TaskUpdateWithWhereUniqueWithoutStageInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutStageInput | Prisma.TaskUpdateManyWithWhereWithoutStageInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskUncheckedCreateWithoutDailyFocusesInput = {
-  id?: string
-  userId?: string
-  stageId: string
-  name: string
-  description?: string | null
-  type?: string
-  priority?: string
-  status?: string
-  estimatedHours?: number
-  actualHours?: number
-  startedAt?: Date | string | null
-  completedAt?: Date | string | null
-  notes?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+export type TaskCreateNestedManyWithoutMilestoneInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutMilestoneInput, Prisma.TaskUncheckedCreateWithoutMilestoneInput> | Prisma.TaskCreateWithoutMilestoneInput[] | Prisma.TaskUncheckedCreateWithoutMilestoneInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutMilestoneInput | Prisma.TaskCreateOrConnectWithoutMilestoneInput[]
+  createMany?: Prisma.TaskCreateManyMilestoneInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
-export type TaskCreateOrConnectWithoutDailyFocusesInput = {
-  where: Prisma.TaskWhereUniqueInput
-  create: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
+export type TaskUncheckedCreateNestedManyWithoutMilestoneInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutMilestoneInput, Prisma.TaskUncheckedCreateWithoutMilestoneInput> | Prisma.TaskCreateWithoutMilestoneInput[] | Prisma.TaskUncheckedCreateWithoutMilestoneInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutMilestoneInput | Prisma.TaskCreateOrConnectWithoutMilestoneInput[]
+  createMany?: Prisma.TaskCreateManyMilestoneInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
-export type TaskUpsertWithoutDailyFocusesInput = {
-  update: Prisma.XOR<Prisma.TaskUpdateWithoutDailyFocusesInput, Prisma.TaskUncheckedUpdateWithoutDailyFocusesInput>
-  create: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
-  where?: Prisma.TaskWhereInput
+export type TaskUpdateManyWithoutMilestoneNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutMilestoneInput, Prisma.TaskUncheckedCreateWithoutMilestoneInput> | Prisma.TaskCreateWithoutMilestoneInput[] | Prisma.TaskUncheckedCreateWithoutMilestoneInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutMilestoneInput | Prisma.TaskCreateOrConnectWithoutMilestoneInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutMilestoneInput | Prisma.TaskUpsertWithWhereUniqueWithoutMilestoneInput[]
+  createMany?: Prisma.TaskCreateManyMilestoneInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutMilestoneInput | Prisma.TaskUpdateWithWhereUniqueWithoutMilestoneInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutMilestoneInput | Prisma.TaskUpdateManyWithWhereWithoutMilestoneInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskUpdateToOneWithWhereWithoutDailyFocusesInput = {
-  where?: Prisma.TaskWhereInput
-  data: Prisma.XOR<Prisma.TaskUpdateWithoutDailyFocusesInput, Prisma.TaskUncheckedUpdateWithoutDailyFocusesInput>
+export type TaskUncheckedUpdateManyWithoutMilestoneNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutMilestoneInput, Prisma.TaskUncheckedCreateWithoutMilestoneInput> | Prisma.TaskCreateWithoutMilestoneInput[] | Prisma.TaskUncheckedCreateWithoutMilestoneInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutMilestoneInput | Prisma.TaskCreateOrConnectWithoutMilestoneInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutMilestoneInput | Prisma.TaskUpsertWithWhereUniqueWithoutMilestoneInput[]
+  createMany?: Prisma.TaskCreateManyMilestoneInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutMilestoneInput | Prisma.TaskUpdateWithWhereUniqueWithoutMilestoneInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutMilestoneInput | Prisma.TaskUpdateManyWithWhereWithoutMilestoneInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type TaskUpdateWithoutDailyFocusesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  stage?: Prisma.StageUpdateOneRequiredWithoutTasksNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+export type EnumTaskTypeFieldUpdateOperationsInput = {
+  set?: $Enums.TaskType
 }
 
-export type TaskUncheckedUpdateWithoutDailyFocusesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  stageId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
+export type EnumTaskStatusFieldUpdateOperationsInput = {
+  set?: $Enums.TaskStatus
+}
+
+export type TaskCreateNestedOneWithoutSessionsInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutSessionsInput, Prisma.TaskUncheckedCreateWithoutSessionsInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutSessionsInput
+  connect?: Prisma.TaskWhereUniqueInput
+}
+
+export type TaskUpdateOneRequiredWithoutSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutSessionsInput, Prisma.TaskUncheckedCreateWithoutSessionsInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutSessionsInput
+  upsert?: Prisma.TaskUpsertWithoutSessionsInput
+  connect?: Prisma.TaskWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutSessionsInput, Prisma.TaskUpdateWithoutSessionsInput>, Prisma.TaskUncheckedUpdateWithoutSessionsInput>
+}
+
+export type TaskCreateNestedOneWithoutDailyFocusesInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutDailyFocusesInput
+  connect?: Prisma.TaskWhereUniqueInput
+}
+
+export type TaskUpdateOneRequiredWithoutDailyFocusesNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutDailyFocusesInput
+  upsert?: Prisma.TaskUpsertWithoutDailyFocusesInput
+  connect?: Prisma.TaskWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutDailyFocusesInput, Prisma.TaskUpdateWithoutDailyFocusesInput>, Prisma.TaskUncheckedUpdateWithoutDailyFocusesInput>
+}
+
+export type TaskCreateNestedOneWithoutCalendarEventsInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutCalendarEventsInput, Prisma.TaskUncheckedCreateWithoutCalendarEventsInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutCalendarEventsInput
+  connect?: Prisma.TaskWhereUniqueInput
+}
+
+export type TaskUpdateOneWithoutCalendarEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutCalendarEventsInput, Prisma.TaskUncheckedCreateWithoutCalendarEventsInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutCalendarEventsInput
+  upsert?: Prisma.TaskUpsertWithoutCalendarEventsInput
+  disconnect?: Prisma.TaskWhereInput | boolean
+  delete?: Prisma.TaskWhereInput | boolean
+  connect?: Prisma.TaskWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutCalendarEventsInput, Prisma.TaskUpdateWithoutCalendarEventsInput>, Prisma.TaskUncheckedUpdateWithoutCalendarEventsInput>
+}
+
+export type TaskCreateNestedOneWithoutActivitiesInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutActivitiesInput, Prisma.TaskUncheckedCreateWithoutActivitiesInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutActivitiesInput
+  connect?: Prisma.TaskWhereUniqueInput
+}
+
+export type TaskUpdateOneWithoutActivitiesNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutActivitiesInput, Prisma.TaskUncheckedCreateWithoutActivitiesInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutActivitiesInput
+  upsert?: Prisma.TaskUpsertWithoutActivitiesInput
+  disconnect?: Prisma.TaskWhereInput | boolean
+  delete?: Prisma.TaskWhereInput | boolean
+  connect?: Prisma.TaskWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutActivitiesInput, Prisma.TaskUpdateWithoutActivitiesInput>, Prisma.TaskUncheckedUpdateWithoutActivitiesInput>
 }
 
 export type TaskCreateWithoutUserInput = {
   id?: string
-  name: string
+  title: string
   description?: string | null
-  type?: string
-  priority?: string
-  status?: string
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
   estimatedHours?: number
   actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  stage: Prisma.StageCreateNestedOneWithoutTasksInput
+  stage?: Prisma.StageCreateNestedOneWithoutTasksInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  area?: Prisma.AreaCreateNestedOneWithoutTasksInput
+  goal?: Prisma.GoalCreateNestedOneWithoutTasksInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
   dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutTaskInput
 }
 
 export type TaskUncheckedCreateWithoutUserInput = {
   id?: string
-  stageId: string
-  name: string
+  title: string
   description?: string | null
-  type?: string
-  priority?: string
-  status?: string
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
   estimatedHours?: number
   actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   notes?: string | null
@@ -1033,6 +1137,8 @@ export type TaskUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
   dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type TaskCreateOrConnectWithoutUserInput = {
@@ -1061,52 +1167,795 @@ export type TaskUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.TaskUpdateManyMutationInput, Prisma.TaskUncheckedUpdateManyWithoutUserInput>
 }
 
-export type TaskCreateManyStageInput = {
+export type TaskScalarWhereInput = {
+  AND?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
+  OR?: Prisma.TaskScalarWhereInput[]
+  NOT?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
+  id?: Prisma.StringFilter<"Task"> | string
+  userId?: Prisma.StringFilter<"Task"> | string
+  title?: Prisma.StringFilter<"Task"> | string
+  description?: Prisma.StringNullableFilter<"Task"> | string | null
+  type?: Prisma.EnumTaskTypeFilter<"Task"> | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFilter<"Task"> | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+  stageId?: Prisma.StringNullableFilter<"Task"> | string | null
+  milestoneId?: Prisma.StringNullableFilter<"Task"> | string | null
+  projectId?: Prisma.StringNullableFilter<"Task"> | string | null
+  areaId?: Prisma.StringNullableFilter<"Task"> | string | null
+  goalId?: Prisma.StringNullableFilter<"Task"> | string | null
+  estimatedHours?: Prisma.FloatFilter<"Task"> | number
+  actualHours?: Prisma.FloatFilter<"Task"> | number
+  dueDate?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  scheduledDate?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  startedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  completedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  notes?: Prisma.StringNullableFilter<"Task"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
+}
+
+export type TaskCreateWithoutAreaInput = {
   id?: string
-  userId?: string
-  name: string
+  title: string
   description?: string | null
-  type?: string
-  priority?: string
-  status?: string
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
   estimatedHours?: number
   actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksInput
+  stage?: Prisma.StageCreateNestedOneWithoutTasksInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  goal?: Prisma.GoalCreateNestedOneWithoutTasksInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutTaskInput
 }
 
-export type TaskUpdateWithoutStageInput = {
+export type TaskUncheckedCreateWithoutAreaInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type TaskCreateOrConnectWithoutAreaInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutAreaInput, Prisma.TaskUncheckedCreateWithoutAreaInput>
+}
+
+export type TaskCreateManyAreaInputEnvelope = {
+  data: Prisma.TaskCreateManyAreaInput | Prisma.TaskCreateManyAreaInput[]
+  skipDuplicates?: boolean
+}
+
+export type TaskUpsertWithWhereUniqueWithoutAreaInput = {
+  where: Prisma.TaskWhereUniqueInput
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutAreaInput, Prisma.TaskUncheckedUpdateWithoutAreaInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutAreaInput, Prisma.TaskUncheckedCreateWithoutAreaInput>
+}
+
+export type TaskUpdateWithWhereUniqueWithoutAreaInput = {
+  where: Prisma.TaskWhereUniqueInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutAreaInput, Prisma.TaskUncheckedUpdateWithoutAreaInput>
+}
+
+export type TaskUpdateManyWithWhereWithoutAreaInput = {
+  where: Prisma.TaskScalarWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateManyMutationInput, Prisma.TaskUncheckedUpdateManyWithoutAreaInput>
+}
+
+export type TaskCreateWithoutGoalInput = {
+  id?: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksInput
+  stage?: Prisma.StageCreateNestedOneWithoutTasksInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  area?: Prisma.AreaCreateNestedOneWithoutTasksInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutTaskInput
+}
+
+export type TaskUncheckedCreateWithoutGoalInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type TaskCreateOrConnectWithoutGoalInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutGoalInput, Prisma.TaskUncheckedCreateWithoutGoalInput>
+}
+
+export type TaskCreateManyGoalInputEnvelope = {
+  data: Prisma.TaskCreateManyGoalInput | Prisma.TaskCreateManyGoalInput[]
+  skipDuplicates?: boolean
+}
+
+export type TaskUpsertWithWhereUniqueWithoutGoalInput = {
+  where: Prisma.TaskWhereUniqueInput
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutGoalInput, Prisma.TaskUncheckedUpdateWithoutGoalInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutGoalInput, Prisma.TaskUncheckedCreateWithoutGoalInput>
+}
+
+export type TaskUpdateWithWhereUniqueWithoutGoalInput = {
+  where: Prisma.TaskWhereUniqueInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutGoalInput, Prisma.TaskUncheckedUpdateWithoutGoalInput>
+}
+
+export type TaskUpdateManyWithWhereWithoutGoalInput = {
+  where: Prisma.TaskScalarWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateManyMutationInput, Prisma.TaskUncheckedUpdateManyWithoutGoalInput>
+}
+
+export type TaskCreateWithoutProjectInput = {
+  id?: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksInput
+  stage?: Prisma.StageCreateNestedOneWithoutTasksInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutTasksInput
+  area?: Prisma.AreaCreateNestedOneWithoutTasksInput
+  goal?: Prisma.GoalCreateNestedOneWithoutTasksInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutTaskInput
+}
+
+export type TaskUncheckedCreateWithoutProjectInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  areaId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type TaskCreateOrConnectWithoutProjectInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput>
+}
+
+export type TaskCreateManyProjectInputEnvelope = {
+  data: Prisma.TaskCreateManyProjectInput | Prisma.TaskCreateManyProjectInput[]
+  skipDuplicates?: boolean
+}
+
+export type TaskUpsertWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.TaskWhereUniqueInput
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutProjectInput, Prisma.TaskUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput>
+}
+
+export type TaskUpdateWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.TaskWhereUniqueInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutProjectInput, Prisma.TaskUncheckedUpdateWithoutProjectInput>
+}
+
+export type TaskUpdateManyWithWhereWithoutProjectInput = {
+  where: Prisma.TaskScalarWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateManyMutationInput, Prisma.TaskUncheckedUpdateManyWithoutProjectInput>
+}
+
+export type TaskCreateWithoutStageInput = {
+  id?: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  area?: Prisma.AreaCreateNestedOneWithoutTasksInput
+  goal?: Prisma.GoalCreateNestedOneWithoutTasksInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutTaskInput
+}
+
+export type TaskUncheckedCreateWithoutStageInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type TaskCreateOrConnectWithoutStageInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput>
+}
+
+export type TaskCreateManyStageInputEnvelope = {
+  data: Prisma.TaskCreateManyStageInput | Prisma.TaskCreateManyStageInput[]
+  skipDuplicates?: boolean
+}
+
+export type TaskUpsertWithWhereUniqueWithoutStageInput = {
+  where: Prisma.TaskWhereUniqueInput
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutStageInput, Prisma.TaskUncheckedUpdateWithoutStageInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutStageInput, Prisma.TaskUncheckedCreateWithoutStageInput>
+}
+
+export type TaskUpdateWithWhereUniqueWithoutStageInput = {
+  where: Prisma.TaskWhereUniqueInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutStageInput, Prisma.TaskUncheckedUpdateWithoutStageInput>
+}
+
+export type TaskUpdateManyWithWhereWithoutStageInput = {
+  where: Prisma.TaskScalarWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateManyMutationInput, Prisma.TaskUncheckedUpdateManyWithoutStageInput>
+}
+
+export type TaskCreateWithoutMilestoneInput = {
+  id?: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksInput
+  stage?: Prisma.StageCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  area?: Prisma.AreaCreateNestedOneWithoutTasksInput
+  goal?: Prisma.GoalCreateNestedOneWithoutTasksInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutTaskInput
+}
+
+export type TaskUncheckedCreateWithoutMilestoneInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type TaskCreateOrConnectWithoutMilestoneInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutMilestoneInput, Prisma.TaskUncheckedCreateWithoutMilestoneInput>
+}
+
+export type TaskCreateManyMilestoneInputEnvelope = {
+  data: Prisma.TaskCreateManyMilestoneInput | Prisma.TaskCreateManyMilestoneInput[]
+  skipDuplicates?: boolean
+}
+
+export type TaskUpsertWithWhereUniqueWithoutMilestoneInput = {
+  where: Prisma.TaskWhereUniqueInput
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutMilestoneInput, Prisma.TaskUncheckedUpdateWithoutMilestoneInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutMilestoneInput, Prisma.TaskUncheckedCreateWithoutMilestoneInput>
+}
+
+export type TaskUpdateWithWhereUniqueWithoutMilestoneInput = {
+  where: Prisma.TaskWhereUniqueInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutMilestoneInput, Prisma.TaskUncheckedUpdateWithoutMilestoneInput>
+}
+
+export type TaskUpdateManyWithWhereWithoutMilestoneInput = {
+  where: Prisma.TaskScalarWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateManyMutationInput, Prisma.TaskUncheckedUpdateManyWithoutMilestoneInput>
+}
+
+export type TaskCreateWithoutSessionsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksInput
+  stage?: Prisma.StageCreateNestedOneWithoutTasksInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  area?: Prisma.AreaCreateNestedOneWithoutTasksInput
+  goal?: Prisma.GoalCreateNestedOneWithoutTasksInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutTaskInput
+}
+
+export type TaskUncheckedCreateWithoutSessionsInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type TaskCreateOrConnectWithoutSessionsInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutSessionsInput, Prisma.TaskUncheckedCreateWithoutSessionsInput>
+}
+
+export type TaskUpsertWithoutSessionsInput = {
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutSessionsInput, Prisma.TaskUncheckedUpdateWithoutSessionsInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutSessionsInput, Prisma.TaskUncheckedCreateWithoutSessionsInput>
+  where?: Prisma.TaskWhereInput
+}
+
+export type TaskUpdateToOneWithWhereWithoutSessionsInput = {
+  where?: Prisma.TaskWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutSessionsInput, Prisma.TaskUncheckedUpdateWithoutSessionsInput>
+}
+
+export type TaskUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
   actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
-  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  stage?: Prisma.StageUpdateOneWithoutTasksNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
+  area?: Prisma.AreaUpdateOneWithoutTasksNestedInput
+  goal?: Prisma.GoalUpdateOneWithoutTasksNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutTaskNestedInput
 }
 
-export type TaskUncheckedUpdateWithoutStageInput = {
+export type TaskUncheckedUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
   actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskCreateWithoutDailyFocusesInput = {
+  id?: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksInput
+  stage?: Prisma.StageCreateNestedOneWithoutTasksInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  area?: Prisma.AreaCreateNestedOneWithoutTasksInput
+  goal?: Prisma.GoalCreateNestedOneWithoutTasksInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutTaskInput
+}
+
+export type TaskUncheckedCreateWithoutDailyFocusesInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type TaskCreateOrConnectWithoutDailyFocusesInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
+}
+
+export type TaskUpsertWithoutDailyFocusesInput = {
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutDailyFocusesInput, Prisma.TaskUncheckedUpdateWithoutDailyFocusesInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutDailyFocusesInput, Prisma.TaskUncheckedCreateWithoutDailyFocusesInput>
+  where?: Prisma.TaskWhereInput
+}
+
+export type TaskUpdateToOneWithWhereWithoutDailyFocusesInput = {
+  where?: Prisma.TaskWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutDailyFocusesInput, Prisma.TaskUncheckedUpdateWithoutDailyFocusesInput>
+}
+
+export type TaskUpdateWithoutDailyFocusesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  stage?: Prisma.StageUpdateOneWithoutTasksNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
+  area?: Prisma.AreaUpdateOneWithoutTasksNestedInput
+  goal?: Prisma.GoalUpdateOneWithoutTasksNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutDailyFocusesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskCreateWithoutCalendarEventsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksInput
+  stage?: Prisma.StageCreateNestedOneWithoutTasksInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  area?: Prisma.AreaCreateNestedOneWithoutTasksInput
+  goal?: Prisma.GoalCreateNestedOneWithoutTasksInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutTaskInput
+}
+
+export type TaskUncheckedCreateWithoutCalendarEventsInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type TaskCreateOrConnectWithoutCalendarEventsInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutCalendarEventsInput, Prisma.TaskUncheckedCreateWithoutCalendarEventsInput>
+}
+
+export type TaskUpsertWithoutCalendarEventsInput = {
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutCalendarEventsInput, Prisma.TaskUncheckedUpdateWithoutCalendarEventsInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutCalendarEventsInput, Prisma.TaskUncheckedCreateWithoutCalendarEventsInput>
+  where?: Prisma.TaskWhereInput
+}
+
+export type TaskUpdateToOneWithWhereWithoutCalendarEventsInput = {
+  where?: Prisma.TaskWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutCalendarEventsInput, Prisma.TaskUncheckedUpdateWithoutCalendarEventsInput>
+}
+
+export type TaskUpdateWithoutCalendarEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  stage?: Prisma.StageUpdateOneWithoutTasksNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
+  area?: Prisma.AreaUpdateOneWithoutTasksNestedInput
+  goal?: Prisma.GoalUpdateOneWithoutTasksNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutCalendarEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1114,35 +1963,149 @@ export type TaskUncheckedUpdateWithoutStageInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
   dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutTaskNestedInput
 }
 
-export type TaskUncheckedUpdateManyWithoutStageInput = {
+export type TaskCreateWithoutActivitiesInput = {
+  id?: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksInput
+  stage?: Prisma.StageCreateNestedOneWithoutTasksInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  area?: Prisma.AreaCreateNestedOneWithoutTasksInput
+  goal?: Prisma.GoalCreateNestedOneWithoutTasksInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutTaskInput
+}
+
+export type TaskUncheckedCreateWithoutActivitiesInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedCreateNestedManyWithoutTaskInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type TaskCreateOrConnectWithoutActivitiesInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutActivitiesInput, Prisma.TaskUncheckedCreateWithoutActivitiesInput>
+}
+
+export type TaskUpsertWithoutActivitiesInput = {
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutActivitiesInput, Prisma.TaskUncheckedUpdateWithoutActivitiesInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutActivitiesInput, Prisma.TaskUncheckedCreateWithoutActivitiesInput>
+  where?: Prisma.TaskWhereInput
+}
+
+export type TaskUpdateToOneWithWhereWithoutActivitiesInput = {
+  where?: Prisma.TaskWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutActivitiesInput, Prisma.TaskUncheckedUpdateWithoutActivitiesInput>
+}
+
+export type TaskUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
   actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  stage?: Prisma.StageUpdateOneWithoutTasksNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
+  area?: Prisma.AreaUpdateOneWithoutTasksNestedInput
+  goal?: Prisma.GoalUpdateOneWithoutTasksNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutActivitiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskCreateManyUserInput = {
   id?: string
-  stageId: string
-  name: string
+  title: string
   description?: string | null
-  type?: string
-  priority?: string
-  status?: string
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
   estimatedHours?: number
   actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   notes?: string | null
@@ -1152,33 +2115,47 @@ export type TaskCreateManyUserInput = {
 
 export type TaskUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
   actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  stage?: Prisma.StageUpdateOneRequiredWithoutTasksNestedInput
+  stage?: Prisma.StageUpdateOneWithoutTasksNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
+  area?: Prisma.AreaUpdateOneWithoutTasksNestedInput
+  goal?: Prisma.GoalUpdateOneWithoutTasksNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
   dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  stageId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
   actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1186,18 +2163,526 @@ export type TaskUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
   dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  stageId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  priority?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
   actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TaskCreateManyAreaInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TaskUpdateWithoutAreaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  stage?: Prisma.StageUpdateOneWithoutTasksNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
+  goal?: Prisma.GoalUpdateOneWithoutTasksNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutAreaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateManyWithoutAreaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TaskCreateManyGoalInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TaskUpdateWithoutGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  stage?: Prisma.StageUpdateOneWithoutTasksNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
+  area?: Prisma.AreaUpdateOneWithoutTasksNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateManyWithoutGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TaskCreateManyProjectInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  milestoneId?: string | null
+  areaId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TaskUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  stage?: Prisma.StageUpdateOneWithoutTasksNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutTasksNestedInput
+  area?: Prisma.AreaUpdateOneWithoutTasksNestedInput
+  goal?: Prisma.GoalUpdateOneWithoutTasksNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateManyWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TaskCreateManyStageInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  milestoneId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TaskUpdateWithoutStageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
+  area?: Prisma.AreaUpdateOneWithoutTasksNestedInput
+  goal?: Prisma.GoalUpdateOneWithoutTasksNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutStageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateManyWithoutStageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  milestoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TaskCreateManyMilestoneInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  type?: $Enums.TaskType
+  priority?: $Enums.Priority
+  status?: $Enums.TaskStatus
+  stageId?: string | null
+  projectId?: string | null
+  areaId?: string | null
+  goalId?: string | null
+  estimatedHours?: number
+  actualHours?: number
+  dueDate?: Date | string | null
+  scheduledDate?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TaskUpdateWithoutMilestoneInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
+  stage?: Prisma.StageUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
+  area?: Prisma.AreaUpdateOneWithoutTasksNestedInput
+  goal?: Prisma.GoalUpdateOneWithoutTasksNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutMilestoneInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
+  dailyFocuses?: Prisma.DailyFocusUncheckedUpdateManyWithoutTaskNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutTaskNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutTaskNestedInput
+}
+
+export type TaskUncheckedUpdateManyWithoutMilestoneInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estimatedHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1213,11 +2698,15 @@ export type TaskUncheckedUpdateManyWithoutUserInput = {
 export type TaskCountOutputType = {
   sessions: number
   dailyFocuses: number
+  calendarEvents: number
+  activities: number
 }
 
 export type TaskCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | TaskCountOutputTypeCountSessionsArgs
   dailyFocuses?: boolean | TaskCountOutputTypeCountDailyFocusesArgs
+  calendarEvents?: boolean | TaskCountOutputTypeCountCalendarEventsArgs
+  activities?: boolean | TaskCountOutputTypeCountActivitiesArgs
 }
 
 /**
@@ -1244,81 +2733,133 @@ export type TaskCountOutputTypeCountDailyFocusesArgs<ExtArgs extends runtime.Typ
   where?: Prisma.DailyFocusWhereInput
 }
 
+/**
+ * TaskCountOutputType without action
+ */
+export type TaskCountOutputTypeCountCalendarEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CalendarEventWhereInput
+}
+
+/**
+ * TaskCountOutputType without action
+ */
+export type TaskCountOutputTypeCountActivitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ActivityWhereInput
+}
+
 
 export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  stageId?: boolean
-  name?: boolean
+  title?: boolean
   description?: boolean
   type?: boolean
   priority?: boolean
   status?: boolean
+  stageId?: boolean
+  milestoneId?: boolean
+  projectId?: boolean
+  areaId?: boolean
+  goalId?: boolean
   estimatedHours?: boolean
   actualHours?: boolean
+  dueDate?: boolean
+  scheduledDate?: boolean
   startedAt?: boolean
   completedAt?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  stage?: boolean | Prisma.StageDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stage?: boolean | Prisma.Task$stageArgs<ExtArgs>
+  milestone?: boolean | Prisma.Task$milestoneArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
+  area?: boolean | Prisma.Task$areaArgs<ExtArgs>
+  goal?: boolean | Prisma.Task$goalArgs<ExtArgs>
   sessions?: boolean | Prisma.Task$sessionsArgs<ExtArgs>
   dailyFocuses?: boolean | Prisma.Task$dailyFocusesArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  calendarEvents?: boolean | Prisma.Task$calendarEventsArgs<ExtArgs>
+  activities?: boolean | Prisma.Task$activitiesArgs<ExtArgs>
   _count?: boolean | Prisma.TaskCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
 
 export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  stageId?: boolean
-  name?: boolean
+  title?: boolean
   description?: boolean
   type?: boolean
   priority?: boolean
   status?: boolean
+  stageId?: boolean
+  milestoneId?: boolean
+  projectId?: boolean
+  areaId?: boolean
+  goalId?: boolean
   estimatedHours?: boolean
   actualHours?: boolean
+  dueDate?: boolean
+  scheduledDate?: boolean
   startedAt?: boolean
   completedAt?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  stage?: boolean | Prisma.StageDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stage?: boolean | Prisma.Task$stageArgs<ExtArgs>
+  milestone?: boolean | Prisma.Task$milestoneArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
+  area?: boolean | Prisma.Task$areaArgs<ExtArgs>
+  goal?: boolean | Prisma.Task$goalArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
 
 export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  stageId?: boolean
-  name?: boolean
+  title?: boolean
   description?: boolean
   type?: boolean
   priority?: boolean
   status?: boolean
+  stageId?: boolean
+  milestoneId?: boolean
+  projectId?: boolean
+  areaId?: boolean
+  goalId?: boolean
   estimatedHours?: boolean
   actualHours?: boolean
+  dueDate?: boolean
+  scheduledDate?: boolean
   startedAt?: boolean
   completedAt?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  stage?: boolean | Prisma.StageDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stage?: boolean | Prisma.Task$stageArgs<ExtArgs>
+  milestone?: boolean | Prisma.Task$milestoneArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
+  area?: boolean | Prisma.Task$areaArgs<ExtArgs>
+  goal?: boolean | Prisma.Task$goalArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
 
 export type TaskSelectScalar = {
   id?: boolean
   userId?: boolean
-  stageId?: boolean
-  name?: boolean
+  title?: boolean
   description?: boolean
   type?: boolean
   priority?: boolean
   status?: boolean
+  stageId?: boolean
+  milestoneId?: boolean
+  projectId?: boolean
+  areaId?: boolean
+  goalId?: boolean
   estimatedHours?: boolean
   actualHours?: boolean
+  dueDate?: boolean
+  scheduledDate?: boolean
   startedAt?: boolean
   completedAt?: boolean
   notes?: boolean
@@ -1326,42 +2867,68 @@ export type TaskSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "stageId" | "name" | "description" | "type" | "priority" | "status" | "estimatedHours" | "actualHours" | "startedAt" | "completedAt" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
+export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "type" | "priority" | "status" | "stageId" | "milestoneId" | "projectId" | "areaId" | "goalId" | "estimatedHours" | "actualHours" | "dueDate" | "scheduledDate" | "startedAt" | "completedAt" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
 export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  stage?: boolean | Prisma.StageDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stage?: boolean | Prisma.Task$stageArgs<ExtArgs>
+  milestone?: boolean | Prisma.Task$milestoneArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
+  area?: boolean | Prisma.Task$areaArgs<ExtArgs>
+  goal?: boolean | Prisma.Task$goalArgs<ExtArgs>
   sessions?: boolean | Prisma.Task$sessionsArgs<ExtArgs>
   dailyFocuses?: boolean | Prisma.Task$dailyFocusesArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  calendarEvents?: boolean | Prisma.Task$calendarEventsArgs<ExtArgs>
+  activities?: boolean | Prisma.Task$activitiesArgs<ExtArgs>
   _count?: boolean | Prisma.TaskCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TaskIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  stage?: boolean | Prisma.StageDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stage?: boolean | Prisma.Task$stageArgs<ExtArgs>
+  milestone?: boolean | Prisma.Task$milestoneArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
+  area?: boolean | Prisma.Task$areaArgs<ExtArgs>
+  goal?: boolean | Prisma.Task$goalArgs<ExtArgs>
 }
 export type TaskIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  stage?: boolean | Prisma.StageDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stage?: boolean | Prisma.Task$stageArgs<ExtArgs>
+  milestone?: boolean | Prisma.Task$milestoneArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
+  area?: boolean | Prisma.Task$areaArgs<ExtArgs>
+  goal?: boolean | Prisma.Task$goalArgs<ExtArgs>
 }
 
 export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Task"
   objects: {
-    stage: Prisma.$StagePayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
+    stage: Prisma.$StagePayload<ExtArgs> | null
+    milestone: Prisma.$MilestonePayload<ExtArgs> | null
+    project: Prisma.$ProjectPayload<ExtArgs> | null
+    area: Prisma.$AreaPayload<ExtArgs> | null
+    goal: Prisma.$GoalPayload<ExtArgs> | null
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     dailyFocuses: Prisma.$DailyFocusPayload<ExtArgs>[]
-    user: Prisma.$UserPayload<ExtArgs>
+    calendarEvents: Prisma.$CalendarEventPayload<ExtArgs>[]
+    activities: Prisma.$ActivityPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    stageId: string
-    name: string
+    title: string
     description: string | null
-    type: string
-    priority: string
-    status: string
+    type: $Enums.TaskType
+    priority: $Enums.Priority
+    status: $Enums.TaskStatus
+    stageId: string | null
+    milestoneId: string | null
+    projectId: string | null
+    areaId: string | null
+    goalId: string | null
     estimatedHours: number
     actualHours: number
+    dueDate: Date | null
+    scheduledDate: Date | null
     startedAt: Date | null
     completedAt: Date | null
     notes: string | null
@@ -1761,10 +3328,16 @@ readonly fields: TaskFieldRefs;
  */
 export interface Prisma__TaskClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  stage<T extends Prisma.StageDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StageDefaultArgs<ExtArgs>>): Prisma.Prisma__StageClient<runtime.Types.Result.GetResult<Prisma.$StagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  stage<T extends Prisma.Task$stageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$stageArgs<ExtArgs>>): Prisma.Prisma__StageClient<runtime.Types.Result.GetResult<Prisma.$StagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  milestone<T extends Prisma.Task$milestoneArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$milestoneArgs<ExtArgs>>): Prisma.Prisma__MilestoneClient<runtime.Types.Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.Task$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  area<T extends Prisma.Task$areaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$areaArgs<ExtArgs>>): Prisma.Prisma__AreaClient<runtime.Types.Result.GetResult<Prisma.$AreaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  goal<T extends Prisma.Task$goalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$goalArgs<ExtArgs>>): Prisma.Prisma__GoalClient<runtime.Types.Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sessions<T extends Prisma.Task$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dailyFocuses<T extends Prisma.Task$dailyFocusesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$dailyFocusesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyFocusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  calendarEvents<T extends Prisma.Task$calendarEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$calendarEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  activities<T extends Prisma.Task$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1796,14 +3369,20 @@ export interface Prisma__TaskClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface TaskFieldRefs {
   readonly id: Prisma.FieldRef<"Task", 'String'>
   readonly userId: Prisma.FieldRef<"Task", 'String'>
-  readonly stageId: Prisma.FieldRef<"Task", 'String'>
-  readonly name: Prisma.FieldRef<"Task", 'String'>
+  readonly title: Prisma.FieldRef<"Task", 'String'>
   readonly description: Prisma.FieldRef<"Task", 'String'>
-  readonly type: Prisma.FieldRef<"Task", 'String'>
-  readonly priority: Prisma.FieldRef<"Task", 'String'>
-  readonly status: Prisma.FieldRef<"Task", 'String'>
+  readonly type: Prisma.FieldRef<"Task", 'TaskType'>
+  readonly priority: Prisma.FieldRef<"Task", 'Priority'>
+  readonly status: Prisma.FieldRef<"Task", 'TaskStatus'>
+  readonly stageId: Prisma.FieldRef<"Task", 'String'>
+  readonly milestoneId: Prisma.FieldRef<"Task", 'String'>
+  readonly projectId: Prisma.FieldRef<"Task", 'String'>
+  readonly areaId: Prisma.FieldRef<"Task", 'String'>
+  readonly goalId: Prisma.FieldRef<"Task", 'String'>
   readonly estimatedHours: Prisma.FieldRef<"Task", 'Float'>
   readonly actualHours: Prisma.FieldRef<"Task", 'Float'>
+  readonly dueDate: Prisma.FieldRef<"Task", 'DateTime'>
+  readonly scheduledDate: Prisma.FieldRef<"Task", 'DateTime'>
   readonly startedAt: Prisma.FieldRef<"Task", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"Task", 'DateTime'>
   readonly notes: Prisma.FieldRef<"Task", 'String'>
@@ -2210,6 +3789,101 @@ export type TaskDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * Task.stage
+ */
+export type Task$stageArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Stage
+   */
+  select?: Prisma.StageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Stage
+   */
+  omit?: Prisma.StageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StageInclude<ExtArgs> | null
+  where?: Prisma.StageWhereInput
+}
+
+/**
+ * Task.milestone
+ */
+export type Task$milestoneArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Milestone
+   */
+  select?: Prisma.MilestoneSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Milestone
+   */
+  omit?: Prisma.MilestoneOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MilestoneInclude<ExtArgs> | null
+  where?: Prisma.MilestoneWhereInput
+}
+
+/**
+ * Task.project
+ */
+export type Task$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
+}
+
+/**
+ * Task.area
+ */
+export type Task$areaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Area
+   */
+  select?: Prisma.AreaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Area
+   */
+  omit?: Prisma.AreaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AreaInclude<ExtArgs> | null
+  where?: Prisma.AreaWhereInput
+}
+
+/**
+ * Task.goal
+ */
+export type Task$goalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Goal
+   */
+  select?: Prisma.GoalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Goal
+   */
+  omit?: Prisma.GoalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GoalInclude<ExtArgs> | null
+  where?: Prisma.GoalWhereInput
+}
+
+/**
  * Task.sessions
  */
 export type Task$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2255,6 +3929,54 @@ export type Task$dailyFocusesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.DailyFocusScalarFieldEnum | Prisma.DailyFocusScalarFieldEnum[]
+}
+
+/**
+ * Task.calendarEvents
+ */
+export type Task$calendarEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalendarEvent
+   */
+  select?: Prisma.CalendarEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalendarEvent
+   */
+  omit?: Prisma.CalendarEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalendarEventInclude<ExtArgs> | null
+  where?: Prisma.CalendarEventWhereInput
+  orderBy?: Prisma.CalendarEventOrderByWithRelationInput | Prisma.CalendarEventOrderByWithRelationInput[]
+  cursor?: Prisma.CalendarEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CalendarEventScalarFieldEnum | Prisma.CalendarEventScalarFieldEnum[]
+}
+
+/**
+ * Task.activities
+ */
+export type Task$activitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Activity
+   */
+  select?: Prisma.ActivitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Activity
+   */
+  omit?: Prisma.ActivityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
+  where?: Prisma.ActivityWhereInput
+  orderBy?: Prisma.ActivityOrderByWithRelationInput | Prisma.ActivityOrderByWithRelationInput[]
+  cursor?: Prisma.ActivityWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ActivityScalarFieldEnum | Prisma.ActivityScalarFieldEnum[]
 }
 
 /**

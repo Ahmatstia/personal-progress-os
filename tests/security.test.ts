@@ -40,14 +40,14 @@ describe("PHASE 17 security boundaries", () => {
         { id: B, email: "sec-b@example.com", name: "Sec B" },
       ],
     });
-    goalA = await prisma.goal.create({ data: { userId: A, name: "Goal Sec A", type: "LEARNING" } });
-    goalB = await prisma.goal.create({ data: { userId: B, name: "Goal Sec B", type: "LEARNING" } });
+    goalA = await prisma.goal.create({ data: { userId: A, title: "Goal Sec A", type: "LEARNING" } });
+    goalB = await prisma.goal.create({ data: { userId: B, title: "Goal Sec B", type: "LEARNING" } });
     const stageA1 = await prisma.stage.create({ data: { userId: A, goalId: goalA.id, name: "Stage A1" } });
     const stageA2 = await prisma.stage.create({ data: { userId: A, goalId: goalA.id, name: "Stage A2" } });
     stageB = await prisma.stage.create({ data: { userId: B, goalId: goalB.id, name: "Stage B" } });
-    taskA1 = await prisma.task.create({ data: { userId: A, stageId: stageA1.id, name: "Task A1" } });
-    taskA2 = await prisma.task.create({ data: { userId: A, stageId: stageA2.id, name: "Task A2" } });
-    taskB = await prisma.task.create({ data: { userId: B, stageId: stageB.id, name: "Task B" } });
+    taskA1 = await prisma.task.create({ data: { userId: A, stageId: stageA1.id, title: "Task A1" } });
+    taskA2 = await prisma.task.create({ data: { userId: A, stageId: stageA2.id, title: "Task A2" } });
+    taskB = await prisma.task.create({ data: { userId: B, stageId: stageB.id, title: "Task B" } });
     sessionB = await prisma.session.create({ data: { userId: B, taskId: taskB.id, startedAt: new Date() } });
     captureB = (await prisma.capture.create({ data: { userId: B, content: "Sec B capture" } })).id;
   });

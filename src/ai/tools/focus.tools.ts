@@ -28,8 +28,8 @@ export const createFocusTool: Tool<{ taskId: string; date?: Date }, { id: string
       success: true,
       toolName: "create_focus",
       type: "WRITE",
-      message: `Task "${task.name}" ditambahkan ke fokus hari ini.`,
-      data: { id: focus.id, taskName: task.name },
+      message: `Task "${task.title}" ditambahkan ke fokus hari ini.`,
+      data: { id: focus.id, taskName: task.title },
       verified: true,
     };
   },

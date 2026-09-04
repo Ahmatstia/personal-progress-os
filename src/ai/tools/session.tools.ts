@@ -27,8 +27,8 @@ export const startSessionTool: Tool<{ taskId: string }, { id: string; taskName: 
         success: true,
         toolName: "start_session",
         type: "WRITE",
-        message: `Sesi fokus untuk task "${task.name}" dimulai.`,
-        data: { id: session.id, taskName: task.name, startedAt: session.startedAt },
+        message: `Sesi fokus untuk task "${task.title}" dimulai.`,
+        data: { id: session.id, taskName: task.title, startedAt: session.startedAt },
         verified: true,
       };
     } catch (err) {
@@ -121,7 +121,7 @@ export const getActiveSessionTool: Tool<Record<string, never>, Record<string, un
       success: true,
       toolName: "get_active_session",
       type: "READ",
-      message: `Sesi aktif: "${active.task.name}" (mulai ${active.startedAt.toLocaleTimeString("id-ID")}).`,
+      message: `Sesi aktif: "${active.task.title}" (mulai ${active.startedAt.toLocaleTimeString("id-ID")}).`,
       data: active,
     };
   },

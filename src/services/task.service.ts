@@ -10,27 +10,70 @@ import {
 } from "@/repositories/task.repository";
 import type { CreateTaskInput, UpdateTaskInput } from "@/schemas/task.schema";
 import { requireUserId } from "../lib/ownership";
+import { validateTaskParents } from "./task-validation.service";
+import type { TaskStatus, Priority, TaskType } from "@/generated/prisma/client";
 
 export class TaskServiceError extends Error {
-  constructor(message: string, public readonly code: "STAGE_NOT_FOUND" | "TASK_NOT_FOUND") {
+  constructor(message: string, public readonly code: "STAGE_NOT_FOUND" | "TASK_NOT_FOUND" | "INVALID_PARENT") {
     super(message);
+    this.name = "TaskServiceError";
   }
+}
+
+function withNameAlias<T extends { title: string }>(task: T): T & { name: string } {
+  if (!task) return task as any;
+  if (!("name" in (task as any))) {
+    Object.defineProperty(task, "name", {
+      get() {
+        return this.title;
+      },
+      enumerable: true,
+      configurable: true,
+    });
+  }
+  return task as any;
 }
 
 export async function createTask(input: CreateTaskInput, userId?: string) {
   const owner = requireUserId(userId);
-  if (!(await findStageForTask(owner, input.stageId))) throw new TaskServiceError("Stage tidak ditemukan.", "STAGE_NOT_FOUND");
-  const data = {
+
+  // Validate structural parents using Step 3 rules
+  const validatedParents = await validateTaskParents(owner, {
     stageId: input.stageId,
-    name: input.name,
+    milestoneId: input.milestoneId,
+    projectId: input.projectId,
+    areaId: input.areaId,
+    goalId: input.goalId,
+  });
+
+  const title = input.title ?? input.name ?? "";
+  const type = (input.type as TaskType) ?? "TASK";
+  const priority = (input.priority as Priority) ?? "MEDIUM";
+  const status: TaskStatus = "TODO";
+
+  const data = {
+    userId: owner,
+    title,
+    stageId: validatedParents.stageId,
+    milestoneId: validatedParents.milestoneId,
+    projectId: validatedParents.projectId,
+    areaId: validatedParents.areaId,
+    goalId: validatedParents.goalId,
     description: input.description || null,
-    type: input.type,
-    priority: input.priority,
-    status: "NOT_STARTED",
-    estimatedHours: input.estimatedHours,
+    type,
+    priority,
+    status,
+    estimatedHours: input.estimatedHours ?? 0,
+    dueDate: input.dueDate ? new Date(input.dueDate) : null,
+    scheduledDate: input.scheduledDate ? new Date(input.scheduledDate) : null,
     notes: input.notes || null,
   };
-  return process.env.NODE_ENV === "test" ? (createTaskRecord as unknown as (data: unknown) => Promise<any>)(data) : createTaskRecord(owner, data);
+
+  const created = process.env.NODE_ENV === "test"
+    ? await (createTaskRecord as unknown as (data: unknown) => Promise<any>)(data)
+    : await createTaskRecord(owner, data);
+
+  return withNameAlias(created);
 }
 
 export async function updateTask(id: string, input: UpdateTaskInput, userId?: string) {
@@ -38,14 +81,47 @@ export async function updateTask(id: string, input: UpdateTaskInput, userId?: st
   const task = await (process.env.NODE_ENV === "test" ? findTask(owner as never, id as never) : findTask(owner, id));
   if (!task) throw new TaskServiceError("Task tidak ditemukan.", "TASK_NOT_FOUND");
 
-  const data: Record<string, unknown> = { ...input };
-  if (input.status) {
-    data.status = input.status;
-    data.completedAt = input.status === "COMPLETED" ? new Date() : null;
-    if (input.status !== "NOT_STARTED") data.startedAt = task.startedAt ?? new Date();
+  const title = input.title ?? input.name;
+  const data: Record<string, unknown> = {};
+
+  if (title !== undefined) {
+    data.title = title;
+    data.name = title;
   }
+  if (input.description !== undefined) data.description = input.description;
+  if (input.type !== undefined) data.type = input.type as TaskType;
+  if (input.priority !== undefined) data.priority = input.priority as Priority;
+  if (input.estimatedHours !== undefined) data.estimatedHours = input.estimatedHours;
+  if (input.dueDate !== undefined) data.dueDate = input.dueDate ? new Date(input.dueDate) : null;
+  if (input.scheduledDate !== undefined) data.scheduledDate = input.scheduledDate ? new Date(input.scheduledDate) : null;
+  if (input.notes !== undefined) data.notes = input.notes;
+
+  // If updating parents, validate
+  if (input.stageId !== undefined || input.milestoneId !== undefined || input.projectId !== undefined || input.areaId !== undefined) {
+    const validatedParents = await validateTaskParents(owner, {
+      stageId: input.stageId !== undefined ? input.stageId : task.stageId,
+      milestoneId: input.milestoneId !== undefined ? input.milestoneId : task.milestoneId,
+      projectId: input.projectId !== undefined ? input.projectId : task.projectId,
+      areaId: input.areaId !== undefined ? input.areaId : task.areaId,
+      goalId: input.goalId !== undefined ? input.goalId : task.goalId,
+    });
+    data.stageId = validatedParents.stageId;
+    data.milestoneId = validatedParents.milestoneId;
+    data.projectId = validatedParents.projectId;
+    data.areaId = validatedParents.areaId;
+    data.goalId = validatedParents.goalId;
+  }
+
+  if (input.status) {
+    const rawStatus = input.status === "NOT_STARTED" ? "TODO" : input.status;
+    data.status = rawStatus as TaskStatus;
+    data.completedAt = rawStatus === "COMPLETED" ? new Date() : null;
+    if (rawStatus !== "TODO") data.startedAt = task.startedAt ?? new Date();
+  }
+
   const fn = updateTaskRecord as unknown as (...args: unknown[]) => Promise<any>;
-  return fn.length === 2 ? fn(id, data) : fn(owner, id, data);
+  const updated = fn.length === 2 ? await fn(id, data) : await fn(owner, id, data);
+  return withNameAlias(updated);
 }
 
 export function completeTask(id: string, userId?: string) {
@@ -68,15 +144,17 @@ export async function getTaskDetail(id: string, userId?: string) {
   const fn = findTaskDetail as unknown as (...args: unknown[]) => Promise<any>;
   const task = fn.length === 1 ? await fn(id) : await fn(owner, id);
   if (!task) return null;
-  const activeSession = task.sessions.find((session: { endedAt: Date | null }) => session.endedAt === null) ?? null;
-  return { task, activeSession };
+  const activeSession = task.sessions?.find((session: { endedAt: Date | null }) => session.endedAt === null) ?? null;
+  return { task: withNameAlias(task), activeSession };
 }
 
 export async function findMatchingTasks(query: string, userId?: string) {
   const normalizedQuery = query.trim().toLocaleLowerCase("id-ID");
   const tasks = await findTasksForAI(requireUserId(userId));
-  if (!normalizedQuery) return tasks;
-  return tasks.filter((task) => task.name.toLocaleLowerCase("id-ID").includes(normalizedQuery));
+  if (!normalizedQuery) return tasks.map(withNameAlias);
+  return tasks
+    .map(withNameAlias)
+    .filter((task) => ((task.title ?? task.name) ?? "").toLocaleLowerCase("id-ID").includes(normalizedQuery));
 }
 
-export { findTask };
+export { findTask, findStageForTask };

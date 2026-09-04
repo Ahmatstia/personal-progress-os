@@ -4,8 +4,9 @@ import { z } from "zod";
 import { requireCurrentUser, authErrorResponse, AuthorizationError } from "@/lib/auth";
 
 const createGoalSchema = z.object({
-  name: z.string().min(1, "Nama goal wajib diisi"),
-  type: z.string().min(1, "Tipe goal wajib diisi"),
+  title: z.string().min(1).optional(),
+  name: z.string().min(1).optional(),
+  type: z.enum(["LEARNING", "ACHIEVEMENT", "HABIT", "MAINTENANCE"]).default("LEARNING"),
   description: z.string().optional(),
 });
 
@@ -25,9 +26,19 @@ export async function POST(request: Request) {
       );
     }
 
+    const title = result.data.title ?? result.data.name;
+    if (!title) {
+      return NextResponse.json(
+        {
+          error: "Judul goal wajib diisi",
+        },
+        { status: 400 },
+      );
+    }
+
     const goal = await prisma.goal.create({
       data: {
-        name: result.data.name,
+        title,
         type: result.data.type,
         description: result.data.description ?? "",
         userId: user.id,

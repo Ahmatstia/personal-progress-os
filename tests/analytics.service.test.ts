@@ -12,12 +12,12 @@ const session = (id: string, date: string, durationMinutes: number, understandin
 
 const tasks = [
   {
-    id: "completed", name: "Ship feature", status: "COMPLETED", estimatedHours: 2, actualHours: 3,
+    id: "completed", title: "Ship feature", name: "Ship feature", status: "COMPLETED", estimatedHours: 2, actualHours: 3,
     createdAt: new Date("2026-08-01T00:00:00"), updatedAt: new Date("2026-09-03T00:00:00"), completedAt: new Date("2026-09-01T11:00:00"),
     sessions: [session("s1", "2026-09-01", 60)],
   },
   {
-    id: "blocked", name: "Learn arrays", status: "IN_PROGRESS", estimatedHours: 2, actualHours: 4,
+    id: "blocked", title: "Learn arrays", name: "Learn arrays", status: "IN_PROGRESS", estimatedHours: 2, actualHours: 4,
     createdAt: new Date("2026-08-01T00:00:00"), updatedAt: new Date("2026-09-03T00:00:00"), completedAt: null,
     sessions: [session("s2", "2026-09-01", 60), session("s3", "2026-09-02", 60), session("s4", "2026-09-03", 60)],
   },

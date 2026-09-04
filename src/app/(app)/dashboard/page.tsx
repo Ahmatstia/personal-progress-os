@@ -318,10 +318,10 @@ export default async function AnalyticsPage({
                         href={`/tasks/${session.task.id}`}
                         className="block truncate text-[13px] font-medium text-surface-800 hover:text-primary-700 transition-colors"
                       >
-                        {session.task.name}
+                        {session.task.title}
                       </Link>
                       <p className="mt-0.5 text-[11px] text-surface-400">
-                        {session.task.stage.goal.name} ·{" "}
+                        {session.task.stage?.goal.title} ·{" "}
                         {session.durationMinutes === null
                           ? "Aktif"
                           : formatDuration(session.durationMinutes)}

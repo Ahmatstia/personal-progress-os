@@ -6,8 +6,8 @@ import { useState } from "react";
 import { Icon } from "../ui/Icon";
 import { useToast } from "../ui/Toast";
 
-type Task = { id: string; name: string; priority: string; status: string; stage: { name: string; goal: { name: string } } };
-type Focus = { id: string; taskId: string; task: Task };
+type Task = { id: string; title: string; name?: string; priority: string; status: string; stage?: { name: string; goal: { title: string; name?: string } } | null; [key: string]: unknown };
+type Focus = { id: string; taskId: string; task: Task; [key: string]: unknown };
 
 export function FocusPanel({ focus, available }: { focus: Focus[]; available: Task[] }) {
   const router = useRouter();
@@ -81,10 +81,10 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
                 </span>
                 <div className="min-w-0 flex-1">
                   <Link href={`/tasks/${item.task.id}`} className="block truncate text-sm font-semibold text-surface-800 hover:text-primary-700">
-                    {item.task.name}
+                    {item.task.title}
                   </Link>
                   <p className="mt-0.5 truncate text-xs text-surface-500">
-                    {item.task.stage.goal.name} · {item.task.stage.name} · {item.task.priority}
+                    {item.task.stage?.goal.title} · {item.task.stage?.name} · {item.task.priority}
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-0.5">
@@ -106,7 +106,7 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
                   </button>
                   <button
                     onClick={() => remove(item.id)}
-                    aria-label={`Hapus ${item.task.name}`}
+                    aria-label={`Hapus ${item.task.title}`}
                     className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-400 hover:bg-danger-50 hover:text-danger-600"
                   >
                     <Icon name="x" size={16} />
@@ -130,7 +130,7 @@ export function FocusPanel({ focus, available }: { focus: Focus[]; available: Ta
             .filter((task) => !focus.some((item) => item.taskId === task.id))
             .map((task) => (
               <option key={task.id} value={task.id}>
-                {task.name} · {task.stage.goal.name}
+                {task.title} · {task.stage?.goal.title}
               </option>
             ))}
         </select>

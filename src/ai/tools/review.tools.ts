@@ -25,7 +25,7 @@ export const getReviewTool: Tool<{ goalId: string }, Record<string, unknown>> = 
       success: true,
       toolName: "get_review",
       type: "READ",
-      message: `Review untuk goal "${data.goal.name}": ${data.review ? "Sudah direview minggu ini" : "Belum direview"}.`,
+      message: `Review untuk goal "${data.goal.title}": ${data.review ? "Sudah direview minggu ini" : "Belum direview"}.`,
       data,
     };
   },
@@ -84,8 +84,8 @@ export const createReviewTool: Tool<
       success: true,
       toolName: "create_review",
       type: "WRITE",
-      message: `Review untuk goal "${goal.name}" berhasil disimpan.`,
-      data: { id: review.id, goalName: goal.name },
+      message: `Review untuk goal "${goal.title}" berhasil disimpan.`,
+      data: { id: review.id, goalName: goal.title },
       verified: true,
     };
   },

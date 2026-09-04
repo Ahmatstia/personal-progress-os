@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -6,8 +6,9 @@ import { Icon } from "@/app/components/ui/Icon";
 import { useToast } from "@/app/components/ui/Toast";
 
 type Task = {
+  title: string;
   id: string;
-  name: string;
+  name?: string;
   goalName: string;
   stageName: string;
   priority: string;
@@ -87,7 +88,7 @@ export function DailyQuickStart({ tasks }: { tasks: Task[] }) {
               title={priorityLabel[task.priority]}
             />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-semibold text-surface-900">{task.name}</p>
+              <p className="truncate text-[13px] font-semibold text-surface-900">{task.title}</p>
               <p className="truncate text-[11px] text-surface-400">
                 {task.goalName}
                 {task.stageName ? ` · ${task.stageName}` : ""}
@@ -96,7 +97,7 @@ export function DailyQuickStart({ tasks }: { tasks: Task[] }) {
             </div>
             <button
               type="button"
-              onClick={() => addToFocus(task.id, task.name)}
+              onClick={() => addToFocus(task.id, task.title)}
               disabled={loading === task.id}
               className="shrink-0 inline-flex items-center gap-1 rounded-lg bg-primary-600 px-2.5 py-1.5 text-[11px] font-semibold text-white transition-all hover:bg-primary-700 disabled:opacity-60"
             >

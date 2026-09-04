@@ -10,10 +10,14 @@ type AIAmbiguousSelectorProps = {
   loading: boolean;
 };
 
-function extractTasks(data: unknown): Array<{ id: string; name: string; status?: string; priority?: string; stage?: { name: string; goal?: { name: string } } }> {
+function extractTasks(data: unknown): Array<{ id: string; name: string;
+    title?: string; status?: string; priority?: string; stage?: { name: string;
+    title?: string; goal?: { name: string } } }> {
   if (!data || !Array.isArray(data)) return [];
   return data.filter(
-    (item): item is { id: string; name: string; status?: string; priority?: string; stage?: { name: string; goal?: { name: string } } } =>
+    (item): item is { id: string; name: string;
+    title?: string; status?: string; priority?: string; stage?: { name: string;
+    title?: string; goal?: { name: string } } } =>
       item != null && typeof item === "object" && "id" in item && "name" in item,
   );
 }
@@ -33,7 +37,7 @@ export default function AIAmbiguousSelector({ response, onSelect, loading }: AIA
         {tasks.map((task, index) => (
           <button
             key={task.id}
-            onClick={() => onSelect(task.id, task.name)}
+            onClick={() => onSelect(task.id, task.title ?? task.name)}
             disabled={loading}
             role="option"
             aria-selected="false"
@@ -44,13 +48,13 @@ export default function AIAmbiguousSelector({ response, onSelect, loading }: AIA
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface-100 text-xs font-bold text-surface-600">
                   {index + 1}
                 </span>
-                <span className="truncate font-medium text-surface-800">{task.name}</span>
+                <span className="truncate font-medium text-surface-800">{task.title ?? task.name}</span>
               </div>
               {task.stage && (
                 <p className="mt-1 truncate pl-8 text-xs text-surface-500">
                   {task.stage.goal?.name}
-                  {task.stage.goal ? " · " : ""}
-                  {task.stage.name}
+                  {task.stage?.goal ? " · " : ""}
+                  {task.stage?.name}
                 </p>
               )}
             </div>

@@ -24,7 +24,9 @@ function TaskDataView({ data }: { data: unknown }) {
       <div className="mt-3 space-y-2">
         {data.map((item, i) => {
           if (item && typeof item === "object" && "name" in item && "id" in item) {
-            const task = item as { id: string; name: string; status?: string; priority?: string; stage?: { name: string; goal?: { name: string } } };
+            const task = item as { id: string; name: string;
+    title?: string; status?: string; priority?: string; stage?: { name: string;
+    title?: string; goal?: { name: string } } };
             return (
               <Link
                 key={task.id}
@@ -32,12 +34,12 @@ function TaskDataView({ data }: { data: unknown }) {
                 className="group flex items-center justify-between rounded-xl border border-surface-200 bg-surface-0 px-4 py-3 text-sm shadow-soft transition hover:border-primary-300 hover:shadow"
               >
                 <div className="min-w-0">
-                  <p className="truncate font-medium text-surface-800">{task.name}</p>
+                  <p className="truncate font-medium text-surface-800">{task.title}</p>
                   {task.stage && (
                     <p className="mt-0.5 truncate text-xs text-surface-500">
                       {task.stage.goal?.name}
-                      {task.stage.goal ? " · " : ""}
-                      {task.stage.name}
+                      {task.stage?.goal ? " · " : ""}
+                      {task.stage?.name}
                     </p>
                   )}
                 </div>
@@ -53,7 +55,8 @@ function TaskDataView({ data }: { data: unknown }) {
             );
           }
           if (item && typeof item === "object" && "name" in item && "id" in item) {
-            const g = item as { id: string; name: string; status?: string };
+            const g = item as { id: string; name: string;
+    title?: string; status?: string };
             return (
               <Link
                 key={i}
@@ -89,7 +92,7 @@ function TaskDataView({ data }: { data: unknown }) {
     const task = obj.task as Record<string, unknown>;
     return (
       <div className="mt-3 rounded-xl border border-surface-200 bg-surface-0 p-4 shadow-soft">
-        <p className="font-semibold text-surface-800">{String(task.name ?? "")}</p>
+        <p className="font-semibold text-surface-800">{String(task.title ?? "")}</p>
         {typeof task.status === "string" && <p className="mt-1 text-xs text-surface-500">Status: {task.status}</p>}
         {typeof task.id === "string" && (
           <div className="mt-3 flex gap-2">
@@ -97,7 +100,7 @@ function TaskDataView({ data }: { data: unknown }) {
               Buka task <Icon name="arrowRight" size={13} />
             </Link>
             {typeof task.id === "string" && (
-              <StartSessionButton taskId={task.id} taskName={String(task.name ?? "")} size="sm" variant="success" icon="play">
+              <StartSessionButton taskId={task.id} taskName={String(task.title ?? "")} size="sm" variant="success" icon="play">
                 Mulai
               </StartSessionButton>
             )}

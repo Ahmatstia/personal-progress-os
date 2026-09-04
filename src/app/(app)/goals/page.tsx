@@ -19,14 +19,15 @@ function formatDate(value: Date | null | undefined) {
 
 type GoalWithRelations = {
   id: string;
-  name: string;
+  title: string;
+  name?: string;
   type: string;
   status: string;
   targetDate: Date | null;
   stages: {
     id: string;
     name: string;
-    tasks: { status: string; name: string }[];
+    tasks: { status: string; title: string; name?: string }[];
   }[];
 };
 
@@ -54,7 +55,8 @@ function buildGoalCard(goal: GoalWithRelations): GoalCard {
 
   return {
     id: goal.id,
-    name: goal.name,
+    title: goal.title,
+    name: goal.title,
     type: goal.type,
     status: goal.status,
     targetDateLabel: formatDate(goal.targetDate),
@@ -64,7 +66,7 @@ function buildGoalCard(goal: GoalWithRelations): GoalCard {
     totalStages: goal.stages.length,
     currentStageIndex,
     currentStageName: currentStage?.name ?? null,
-    nextTaskName: nextTask?.name ?? null,
+    nextTaskName: nextTask?.title ?? nextTask?.name ?? null,
     waypoints,
   };
 }

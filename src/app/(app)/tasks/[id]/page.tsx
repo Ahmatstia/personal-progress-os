@@ -32,19 +32,19 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
       <nav aria-label="Breadcrumb" className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-[13px]">
           <Link
-            href={`/goals/${task.stage.goalId}`}
+            href={`/goals/${task.stage?.goalId}`}
             className="inline-flex items-center gap-1.5 font-medium text-surface-500 transition hover:text-primary-700"
           >
             <Icon name="arrowLeft" size={14} />
-            <span className="truncate max-w-[160px] sm:max-w-none">{task.stage.goal.name}</span>
+            <span className="truncate max-w-[160px] sm:max-w-none">{task.stage?.goal.title}</span>
           </Link>
           <span className="text-surface-300">/</span>
-          <span className="chip bg-surface-100 text-surface-600 font-semibold">{task.stage.name}</span>
+          <span className="chip bg-surface-100 text-surface-600 font-semibold">{task.stage?.name}</span>
         </div>
 
         <TaskActions
           id={task.id}
-          name={task.name}
+          name={task.title}
           description={task.description}
           priority={task.priority}
           estimatedHours={task.estimatedHours}
@@ -74,7 +74,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
 
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-surface-900 leading-tight">
-                {task.name}
+                {task.title}
               </h1>
               {task.description && (
                 <p className="mt-2.5 text-[14px] leading-relaxed text-surface-600 bg-surface-50/60 rounded-xl p-3.5 border border-surface-100">
@@ -233,9 +233,9 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
             <PomodoroPanel
               key={activeSession?.id ?? "idle-timer"}
               taskId={task.id}
-              taskName={task.name}
-              goalName={task.stage.goal.name}
-              stageName={task.stage.name}
+              taskName={task.title}
+              goalName={task.stage?.goal.title}
+              stageName={task.stage?.name}
               activeSession={
                 activeSession
                   ? { id: activeSession.id, startedAt: activeSession.startedAt.toISOString() }

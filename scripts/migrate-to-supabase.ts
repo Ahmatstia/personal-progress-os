@@ -1,4 +1,5 @@
-﻿import Database from "better-sqlite3";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Database from "better-sqlite3";
 import { prisma } from "../src/lib/prisma";
 
 async function main() {
@@ -32,7 +33,7 @@ async function main() {
       create: {
         id: g.id,
         userId: g.userId,
-        name: g.name,
+        title: g.title ?? g.name,
         description: g.description,
         type: g.type,
         status: g.status,
@@ -74,9 +75,9 @@ async function main() {
         id: t.id,
         userId: t.userId,
         stageId: t.stageId,
-        name: t.name,
+        title: t.title ?? t.name,
         description: t.description,
-        type: t.type,
+        type: t.type === "CONCEPT" ? "LEARNING" : t.type,
         priority: t.priority,
         status: t.status,
         estimatedHours: t.estimatedHours,

@@ -26,8 +26,49 @@ export async function getToday(date = new Date(), userId?: string) {
   const finishedSessions = sessions.filter((session) => session.endedAt !== null);
   const totalMinutes = finishedSessions.reduce((sum, session) => sum + (session.durationMinutes ?? calculateSessionDurationMinutes(session.startedAt, session.endedAt ?? end)), 0);
   const unfinished = tasks.filter((task) => task.status !== "COMPLETED");
-  const nextAction = activeSession ? { taskId: activeSession.taskId, goalId: activeSession.task.stage.goalId, stageId: activeSession.task.stageId, taskName: activeSession.task.name, goalName: activeSession.task.stage.goal.name, stageName: activeSession.task.stage.name, priority: activeSession.task.priority, estimatedHours: activeSession.task.estimatedHours, estimatedMinutes: Math.round(activeSession.task.estimatedHours * 60), status: activeSession.task.status, startedAt: activeSession.task.startedAt, reason: "ACTIVE_SESSION" } : selectNextAction(unfinished.map((task) => ({ id: task.id, goalId: task.stage.goalId, stageId: task.stageId, name: task.name, status: task.status, priority: task.priority, estimatedHours: task.estimatedHours, goalName: task.stage.goal.name, stageName: task.stage.name, createdAt: task.createdAt, startedAt: task.startedAt })));
-  return { date: start, focusTasks, availableTasks: unfinished, currentSession: activeSession, completedTasks, overdueTasks: tasks.filter((task) => task.status !== "COMPLETED" && task.stage.goal.targetDate && task.stage.goal.targetDate < start), stats: { totalSessions: finishedSessions.length, totalMinutes, totalHours: totalMinutes / 60, completedTasks: completedTasks.length, activeTasks: unfinished.length }, nextAction, focusCompleted: focus.filter((item) => item.task.status === "COMPLETED").length, focusTotal: focus.length, momentumSessions: finishedSessions };
+  const nextAction = activeSession
+    ? {
+        taskId: activeSession.taskId,
+        goalId: activeSession.task.goalId ?? activeSession.task.stage?.goalId ?? "",
+        stageId: activeSession.task.stageId ?? "",
+        taskName: activeSession.task.title,
+        goalName: activeSession.task.stage?.goal?.title ?? "",
+        stageName: activeSession.task.stage?.name ?? "",
+        priority: activeSession.task.priority,
+        estimatedHours: activeSession.task.estimatedHours,
+        estimatedMinutes: Math.round(activeSession.task.estimatedHours * 60),
+        status: activeSession.task.status,
+        startedAt: activeSession.task.startedAt,
+        reason: "ACTIVE_SESSION",
+      }
+    : selectNextAction(
+        unfinished.map((task) => ({
+          id: task.id,
+          goalId: task.goalId ?? task.stage?.goalId ?? "",
+          stageId: task.stageId ?? "",
+          name: task.title,
+          status: task.status,
+          priority: task.priority,
+          estimatedHours: task.estimatedHours,
+          goalName: task.stage?.goal?.title ?? "",
+          stageName: task.stage?.name ?? "",
+          createdAt: task.createdAt,
+          startedAt: task.startedAt,
+        }))
+      );
+  return {
+    date: start,
+    focusTasks,
+    availableTasks: unfinished,
+    currentSession: activeSession,
+    completedTasks,
+    overdueTasks: tasks.filter((task) => task.status !== "COMPLETED" && task.stage?.goal?.targetDate && task.stage?.goal.targetDate < start),
+    stats: { totalSessions: finishedSessions.length, totalMinutes, totalHours: totalMinutes / 60, completedTasks: completedTasks.length, activeTasks: unfinished.length },
+    nextAction,
+    focusCompleted: focus.filter((item) => item.task.status === "COMPLETED").length,
+    focusTotal: focus.length,
+    momentumSessions: finishedSessions,
+  };
 }
 
 export async function getTodayFocus(date = new Date(), userId?: string) { return (await focusRecords(date, userId)).filter((item) => item.task.status !== "COMPLETED"); }

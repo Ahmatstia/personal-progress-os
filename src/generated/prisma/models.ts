@@ -8,12 +8,20 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/User'
+export type * from './models/UserPreference'
+export type * from './models/Area'
 export type * from './models/Goal'
+export type * from './models/Objective'
+export type * from './models/Project'
 export type * from './models/Stage'
+export type * from './models/Milestone'
 export type * from './models/Task'
 export type * from './models/Session'
-export type * from './models/Review'
 export type * from './models/DailyFocus'
+export type * from './models/Review'
+export type * from './models/CalendarEvent'
+export type * from './models/Activity'
 export type * from './models/Capture'
-export type * from './models/User'
+export type * from './models/Notification'
 export type * from './commonInputTypes'

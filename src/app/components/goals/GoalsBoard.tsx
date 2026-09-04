@@ -11,7 +11,8 @@ import { ProgressBar } from "@/app/components/ui/Progress";
 
 export type GoalCard = {
   id: string;
-  name: string;
+  title: string;
+  name?: string;
   type: string;
   status: string;
   targetDateLabel: string | null;
@@ -121,7 +122,7 @@ function GoalCardRow({ goal }: { goal: GoalCard }) {
               size={44}
               stroke={4.5}
               tone={done ? "success" : "primary"}
-              label={`Progres ${goal.name} ${goal.progress} persen`}
+              label={`Progres ${goal.title} ${goal.progress} persen`}
             >
               <span className="text-[11px] font-bold text-surface-900">{goal.progress}%</span>
             </FocusOrb>
@@ -129,7 +130,7 @@ function GoalCardRow({ goal }: { goal: GoalCard }) {
 
           {/* Goal name */}
           <h2 className="mt-3 text-[15px] font-bold tracking-tight text-surface-900 transition-colors group-hover:text-primary-700 line-clamp-2">
-            {goal.name}
+            {goal.title}
           </h2>
 
           {/* Target date if available */}
@@ -150,7 +151,7 @@ function GoalCardRow({ goal }: { goal: GoalCard }) {
               <JourneyRoute
                 waypoints={goal.waypoints}
                 size="sm"
-                label={`Peta ${goal.name}`}
+                label={`Peta ${goal.title}`}
               />
             </div>
           )}
@@ -207,7 +208,7 @@ function CompletedGrid({ goals }: { goals: GoalCard[] }) {
             <div className="min-w-0">
               <span className={`chip ${cfg.bg} ${cfg.text} mb-0.5`}>{goal.type}</span>
               <p className="truncate text-[13px] font-semibold text-surface-800 transition-colors group-hover:text-success-700">
-                {goal.name}
+                {goal.title}
               </p>
             </div>
           </Link>

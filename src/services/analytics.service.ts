@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { findAnalyticsGoals } from "../repositories/analytics.repository";
 import type { AnalyticsQuery } from "../schemas/analytics.schema";
 import { requireUserId } from "../lib/ownership";
 
 type Session = { id: string; startedAt: Date; endedAt: Date | null; durationMinutes: number | null; understanding: number | null; obstacle: string | null };
-type Task = { id: string; name: string; status: string; estimatedHours: number; actualHours: number; createdAt: Date; updatedAt: Date; completedAt: Date | null; sessions: Session[] };
+type Task = { id: string; title: string; name?: string; status: string; estimatedHours: number; actualHours: number; createdAt: Date; updatedAt: Date; completedAt: Date | null; sessions: Session[] };
 type Goal = { id: string; stages: { tasks: Task[] }[] };
 
 export type AnalyticsTrend = { date: string; learningMinutes: number; learningHours: number; completedTasks: number };
@@ -45,10 +46,10 @@ function calculateBottlenecks(tasks: Task[], now: Date): Bottleneck[] {
     const finishedSessions = task.sessions.filter((session) => session.endedAt);
     const averageUnderstanding = finishedSessions.filter((session) => session.understanding !== null).reduce((sum, session) => sum + (session.understanding ?? 0), 0) / (finishedSessions.filter((session) => session.understanding !== null).length || 1);
     const daysSinceActivity = Math.floor((now.getTime() - task.updatedAt.getTime()) / 86400000);
-    if (task.estimatedHours > 0 && task.actualHours / task.estimatedHours >= 2) return [{ taskId: task.id, taskName: task.name, reason: "Waktu yang dihabiskan jauh melebihi estimasi.", severity: "HIGH" as const }];
-    if (finishedSessions.length >= 3) return [{ taskId: task.id, taskName: task.name, reason: "Banyak sesi namun task masih belum selesai.", severity: "MEDIUM" as const }];
-    if (averageUnderstanding <= 2 && finishedSessions.some((session) => session.understanding !== null)) return [{ taskId: task.id, taskName: task.name, reason: "Pemahaman yang dilaporkan rendah.", severity: "MEDIUM" as const }];
-    if (daysSinceActivity >= 14) return [{ taskId: task.id, taskName: task.name, reason: "Tidak ada aktivitas baru-baru ini.", severity: "LOW" as const }];
+    if (task.estimatedHours > 0 && task.actualHours / task.estimatedHours >= 2) return [{ taskId: task.id, taskName: task.title, reason: "Waktu yang dihabiskan jauh melebihi estimasi.", severity: "HIGH" as const }];
+    if (finishedSessions.length >= 3) return [{ taskId: task.id, taskName: task.title, reason: "Banyak sesi namun task masih belum selesai.", severity: "MEDIUM" as const }];
+    if (averageUnderstanding <= 2 && finishedSessions.some((session) => session.understanding !== null)) return [{ taskId: task.id, taskName: task.title, reason: "Pemahaman yang dilaporkan rendah.", severity: "MEDIUM" as const }];
+    if (daysSinceActivity >= 14) return [{ taskId: task.id, taskName: task.title, reason: "Tidak ada aktivitas baru-baru ini.", severity: "LOW" as const }];
     return [];
   });
 }
@@ -85,7 +86,7 @@ export async function getDashboardAnalytics(query: AnalyticsQuery = { days: 30 }
   return getPeriodAnalytics(start, end, query.goalId, userId);
 }
 export async function getGoalAnalytics(goalId: string, start?: Date, end?: Date, userId?: string) { const finish = end ?? new Date(); return getPeriodAnalytics(start ?? new Date(startOfDay(finish).getTime() - 29 * 86400000), finish, goalId, userId); }
-export async function getTaskAnalytics(taskId: string, userId?: string) { const goals = await findAnalyticsGoals(undefined, requireUserId(userId)); const task = flattenTasks(goals).find((item) => item.id === taskId); return task ? { sessionCount: task.sessions.filter((session) => session.endedAt).length, totalActualHours: task.actualHours, estimatedHours: task.estimatedHours, estimateAccuracy: task.estimatedHours > 0 ? round(task.actualHours / task.estimatedHours, 2) : null, averageSessionMinutes: task.sessions.length ? round(task.sessions.reduce((sum, session) => sum + (session.durationMinutes ?? 0), 0) / task.sessions.length) : 0, status: task.status, daysSinceCreated: Math.floor((Date.now() - task.createdAt.getTime()) / 86400000), daysSinceLastActivity: Math.floor((Date.now() - task.updatedAt.getTime()) / 86400000) } : null; }
+export async function getTaskAnalytics(taskId: string, userId?: string) { const goals = await findAnalyticsGoals(undefined, requireUserId(userId)); const task = flattenTasks(goals as any).find((item) => item.id === taskId); return task ? { sessionCount: task.sessions.filter((session) => session.endedAt).length, totalActualHours: task.actualHours, estimatedHours: task.estimatedHours, estimateAccuracy: task.estimatedHours > 0 ? round(task.actualHours / task.estimatedHours, 2) : null, averageSessionMinutes: task.sessions.length ? round(task.sessions.reduce((sum, session) => sum + (session.durationMinutes ?? 0), 0) / task.sessions.length) : 0, status: task.status, daysSinceCreated: Math.floor((Date.now() - task.createdAt.getTime()) / 86400000), daysSinceLastActivity: Math.floor((Date.now() - task.updatedAt.getTime()) / 86400000) } : null; }
 export const getProgressTrend = getDashboardAnalytics;
 export const getLearningTimeTrend = getDashboardAnalytics;
 export const getCompletionTrend = getDashboardAnalytics;

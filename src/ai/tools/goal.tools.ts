@@ -1,29 +1,30 @@
 import { z } from "zod";
-import type { Tool, ToolContext, ToolExecutionResult } from "./tool.interface";
+import type { Tool } from "./tool.interface";
 import { createGoal, deleteGoal } from "@/services/goal.service";
 import { prisma } from "@/lib/prisma";
+import type { GoalType, GoalStatus } from "@/generated/prisma/client";
 
-export const createGoalTool: Tool<{ name: string; type?: string; description?: string }, { id: string; name: string }> = {
+export const createGoalTool: Tool<{ name: string; type?: "LEARNING" | "ACHIEVEMENT" | "HABIT" | "MAINTENANCE"; description?: string }, { id: string; name: string }> = {
   name: "create_goal",
   description: "Membuat goal baru untuk pengguna",
   type: "WRITE",
   schema: z.object({
     name: z.string().min(1, "Nama goal tidak boleh kosong"),
-    type: z.enum(["LEARNING", "PROJECT", "PERSONAL", "HEALTH", "CAREER", "OTHER"]).default("LEARNING"),
+    type: z.enum(["LEARNING", "ACHIEVEMENT", "HABIT", "MAINTENANCE"]).default("LEARNING"),
     description: z.string().optional(),
   }),
   async execute(input, context) {
     try {
       const goal = await createGoal(
-        { name: input.name, type: input.type ?? "LEARNING", description: input.description ?? null },
+        { title: input.name, type: input.type ?? "LEARNING", description: input.description ?? null, priority: "MEDIUM" },
         context.userId
       );
       return {
         success: true,
         toolName: "create_goal",
         type: "WRITE",
-        message: `Goal "${goal.name}" berhasil dibuat.`,
-        data: { id: goal.id, name: goal.name },
+        message: `Goal "${goal.title}" berhasil dibuat.`,
+        data: { id: goal.id, name: goal.title },
         verified: true,
       };
     } catch (error) {
@@ -77,7 +78,7 @@ export const getGoalTool: Tool<{ id: string }, Record<string, unknown>> = {
       success: true,
       toolName: "get_goal",
       type: "READ",
-      message: `Goal "${goal.name}" ditemukan dengan ${goal.stages.length} stage.`,
+      message: `Goal "${goal.title}" ditemukan dengan ${goal.stages.length} stage.`,
       data: goal,
     };
   },
@@ -114,7 +115,7 @@ export const findGoalTool: Tool<{ query?: string }, Array<{ id: string; name: st
       message: `Ditemukan ${goals.length} goal.`,
       data: goals.map((g) => ({
         id: g.id,
-        name: g.name,
+        name: g.title,
         type: g.type,
         stageCount: g._count.stages,
       })),
@@ -147,18 +148,18 @@ export const updateGoalTool: Tool<{ id: string; name?: string; description?: str
     const updated = await prisma.goal.update({
       where: { id: input.id },
       data: {
-        ...(input.name ? { name: input.name } : {}),
+        ...(input.name ? { title: input.name } : {}),
         ...(input.description !== undefined ? { description: input.description } : {}),
-        ...(input.type ? { type: input.type } : {}),
-        ...(input.status ? { status: input.status } : {}),
+        ...(input.type ? { type: input.type as GoalType } : {}),
+        ...(input.status ? { status: input.status as GoalStatus } : {}),
       },
     });
     return {
       success: true,
       toolName: "update_goal",
       type: "WRITE",
-      message: `Goal "${updated.name}" berhasil diperbarui.`,
-      data: { id: updated.id, name: updated.name },
+      message: `Goal "${updated.title}" berhasil diperbarui.`,
+      data: { id: updated.id, name: updated.title },
       verified: true,
     };
   },
@@ -187,8 +188,8 @@ export const deleteGoalTool: Tool<{ id: string }, { id: string; name: string }> 
       success: true,
       toolName: "delete_goal",
       type: "DESTRUCTIVE",
-      message: `Goal "${exists.name}" beserta seluruh isinya berhasil dihapus.`,
-      data: { id: exists.id, name: exists.name },
+      message: `Goal "${exists.title}" beserta seluruh isinya berhasil dihapus.`,
+      data: { id: exists.id, name: exists.title },
       verified: true,
     };
   },

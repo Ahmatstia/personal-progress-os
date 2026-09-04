@@ -12,7 +12,7 @@ const sessionInclude = {
 
 export function createSession(taskId: string, userId: string) {
   return prisma.session.create({
-    data: { taskId, startedAt: new Date(), ...(userId ? { userId } : {}) },
+    data: { taskId, startedAt: new Date(), userId },
     include: sessionInclude,
   });
 }
@@ -79,13 +79,12 @@ export function deleteSessionById(userId: string, id: string) {
   return prisma.session.deleteMany({ where: { id, userId } });
 }
 
-export function findTaskForSession(taskId: string, userId: string) {
-  return prisma.task.findFirst({ where: { id: taskId, ...(userId ? { userId } : {}) } });
-}
-
-export function markTaskInProgress(userId: string, taskId: string, startedAt: Date) {
+export function markTaskInProgress(userId: string, taskId: string, startedAt?: Date) {
   return prisma.task.update({
     where: { id: taskId, userId },
-    data: { status: "IN_PROGRESS", startedAt },
+    data: { status: "IN_PROGRESS", startedAt: startedAt ?? new Date() },
   });
+}
+export function findTaskForSession(taskId: string, userId: string) {
+  return prisma.task.findFirst({ where: { id: taskId, userId } });
 }

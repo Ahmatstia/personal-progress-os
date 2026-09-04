@@ -5,13 +5,15 @@ import TaskItem from "@/app/components/TaskItem";
 
 type Task = {
   id: string;
-  name: string;
+  title: string;
+  name?: string;
   description: string | null;
   priority: string;
   status: string;
   estimatedHours: number;
   actualHours: number;
   notes: string | null;
+  [key: string]: unknown;
 };
 
 export default function TaskList({ tasks }: { tasks: Task[] }) {

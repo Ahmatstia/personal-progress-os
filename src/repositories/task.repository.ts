@@ -6,7 +6,14 @@ export function findStageForTask(userId: string, stageId: string) {
 }
 
 export function createTask(userId: string, data: Prisma.TaskUncheckedCreateInput) {
-  return prisma.task.create({ data: { ...data, userId } });
+  const payload = { ...data };
+  if ("name" in payload) {
+    if (!payload.title && (payload as { name?: string }).name) {
+      payload.title = (payload as { name?: string }).name!;
+    }
+    delete (payload as { name?: string }).name;
+  }
+  return prisma.task.create({ data: { ...payload, userId } });
 }
 
 export function findTask(userId: string, id: string) {
@@ -14,11 +21,24 @@ export function findTask(userId: string, id: string) {
 }
 
 export function findTasksForAI(userId: string) {
-  return prisma.task.findMany({ where: { userId }, include: { stage: { include: { goal: true } } }, orderBy: { createdAt: "asc" } });
+  return prisma.task.findMany({
+    where: { userId },
+    include: { stage: { include: { goal: true } }, project: true, area: true },
+    orderBy: { createdAt: "asc" },
+  });
 }
 
 export function updateTask(userId: string, id: string, data: Prisma.TaskUpdateInput) {
-  return prisma.task.updateMany({ where: { id, userId }, data }).then(() => prisma.task.findFirstOrThrow({ where: { id, userId } }));
+  const payload = { ...data };
+  if ("name" in payload) {
+    if (!payload.title && (payload as { name?: string }).name) {
+      payload.title = (payload as { name?: string }).name;
+    }
+    delete (payload as { name?: string }).name;
+  }
+  return prisma.task
+    .updateMany({ where: { id, userId }, data: payload })
+    .then(() => prisma.task.findFirstOrThrow({ where: { id, userId } }));
 }
 
 export function deleteTask(userId: string, id: string) {
@@ -30,6 +50,9 @@ export function findTaskDetail(userId: string, id: string) {
     where: { id, userId },
     include: {
       stage: { include: { goal: true } },
+      project: true,
+      milestone: true,
+      area: true,
       sessions: { orderBy: { startedAt: "desc" }, take: 10 },
     },
   });

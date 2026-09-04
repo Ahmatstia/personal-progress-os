@@ -11,7 +11,8 @@ import { formatHours } from "@/lib/format";
 
 type TaskItemProps = {
   id: string;
-  name: string;
+  title?: string;
+  name?: string;
   description: string | null;
   priority: string;
   status: string;
@@ -22,6 +23,7 @@ type TaskItemProps = {
 
 export default function TaskItem({
   id,
+  title,
   name,
   description,
   priority,
@@ -36,7 +38,8 @@ export default function TaskItem({
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const [editName, setEditName] = useState(name);
+  const displayName = title ?? name ?? "";
+  const [editName, setEditName] = useState(displayName);
   const [editDescription, setEditDescription] = useState(description ?? "");
   const [editPriority, setEditPriority] = useState(priority);
   const [editHours, setEditHours] = useState(String(estimatedHours));
@@ -67,7 +70,7 @@ export default function TaskItem({
   }
 
   function startEditing() {
-    setEditName(name);
+    setEditName(displayName);
     setEditDescription(description ?? "");
     setEditPriority(priority);
     setEditHours(String(estimatedHours ?? 0));
@@ -76,7 +79,7 @@ export default function TaskItem({
   }
 
   function cancelEditing() {
-    setEditName(name);
+    setEditName(displayName);
     setEditDescription(description ?? "");
     setEditPriority(priority);
     setEditHours(String(estimatedHours ?? 0));
@@ -100,6 +103,7 @@ export default function TaskItem({
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          title: editName,
           name: editName,
           description: editDescription,
           priority: editPriority,
@@ -122,7 +126,7 @@ export default function TaskItem({
   async function deleteTask() {
     const confirmed = await askConfirm({
       title: "Hapus task",
-      description: `Hapus task "${name}"?`,
+      description: `Hapus task "${displayName}"?`,
       confirmLabel: "Hapus",
       danger: true,
     });
@@ -223,7 +227,7 @@ export default function TaskItem({
             type="button"
             onClick={toggleTask}
             disabled={isLoading}
-            aria-label={completed ? `Buka kembali ${name}` : `Ubah status ${name}`}
+            aria-label={completed ? `Buka kembali ${displayName}` : `Ubah status ${displayName}`}
             className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
               completed
                 ? "border-success-500 bg-success-500 text-white shadow-xs"
@@ -243,7 +247,7 @@ export default function TaskItem({
                     : "text-surface-800 group-hover:text-primary-700"
                 }`}
               >
-                {name}
+                {displayName}
               </Link>
             </div>
             <div className="flex flex-wrap items-center gap-1.5">
@@ -270,7 +274,7 @@ export default function TaskItem({
             <button
               onClick={startEditing}
               disabled={isLoading}
-              aria-label={`Edit ${name}`}
+              aria-label={`Edit ${displayName}`}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-surface-400 hover:bg-surface-100 hover:text-surface-800 transition-colors"
             >
               <Icon name="edit" size={13} />
@@ -278,14 +282,14 @@ export default function TaskItem({
             <button
               onClick={deleteTask}
               disabled={isLoading}
-              aria-label={`Hapus ${name}`}
+              aria-label={`Hapus ${displayName}`}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-surface-400 hover:bg-danger-50 hover:text-danger-600 transition-colors"
             >
               <Icon name="trash" size={13} />
             </button>
             <Link
               href={`/tasks/${id}`}
-              aria-label={`Buka ${name}`}
+              aria-label={`Buka ${displayName}`}
               className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface-50 text-surface-600 hover:bg-primary-50 hover:text-primary-600 transition-colors"
             >
               <Icon name="arrowRight" size={13} />

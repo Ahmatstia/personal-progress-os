@@ -4,9 +4,19 @@ import { prisma } from "../src/lib/prisma";
 async function main() {
   console.log("🌱 Seeding database...");
 
+  const user = await prisma.user.upsert({
+    where: { email: "demo@example.com" },
+    update: {},
+    create: {
+      email: "demo@example.com",
+      name: "Demo User",
+    },
+  });
+
   const goal = await prisma.goal.create({
     data: {
-      name: "Belajar AI / Machine Learning",
+      userId: user.id,
+      title: "Belajar AI / Machine Learning",
       description:
         "Roadmap belajar AI dan Machine Learning dari fundamental sampai project.",
       type: "LEARNING",
@@ -16,6 +26,7 @@ async function main() {
 
   const stage = await prisma.stage.create({
     data: {
+      userId: user.id,
       goalId: goal.id,
       name: "Phase 0 — Fundamental",
       description: "Membangun fondasi sebelum masuk ke Machine Learning.",
@@ -26,26 +37,32 @@ async function main() {
   await prisma.task.createMany({
     data: [
       {
+        userId: user.id,
         stageId: stage.id,
-        name: "Python Fundamental",
+        goalId: goal.id,
+        title: "Python Fundamental",
         description: "Memahami dasar-dasar Python.",
-        type: "CONCEPT",
+        type: "LEARNING",
         priority: "HIGH",
         estimatedHours: 5,
       },
       {
+        userId: user.id,
         stageId: stage.id,
-        name: "Tipe Data & Variabel",
+        goalId: goal.id,
+        title: "Tipe Data & Variabel",
         description: "Memahami int, float, string, boolean, dan casting.",
-        type: "CONCEPT",
+        type: "LEARNING",
         priority: "HIGH",
         estimatedHours: 3,
       },
       {
+        userId: user.id,
         stageId: stage.id,
-        name: "Struktur Data",
+        goalId: goal.id,
+        title: "Struktur Data",
         description: "List, tuple, dictionary, dan set.",
-        type: "CONCEPT",
+        type: "LEARNING",
         priority: "MEDIUM",
         estimatedHours: 4,
       },
@@ -53,7 +70,7 @@ async function main() {
   });
 
   console.log("✅ Seed selesai!");
-  console.log(`Goal: ${goal.name}`);
+  console.log(`Goal: ${goal.title}`);
 }
 
 main()

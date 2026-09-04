@@ -288,8 +288,8 @@ export type ReviewWhereInput = {
   improvements?: Prisma.StringNullableFilter<"Review"> | string | null
   nextFocus?: Prisma.StringNullableFilter<"Review"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
-  goal?: Prisma.XOR<Prisma.GoalScalarRelationFilter, Prisma.GoalWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  goal?: Prisma.XOR<Prisma.GoalScalarRelationFilter, Prisma.GoalWhereInput>
 }
 
 export type ReviewOrderByWithRelationInput = {
@@ -306,12 +306,13 @@ export type ReviewOrderByWithRelationInput = {
   improvements?: Prisma.SortOrderInput | Prisma.SortOrder
   nextFocus?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  goal?: Prisma.GoalOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  goal?: Prisma.GoalOrderByWithRelationInput
 }
 
 export type ReviewWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId_goalId_periodStart_periodEnd?: Prisma.ReviewUserIdGoalIdPeriodStartPeriodEndCompoundUniqueInput
   AND?: Prisma.ReviewWhereInput | Prisma.ReviewWhereInput[]
   OR?: Prisma.ReviewWhereInput[]
   NOT?: Prisma.ReviewWhereInput | Prisma.ReviewWhereInput[]
@@ -327,9 +328,9 @@ export type ReviewWhereUniqueInput = Prisma.AtLeast<{
   improvements?: Prisma.StringNullableFilter<"Review"> | string | null
   nextFocus?: Prisma.StringNullableFilter<"Review"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
-  goal?: Prisma.XOR<Prisma.GoalScalarRelationFilter, Prisma.GoalWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id">
+  goal?: Prisma.XOR<Prisma.GoalScalarRelationFilter, Prisma.GoalWhereInput>
+}, "id" | "userId_goalId_periodStart_periodEnd">
 
 export type ReviewOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -383,13 +384,13 @@ export type ReviewCreateInput = {
   improvements?: string | null
   nextFocus?: string | null
   createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutReviewsInput
   goal: Prisma.GoalCreateNestedOneWithoutReviewsInput
-  user?: Prisma.UserCreateNestedOneWithoutReviewsInput
 }
 
 export type ReviewUncheckedCreateInput = {
   id?: string
-  userId?: string
+  userId: string
   goalId: string
   periodStart: Date | string
   periodEnd: Date | string
@@ -415,8 +416,8 @@ export type ReviewUpdateInput = {
   improvements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextFocus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  goal?: Prisma.GoalUpdateOneRequiredWithoutReviewsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
+  goal?: Prisma.GoalUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type ReviewUncheckedUpdateInput = {
@@ -437,7 +438,7 @@ export type ReviewUncheckedUpdateInput = {
 
 export type ReviewCreateManyInput = {
   id?: string
-  userId?: string
+  userId: string
   goalId: string
   periodStart: Date | string
   periodEnd: Date | string
@@ -489,6 +490,13 @@ export type ReviewListRelationFilter = {
 
 export type ReviewOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ReviewUserIdGoalIdPeriodStartPeriodEndCompoundUniqueInput = {
+  userId: string
+  goalId: string
+  periodStart: Date | string
+  periodEnd: Date | string
 }
 
 export type ReviewCountOrderByAggregateInput = {
@@ -551,6 +559,48 @@ export type ReviewSumOrderByAggregateInput = {
   understanding?: Prisma.SortOrder
 }
 
+export type ReviewCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutUserInput, Prisma.ReviewUncheckedCreateWithoutUserInput> | Prisma.ReviewCreateWithoutUserInput[] | Prisma.ReviewUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutUserInput | Prisma.ReviewCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.ReviewCreateManyUserInputEnvelope
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+}
+
+export type ReviewUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutUserInput, Prisma.ReviewUncheckedCreateWithoutUserInput> | Prisma.ReviewCreateWithoutUserInput[] | Prisma.ReviewUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutUserInput | Prisma.ReviewCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.ReviewCreateManyUserInputEnvelope
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+}
+
+export type ReviewUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutUserInput, Prisma.ReviewUncheckedCreateWithoutUserInput> | Prisma.ReviewCreateWithoutUserInput[] | Prisma.ReviewUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutUserInput | Prisma.ReviewCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.ReviewUpsertWithWhereUniqueWithoutUserInput | Prisma.ReviewUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.ReviewCreateManyUserInputEnvelope
+  set?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  disconnect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  delete?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  update?: Prisma.ReviewUpdateWithWhereUniqueWithoutUserInput | Prisma.ReviewUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutUserInput | Prisma.ReviewUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
+}
+
+export type ReviewUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutUserInput, Prisma.ReviewUncheckedCreateWithoutUserInput> | Prisma.ReviewCreateWithoutUserInput[] | Prisma.ReviewUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutUserInput | Prisma.ReviewCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.ReviewUpsertWithWhereUniqueWithoutUserInput | Prisma.ReviewUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.ReviewCreateManyUserInputEnvelope
+  set?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  disconnect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  delete?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  update?: Prisma.ReviewUpdateWithWhereUniqueWithoutUserInput | Prisma.ReviewUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutUserInput | Prisma.ReviewUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
+}
+
 export type ReviewCreateNestedManyWithoutGoalInput = {
   create?: Prisma.XOR<Prisma.ReviewCreateWithoutGoalInput, Prisma.ReviewUncheckedCreateWithoutGoalInput> | Prisma.ReviewCreateWithoutGoalInput[] | Prisma.ReviewUncheckedCreateWithoutGoalInput[]
   connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutGoalInput | Prisma.ReviewCreateOrConnectWithoutGoalInput[]
@@ -599,123 +649,6 @@ export type NullableFloatFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
-}
-
-export type ReviewCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutUserInput, Prisma.ReviewUncheckedCreateWithoutUserInput> | Prisma.ReviewCreateWithoutUserInput[] | Prisma.ReviewUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutUserInput | Prisma.ReviewCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ReviewCreateManyUserInputEnvelope
-  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-}
-
-export type ReviewUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutUserInput, Prisma.ReviewUncheckedCreateWithoutUserInput> | Prisma.ReviewCreateWithoutUserInput[] | Prisma.ReviewUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutUserInput | Prisma.ReviewCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ReviewCreateManyUserInputEnvelope
-  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-}
-
-export type ReviewUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutUserInput, Prisma.ReviewUncheckedCreateWithoutUserInput> | Prisma.ReviewCreateWithoutUserInput[] | Prisma.ReviewUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutUserInput | Prisma.ReviewCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ReviewUpsertWithWhereUniqueWithoutUserInput | Prisma.ReviewUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ReviewCreateManyUserInputEnvelope
-  set?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  disconnect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  delete?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  update?: Prisma.ReviewUpdateWithWhereUniqueWithoutUserInput | Prisma.ReviewUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutUserInput | Prisma.ReviewUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
-}
-
-export type ReviewUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutUserInput, Prisma.ReviewUncheckedCreateWithoutUserInput> | Prisma.ReviewCreateWithoutUserInput[] | Prisma.ReviewUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutUserInput | Prisma.ReviewCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ReviewUpsertWithWhereUniqueWithoutUserInput | Prisma.ReviewUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ReviewCreateManyUserInputEnvelope
-  set?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  disconnect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  delete?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  update?: Prisma.ReviewUpdateWithWhereUniqueWithoutUserInput | Prisma.ReviewUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutUserInput | Prisma.ReviewUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
-}
-
-export type ReviewCreateWithoutGoalInput = {
-  id?: string
-  periodStart: Date | string
-  periodEnd: Date | string
-  learningHours?: number
-  tasksCompleted?: number
-  understanding?: number | null
-  wentWell?: string | null
-  difficulties?: string | null
-  improvements?: string | null
-  nextFocus?: string | null
-  createdAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutReviewsInput
-}
-
-export type ReviewUncheckedCreateWithoutGoalInput = {
-  id?: string
-  userId?: string
-  periodStart: Date | string
-  periodEnd: Date | string
-  learningHours?: number
-  tasksCompleted?: number
-  understanding?: number | null
-  wentWell?: string | null
-  difficulties?: string | null
-  improvements?: string | null
-  nextFocus?: string | null
-  createdAt?: Date | string
-}
-
-export type ReviewCreateOrConnectWithoutGoalInput = {
-  where: Prisma.ReviewWhereUniqueInput
-  create: Prisma.XOR<Prisma.ReviewCreateWithoutGoalInput, Prisma.ReviewUncheckedCreateWithoutGoalInput>
-}
-
-export type ReviewCreateManyGoalInputEnvelope = {
-  data: Prisma.ReviewCreateManyGoalInput | Prisma.ReviewCreateManyGoalInput[]
-  skipDuplicates?: boolean
-}
-
-export type ReviewUpsertWithWhereUniqueWithoutGoalInput = {
-  where: Prisma.ReviewWhereUniqueInput
-  update: Prisma.XOR<Prisma.ReviewUpdateWithoutGoalInput, Prisma.ReviewUncheckedUpdateWithoutGoalInput>
-  create: Prisma.XOR<Prisma.ReviewCreateWithoutGoalInput, Prisma.ReviewUncheckedCreateWithoutGoalInput>
-}
-
-export type ReviewUpdateWithWhereUniqueWithoutGoalInput = {
-  where: Prisma.ReviewWhereUniqueInput
-  data: Prisma.XOR<Prisma.ReviewUpdateWithoutGoalInput, Prisma.ReviewUncheckedUpdateWithoutGoalInput>
-}
-
-export type ReviewUpdateManyWithWhereWithoutGoalInput = {
-  where: Prisma.ReviewScalarWhereInput
-  data: Prisma.XOR<Prisma.ReviewUpdateManyMutationInput, Prisma.ReviewUncheckedUpdateManyWithoutGoalInput>
-}
-
-export type ReviewScalarWhereInput = {
-  AND?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
-  OR?: Prisma.ReviewScalarWhereInput[]
-  NOT?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
-  id?: Prisma.StringFilter<"Review"> | string
-  userId?: Prisma.StringFilter<"Review"> | string
-  goalId?: Prisma.StringFilter<"Review"> | string
-  periodStart?: Prisma.DateTimeFilter<"Review"> | Date | string
-  periodEnd?: Prisma.DateTimeFilter<"Review"> | Date | string
-  learningHours?: Prisma.FloatFilter<"Review"> | number
-  tasksCompleted?: Prisma.IntFilter<"Review"> | number
-  understanding?: Prisma.FloatNullableFilter<"Review"> | number | null
-  wentWell?: Prisma.StringNullableFilter<"Review"> | string | null
-  difficulties?: Prisma.StringNullableFilter<"Review"> | string | null
-  improvements?: Prisma.StringNullableFilter<"Review"> | string | null
-  nextFocus?: Prisma.StringNullableFilter<"Review"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
 }
 
 export type ReviewCreateWithoutUserInput = {
@@ -774,9 +707,43 @@ export type ReviewUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.ReviewUpdateManyMutationInput, Prisma.ReviewUncheckedUpdateManyWithoutUserInput>
 }
 
-export type ReviewCreateManyGoalInput = {
+export type ReviewScalarWhereInput = {
+  AND?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
+  OR?: Prisma.ReviewScalarWhereInput[]
+  NOT?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
+  id?: Prisma.StringFilter<"Review"> | string
+  userId?: Prisma.StringFilter<"Review"> | string
+  goalId?: Prisma.StringFilter<"Review"> | string
+  periodStart?: Prisma.DateTimeFilter<"Review"> | Date | string
+  periodEnd?: Prisma.DateTimeFilter<"Review"> | Date | string
+  learningHours?: Prisma.FloatFilter<"Review"> | number
+  tasksCompleted?: Prisma.IntFilter<"Review"> | number
+  understanding?: Prisma.FloatNullableFilter<"Review"> | number | null
+  wentWell?: Prisma.StringNullableFilter<"Review"> | string | null
+  difficulties?: Prisma.StringNullableFilter<"Review"> | string | null
+  improvements?: Prisma.StringNullableFilter<"Review"> | string | null
+  nextFocus?: Prisma.StringNullableFilter<"Review"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
+}
+
+export type ReviewCreateWithoutGoalInput = {
   id?: string
-  userId?: string
+  periodStart: Date | string
+  periodEnd: Date | string
+  learningHours?: number
+  tasksCompleted?: number
+  understanding?: number | null
+  wentWell?: string | null
+  difficulties?: string | null
+  improvements?: string | null
+  nextFocus?: string | null
+  createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutReviewsInput
+}
+
+export type ReviewUncheckedCreateWithoutGoalInput = {
+  id?: string
+  userId: string
   periodStart: Date | string
   periodEnd: Date | string
   learningHours?: number
@@ -789,49 +756,30 @@ export type ReviewCreateManyGoalInput = {
   createdAt?: Date | string
 }
 
-export type ReviewUpdateWithoutGoalInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  learningHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  tasksCompleted?: Prisma.IntFieldUpdateOperationsInput | number
-  understanding?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  wentWell?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  difficulties?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  improvements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nextFocus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
+export type ReviewCreateOrConnectWithoutGoalInput = {
+  where: Prisma.ReviewWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReviewCreateWithoutGoalInput, Prisma.ReviewUncheckedCreateWithoutGoalInput>
 }
 
-export type ReviewUncheckedUpdateWithoutGoalInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  learningHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  tasksCompleted?: Prisma.IntFieldUpdateOperationsInput | number
-  understanding?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  wentWell?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  difficulties?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  improvements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nextFocus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type ReviewCreateManyGoalInputEnvelope = {
+  data: Prisma.ReviewCreateManyGoalInput | Prisma.ReviewCreateManyGoalInput[]
+  skipDuplicates?: boolean
 }
 
-export type ReviewUncheckedUpdateManyWithoutGoalInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  learningHours?: Prisma.FloatFieldUpdateOperationsInput | number
-  tasksCompleted?: Prisma.IntFieldUpdateOperationsInput | number
-  understanding?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  wentWell?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  difficulties?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  improvements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nextFocus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type ReviewUpsertWithWhereUniqueWithoutGoalInput = {
+  where: Prisma.ReviewWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReviewUpdateWithoutGoalInput, Prisma.ReviewUncheckedUpdateWithoutGoalInput>
+  create: Prisma.XOR<Prisma.ReviewCreateWithoutGoalInput, Prisma.ReviewUncheckedCreateWithoutGoalInput>
+}
+
+export type ReviewUpdateWithWhereUniqueWithoutGoalInput = {
+  where: Prisma.ReviewWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReviewUpdateWithoutGoalInput, Prisma.ReviewUncheckedUpdateWithoutGoalInput>
+}
+
+export type ReviewUpdateManyWithWhereWithoutGoalInput = {
+  where: Prisma.ReviewScalarWhereInput
+  data: Prisma.XOR<Prisma.ReviewUpdateManyMutationInput, Prisma.ReviewUncheckedUpdateManyWithoutGoalInput>
 }
 
 export type ReviewCreateManyUserInput = {
@@ -894,6 +842,66 @@ export type ReviewUncheckedUpdateManyWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type ReviewCreateManyGoalInput = {
+  id?: string
+  userId: string
+  periodStart: Date | string
+  periodEnd: Date | string
+  learningHours?: number
+  tasksCompleted?: number
+  understanding?: number | null
+  wentWell?: string | null
+  difficulties?: string | null
+  improvements?: string | null
+  nextFocus?: string | null
+  createdAt?: Date | string
+}
+
+export type ReviewUpdateWithoutGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  learningHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  tasksCompleted?: Prisma.IntFieldUpdateOperationsInput | number
+  understanding?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  wentWell?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  difficulties?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  improvements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nextFocus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
+}
+
+export type ReviewUncheckedUpdateWithoutGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  learningHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  tasksCompleted?: Prisma.IntFieldUpdateOperationsInput | number
+  understanding?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  wentWell?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  difficulties?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  improvements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nextFocus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReviewUncheckedUpdateManyWithoutGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  learningHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  tasksCompleted?: Prisma.IntFieldUpdateOperationsInput | number
+  understanding?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  wentWell?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  difficulties?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  improvements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nextFocus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 
 
 export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -910,8 +918,8 @@ export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   improvements?: boolean
   nextFocus?: boolean
   createdAt?: boolean
-  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type ReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -928,8 +936,8 @@ export type ReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   improvements?: boolean
   nextFocus?: boolean
   createdAt?: boolean
-  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type ReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -946,8 +954,8 @@ export type ReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   improvements?: boolean
   nextFocus?: boolean
   createdAt?: boolean
-  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type ReviewSelectScalar = {
@@ -968,23 +976,23 @@ export type ReviewSelectScalar = {
 
 export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "goalId" | "periodStart" | "periodEnd" | "learningHours" | "tasksCompleted" | "understanding" | "wentWell" | "difficulties" | "improvements" | "nextFocus" | "createdAt", ExtArgs["result"]["review"]>
 export type ReviewInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
 }
 export type ReviewIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
 }
 export type ReviewIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  goal?: boolean | Prisma.GoalDefaultArgs<ExtArgs>
 }
 
 export type $ReviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Review"
   objects: {
-    goal: Prisma.$GoalPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
+    goal: Prisma.$GoalPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1394,8 +1402,8 @@ readonly fields: ReviewFieldRefs;
  */
 export interface Prisma__ReviewClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  goal<T extends Prisma.GoalDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GoalDefaultArgs<ExtArgs>>): Prisma.Prisma__GoalClient<runtime.Types.Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  goal<T extends Prisma.GoalDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GoalDefaultArgs<ExtArgs>>): Prisma.Prisma__GoalClient<runtime.Types.Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

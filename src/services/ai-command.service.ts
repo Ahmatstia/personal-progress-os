@@ -301,7 +301,7 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
       return {
         success: true,
         code: "OK",
-        message: data.length ? `Ditemukan ${data.length} task: ${data.map((task) => task.name).join(", ")}.` : "Tidak ada task yang cocok.",
+        message: data.length ? `Ditemukan ${data.length} task: ${data.map((task: { title?: string; name?: string }) => task.title ?? task.name).join(", ")}.` : "Tidak ada task yang cocok.",
         interpretation,
         data,
       };
@@ -313,7 +313,7 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
       return {
         success: true,
         code: "OK",
-        message: data.length ? `Ditemukan ${data.length} task: ${data.map((task) => task.name).join(", ")}.` : "Tidak ada task yang cocok.",
+        message: data.length ? `Ditemukan ${data.length} task: ${data.map((task: { title?: string; name?: string }) => task.title ?? task.name).join(", ")}.` : "Tidak ada task yang cocok.",
         interpretation,
         data,
       };
@@ -348,7 +348,7 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
         return {
           success: true,
           code: "FOCUSED",
-          message: `Task ${matches[0].name} ditambahkan ke fokus hari ini.`,
+          message: `Task ${matches[0].title} ditambahkan ke fokus hari ini.`,
           interpretation,
           data: focused,
         };
@@ -357,7 +357,7 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
       return {
         success: true,
         code: "OK",
-        message: data.focusTasks.length ? `Fokus hari ini: ${data.focusTasks.map((item) => item.task.name).join(", ")}.` : "Belum ada fokus hari ini.",
+        message: data.focusTasks.length ? `Fokus hari ini: ${data.focusTasks.map((item) => item.task.title).join(", ")}.` : "Belum ada fokus hari ini.",
         interpretation,
         data: data.focusTasks,
       };
@@ -399,12 +399,12 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
       if (!name) {
         return { success: false, code: "MISSING_GOAL_NAME", message: "Sebutkan nama goal yang ingin dibuat.", interpretation };
       }
-      const data = await createGoal({ name, type: "LEARNING" }, owner);
+      const data = await createGoal({ title: name, name, type: "LEARNING", priority: "MEDIUM" }, owner);
       updateConversationContext(owner, () => ({
-        currentGoal: { id: data.id, name: data.name },
-        lastReferencedEntity: { id: data.id, name: data.name, type: "GOAL" },
+        currentGoal: { id: data.id, name: data.title },
+        lastReferencedEntity: { id: data.id, name: data.title, type: "GOAL" },
       }));
-      return { success: true, code: "CREATED", message: `Goal ${data.name} berhasil dibuat.`, interpretation, data };
+      return { success: true, code: "CREATED", message: `Goal ${data.title} berhasil dibuat.`, interpretation, data };
     }
 
     case "GOAL_DELETE": {
@@ -504,11 +504,11 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
           interpretation,
           data: matches,
           confirmationToken: createConfirmationToken(intent, owner).token,
-          ambiguityCandidates: matches.map((m) => ({ id: m.id, name: m.name, type: "TASK" })),
+          ambiguityCandidates: matches.map((m) => ({ id: m.id, name: m.title, type: "TASK" })),
         };
       }
       const data = intent === "TASK_COMPLETE" ? await completeTask(matches[0].id, owner) : await reopenTask(matches[0].id, owner);
-      return { success: true, code: "UPDATED", message: `Task ${data.name} berhasil diperbarui.`, interpretation, data };
+      return { success: true, code: "UPDATED", message: `Task ${data.title} berhasil diperbarui.`, interpretation, data };
     }
 
     case "TASK_DELETE": {
@@ -521,11 +521,11 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
           interpretation,
           data: matches,
           confirmationToken: createConfirmationToken("TASK_DELETE", owner).token,
-          ambiguityCandidates: matches.map((m) => ({ id: m.id, name: m.name, type: "TASK" })),
+          ambiguityCandidates: matches.map((m) => ({ id: m.id, name: m.title, type: "TASK" })),
         };
       }
       await deleteTask(matches[0].id, owner);
-      return { success: true, code: "DELETED", message: `Task "${matches[0].name}" berhasil dihapus.`, interpretation, data: matches[0] };
+      return { success: true, code: "DELETED", message: `Task "${matches[0].title}" berhasil dihapus.`, interpretation, data: matches[0] };
     }
 
     // ── SESSION ───────────────────────────────────────────
@@ -542,7 +542,7 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
         };
       }
       const data = await startSession(matches[0].id, owner);
-      return { success: true, code: "STARTED", message: `Session untuk ${matches[0].name} dimulai.`, interpretation, data };
+      return { success: true, code: "STARTED", message: `Session untuk ${matches[0].title} dimulai.`, interpretation, data };
     }
 
     case "SESSION_END": {

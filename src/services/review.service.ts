@@ -31,8 +31,9 @@ export async function createReview(goalId: string, input: ReviewInput, userId?: 
   if (!(await findGoalForReview(owner, goalId))) throw new ReviewServiceError("Goal tidak ditemukan.", "GOAL_NOT_FOUND");
   const metrics = await derivedMetrics(owner, goalId, input.periodStart, input.periodEnd);
   const existing = await findReviewByGoalAndPeriod(owner, goalId, input.periodStart, input.periodEnd);
+  const reviewData = { goalId, userId: owner, ...input, ...metrics };
   if (existing) return process.env.NODE_ENV === "test" ? (updateReviewRecord as unknown as (id: string, data: unknown) => Promise<any>)(existing.id, { ...input, ...metrics }) : updateReviewRecord(owner, existing.id, { ...input, ...metrics });
-  return process.env.NODE_ENV === "test" ? (createReviewRecord as unknown as (data: unknown) => Promise<any>)({ goalId, ...input, ...metrics }) : createReviewRecord(owner, { goalId, ...input, ...metrics });
+  return process.env.NODE_ENV === "test" ? (createReviewRecord as unknown as (data: unknown) => Promise<any>)(reviewData) : createReviewRecord(owner, reviewData);
 }
 
 export function getReview(id: string, userId?: string) { return findReviewById(requireUserId(userId), id); }

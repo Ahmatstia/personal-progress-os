@@ -109,7 +109,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-success-600">Goal Selesai</p>
               <p className="mt-0.5 text-xl font-bold text-surface-900">
-                Perjalanan {goal.name} telah sampai!
+                Perjalanan {goal.title} telah sampai!
               </p>
               <p className="mt-0.5 text-[13px] text-success-700">
                 {completedTasks} task · {goal.stages.length} stage · semua tuntas.
@@ -152,7 +152,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 <StatusBadge status={goal.status} />
               </div>
               <h1 className="mt-3 text-3xl font-bold tracking-tight text-surface-900 md:text-5xl">
-                {goal.name}
+                {goal.title}
               </h1>
               {goal.description && (
                 <p className="mt-4 max-w-2xl text-base leading-7 text-surface-600">
@@ -202,7 +202,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 size={140}
                 stroke={9}
                 tone="primary"
-                label={`Progres goal ${goal.name} ${progress} persen`}
+                label={`Progres goal ${goal.title} ${progress} persen`}
               >
                 <span className="text-3xl font-bold text-surface-900">
                   {progress}%
@@ -233,9 +233,9 @@ export default async function GoalPage({ params }: GoalPageProps) {
             <StageForm goalId={goal.id} nextOrder={goal.stages.length} />
             <GoalActionsMenu
               goalId={goal.id}
-              goalName={goal.name}
+              goalName={goal.title}
               initialData={{
-                name: goal.name,
+                name: goal.title,
                 description: goal.description,
                 type: goal.type,
                 status: goal.status,
@@ -250,7 +250,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
             <div className="mt-6">
               <JourneyPath
                 waypoints={waypoints}
-                label={`Peta perjalanan ${goal.name}`}
+                label={`Peta perjalanan ${goal.title}`}
               />
             </div>
             <p className="mt-3 text-xs text-surface-500">

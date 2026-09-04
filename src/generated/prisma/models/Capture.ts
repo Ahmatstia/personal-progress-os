@@ -28,21 +28,39 @@ export type CaptureMinAggregateOutputType = {
   id: string | null
   userId: string | null
   content: string | null
+  status: $Enums.CaptureStatus | null
+  category: $Enums.CaptureCategory | null
+  convertedTaskId: string | null
+  convertedGoalId: string | null
+  processedAt: Date | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type CaptureMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   content: string | null
+  status: $Enums.CaptureStatus | null
+  category: $Enums.CaptureCategory | null
+  convertedTaskId: string | null
+  convertedGoalId: string | null
+  processedAt: Date | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type CaptureCountAggregateOutputType = {
   id: number
   userId: number
   content: number
+  status: number
+  category: number
+  convertedTaskId: number
+  convertedGoalId: number
+  processedAt: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -51,21 +69,39 @@ export type CaptureMinAggregateInputType = {
   id?: true
   userId?: true
   content?: true
+  status?: true
+  category?: true
+  convertedTaskId?: true
+  convertedGoalId?: true
+  processedAt?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type CaptureMaxAggregateInputType = {
   id?: true
   userId?: true
   content?: true
+  status?: true
+  category?: true
+  convertedTaskId?: true
+  convertedGoalId?: true
+  processedAt?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type CaptureCountAggregateInputType = {
   id?: true
   userId?: true
   content?: true
+  status?: true
+  category?: true
+  convertedTaskId?: true
+  convertedGoalId?: true
+  processedAt?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -145,7 +181,13 @@ export type CaptureGroupByOutputType = {
   id: string
   userId: string
   content: string
+  status: $Enums.CaptureStatus
+  category: $Enums.CaptureCategory
+  convertedTaskId: string | null
+  convertedGoalId: string | null
+  processedAt: Date | null
   createdAt: Date
+  updatedAt: Date
   _count: CaptureCountAggregateOutputType | null
   _min: CaptureMinAggregateOutputType | null
   _max: CaptureMaxAggregateOutputType | null
@@ -173,7 +215,13 @@ export type CaptureWhereInput = {
   id?: Prisma.StringFilter<"Capture"> | string
   userId?: Prisma.StringFilter<"Capture"> | string
   content?: Prisma.StringFilter<"Capture"> | string
+  status?: Prisma.EnumCaptureStatusFilter<"Capture"> | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryFilter<"Capture"> | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.StringNullableFilter<"Capture"> | string | null
+  convertedGoalId?: Prisma.StringNullableFilter<"Capture"> | string | null
+  processedAt?: Prisma.DateTimeNullableFilter<"Capture"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Capture"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Capture"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -181,7 +229,13 @@ export type CaptureOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  convertedTaskId?: Prisma.SortOrderInput | Prisma.SortOrder
+  convertedGoalId?: Prisma.SortOrderInput | Prisma.SortOrder
+  processedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -192,7 +246,13 @@ export type CaptureWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CaptureWhereInput | Prisma.CaptureWhereInput[]
   userId?: Prisma.StringFilter<"Capture"> | string
   content?: Prisma.StringFilter<"Capture"> | string
+  status?: Prisma.EnumCaptureStatusFilter<"Capture"> | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryFilter<"Capture"> | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.StringNullableFilter<"Capture"> | string | null
+  convertedGoalId?: Prisma.StringNullableFilter<"Capture"> | string | null
+  processedAt?: Prisma.DateTimeNullableFilter<"Capture"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Capture"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Capture"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
@@ -200,7 +260,13 @@ export type CaptureOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  convertedTaskId?: Prisma.SortOrderInput | Prisma.SortOrder
+  convertedGoalId?: Prisma.SortOrderInput | Prisma.SortOrder
+  processedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.CaptureCountOrderByAggregateInput
   _max?: Prisma.CaptureMaxOrderByAggregateInput
   _min?: Prisma.CaptureMinOrderByAggregateInput
@@ -213,27 +279,51 @@ export type CaptureScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Capture"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Capture"> | string
   content?: Prisma.StringWithAggregatesFilter<"Capture"> | string
+  status?: Prisma.EnumCaptureStatusWithAggregatesFilter<"Capture"> | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryWithAggregatesFilter<"Capture"> | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.StringNullableWithAggregatesFilter<"Capture"> | string | null
+  convertedGoalId?: Prisma.StringNullableWithAggregatesFilter<"Capture"> | string | null
+  processedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Capture"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Capture"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Capture"> | Date | string
 }
 
 export type CaptureCreateInput = {
   id?: string
   content: string
+  status?: $Enums.CaptureStatus
+  category?: $Enums.CaptureCategory
+  convertedTaskId?: string | null
+  convertedGoalId?: string | null
+  processedAt?: Date | string | null
   createdAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutCapturesInput
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutCapturesInput
 }
 
 export type CaptureUncheckedCreateInput = {
   id?: string
-  userId?: string
+  userId: string
   content: string
+  status?: $Enums.CaptureStatus
+  category?: $Enums.CaptureCategory
+  convertedTaskId?: string | null
+  convertedGoalId?: string | null
+  processedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CaptureUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCaptureStatusFieldUpdateOperationsInput | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryFieldUpdateOperationsInput | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  convertedGoalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCapturesNestedInput
 }
 
@@ -241,48 +331,51 @@ export type CaptureUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCaptureStatusFieldUpdateOperationsInput | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryFieldUpdateOperationsInput | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  convertedGoalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CaptureCreateManyInput = {
   id?: string
-  userId?: string
+  userId: string
   content: string
+  status?: $Enums.CaptureStatus
+  category?: $Enums.CaptureCategory
+  convertedTaskId?: string | null
+  convertedGoalId?: string | null
+  processedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CaptureUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCaptureStatusFieldUpdateOperationsInput | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryFieldUpdateOperationsInput | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  convertedGoalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CaptureUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCaptureStatusFieldUpdateOperationsInput | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryFieldUpdateOperationsInput | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  convertedGoalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type CaptureCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  content?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-}
-
-export type CaptureMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  content?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-}
-
-export type CaptureMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  content?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CaptureListRelationFilter = {
@@ -293,6 +386,45 @@ export type CaptureListRelationFilter = {
 
 export type CaptureOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type CaptureCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  convertedTaskId?: Prisma.SortOrder
+  convertedGoalId?: Prisma.SortOrder
+  processedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type CaptureMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  convertedTaskId?: Prisma.SortOrder
+  convertedGoalId?: Prisma.SortOrder
+  processedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type CaptureMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  convertedTaskId?: Prisma.SortOrder
+  convertedGoalId?: Prisma.SortOrder
+  processedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type CaptureCreateNestedManyWithoutUserInput = {
@@ -337,16 +469,36 @@ export type CaptureUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.CaptureScalarWhereInput | Prisma.CaptureScalarWhereInput[]
 }
 
+export type EnumCaptureStatusFieldUpdateOperationsInput = {
+  set?: $Enums.CaptureStatus
+}
+
+export type EnumCaptureCategoryFieldUpdateOperationsInput = {
+  set?: $Enums.CaptureCategory
+}
+
 export type CaptureCreateWithoutUserInput = {
   id?: string
   content: string
+  status?: $Enums.CaptureStatus
+  category?: $Enums.CaptureCategory
+  convertedTaskId?: string | null
+  convertedGoalId?: string | null
+  processedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CaptureUncheckedCreateWithoutUserInput = {
   id?: string
   content: string
+  status?: $Enums.CaptureStatus
+  category?: $Enums.CaptureCategory
+  convertedTaskId?: string | null
+  convertedGoalId?: string | null
+  processedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CaptureCreateOrConnectWithoutUserInput = {
@@ -382,31 +534,61 @@ export type CaptureScalarWhereInput = {
   id?: Prisma.StringFilter<"Capture"> | string
   userId?: Prisma.StringFilter<"Capture"> | string
   content?: Prisma.StringFilter<"Capture"> | string
+  status?: Prisma.EnumCaptureStatusFilter<"Capture"> | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryFilter<"Capture"> | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.StringNullableFilter<"Capture"> | string | null
+  convertedGoalId?: Prisma.StringNullableFilter<"Capture"> | string | null
+  processedAt?: Prisma.DateTimeNullableFilter<"Capture"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Capture"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Capture"> | Date | string
 }
 
 export type CaptureCreateManyUserInput = {
   id?: string
   content: string
+  status?: $Enums.CaptureStatus
+  category?: $Enums.CaptureCategory
+  convertedTaskId?: string | null
+  convertedGoalId?: string | null
+  processedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CaptureUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCaptureStatusFieldUpdateOperationsInput | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryFieldUpdateOperationsInput | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  convertedGoalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CaptureUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCaptureStatusFieldUpdateOperationsInput | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryFieldUpdateOperationsInput | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  convertedGoalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CaptureUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCaptureStatusFieldUpdateOperationsInput | $Enums.CaptureStatus
+  category?: Prisma.EnumCaptureCategoryFieldUpdateOperationsInput | $Enums.CaptureCategory
+  convertedTaskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  convertedGoalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -415,7 +597,13 @@ export type CaptureSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   userId?: boolean
   content?: boolean
+  status?: boolean
+  category?: boolean
+  convertedTaskId?: boolean
+  convertedGoalId?: boolean
+  processedAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["capture"]>
 
@@ -423,7 +611,13 @@ export type CaptureSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   userId?: boolean
   content?: boolean
+  status?: boolean
+  category?: boolean
+  convertedTaskId?: boolean
+  convertedGoalId?: boolean
+  processedAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["capture"]>
 
@@ -431,7 +625,13 @@ export type CaptureSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   userId?: boolean
   content?: boolean
+  status?: boolean
+  category?: boolean
+  convertedTaskId?: boolean
+  convertedGoalId?: boolean
+  processedAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["capture"]>
 
@@ -439,10 +639,16 @@ export type CaptureSelectScalar = {
   id?: boolean
   userId?: boolean
   content?: boolean
+  status?: boolean
+  category?: boolean
+  convertedTaskId?: boolean
+  convertedGoalId?: boolean
+  processedAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type CaptureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "content" | "createdAt", ExtArgs["result"]["capture"]>
+export type CaptureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "content" | "status" | "category" | "convertedTaskId" | "convertedGoalId" | "processedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["capture"]>
 export type CaptureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -462,7 +668,13 @@ export type $CapturePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     userId: string
     content: string
+    status: $Enums.CaptureStatus
+    category: $Enums.CaptureCategory
+    convertedTaskId: string | null
+    convertedGoalId: string | null
+    processedAt: Date | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["capture"]>
   composites: {}
 }
@@ -890,7 +1102,13 @@ export interface CaptureFieldRefs {
   readonly id: Prisma.FieldRef<"Capture", 'String'>
   readonly userId: Prisma.FieldRef<"Capture", 'String'>
   readonly content: Prisma.FieldRef<"Capture", 'String'>
+  readonly status: Prisma.FieldRef<"Capture", 'CaptureStatus'>
+  readonly category: Prisma.FieldRef<"Capture", 'CaptureCategory'>
+  readonly convertedTaskId: Prisma.FieldRef<"Capture", 'String'>
+  readonly convertedGoalId: Prisma.FieldRef<"Capture", 'String'>
+  readonly processedAt: Prisma.FieldRef<"Capture", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Capture", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Capture", 'DateTime'>
 }
     
 

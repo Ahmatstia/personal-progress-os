@@ -31,8 +31,8 @@ export * from "./enums"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Goals
- * const goals = await prisma.goal.findMany()
+ * // Fetch zero or more Users
+ * const users = await prisma.user.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -42,15 +42,45 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
+ * Model User
+ * 
+ */
+export type User = Prisma.UserModel
+/**
+ * Model UserPreference
+ * 
+ */
+export type UserPreference = Prisma.UserPreferenceModel
+/**
+ * Model Area
+ * 
+ */
+export type Area = Prisma.AreaModel
+/**
  * Model Goal
  * 
  */
 export type Goal = Prisma.GoalModel
 /**
+ * Model Objective
+ * 
+ */
+export type Objective = Prisma.ObjectiveModel
+/**
+ * Model Project
+ * 
+ */
+export type Project = Prisma.ProjectModel
+/**
  * Model Stage
  * 
  */
 export type Stage = Prisma.StageModel
+/**
+ * Model Milestone
+ * 
+ */
+export type Milestone = Prisma.MilestoneModel
 /**
  * Model Task
  * 
@@ -62,22 +92,32 @@ export type Task = Prisma.TaskModel
  */
 export type Session = Prisma.SessionModel
 /**
+ * Model DailyFocus
+ * 
+ */
+export type DailyFocus = Prisma.DailyFocusModel
+/**
  * Model Review
  * 
  */
 export type Review = Prisma.ReviewModel
 /**
- * Model DailyFocus
+ * Model CalendarEvent
  * 
  */
-export type DailyFocus = Prisma.DailyFocusModel
+export type CalendarEvent = Prisma.CalendarEventModel
+/**
+ * Model Activity
+ * 
+ */
+export type Activity = Prisma.ActivityModel
 /**
  * Model Capture
  * 
  */
 export type Capture = Prisma.CaptureModel
 /**
- * Model User
+ * Model Notification
  * 
  */
-export type User = Prisma.UserModel
+export type Notification = Prisma.NotificationModel

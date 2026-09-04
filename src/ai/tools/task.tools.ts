@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Tool } from "./tool.interface";
 import { completeTask, createTask, deleteTask, reopenTask, updateTask } from "@/services/task.service";
 import { prisma } from "@/lib/prisma";
+import type { TaskStatus, Priority } from "@/generated/prisma/client";
 
 export const createTaskTool: Tool<
   { stageId: string; name: string; description?: string; priority?: "LOW" | "MEDIUM" | "HIGH"; estimatedHours?: number; notes?: string },
@@ -50,12 +51,12 @@ export const createTaskTool: Tool<
       success: true,
       toolName: "create_task",
       type: "WRITE",
-      message: `Task "${task.name}" berhasil dibuat pada stage "${stage.name}" (${stage.goal.name}).`,
+      message: `Task "${task.title}" berhasil dibuat pada stage "${stage.name}" (${stage.goal.title}).`,
       data: {
         id: task.id,
-        name: task.name,
+        name: task.title,
         stageName: stage.name,
-        goalName: stage.goal.name,
+        goalName: stage.goal.title,
       },
       verified: true,
     };
@@ -97,7 +98,7 @@ export const getTaskTool: Tool<{ id: string }, Record<string, unknown>> = {
       success: true,
       toolName: "get_task",
       type: "READ",
-      message: `Task "${task.name}" (${task.status}) pada ${task.stage.goal.name} / ${task.stage.name}.`,
+      message: `Task "${task.title}" (${task.status}) pada ${task.stage?.goal.title} / ${task.stage?.name}.`,
       data: task,
     };
   },
@@ -123,9 +124,9 @@ export const searchTasksTool: Tool<
         userId: context.userId,
         ...(input.stageId ? { stageId: input.stageId } : {}),
         ...(input.goalId ? { stage: { goalId: input.goalId } } : {}),
-        ...(input.status ? { status: input.status } : {}),
-        ...(input.priority ? { priority: input.priority } : {}),
-        ...(input.query ? { name: { contains: input.query } } : {}),
+        ...(input.status ? { status: input.status as TaskStatus } : {}),
+        ...(input.priority ? { priority: input.priority as Priority } : {}),
+        ...(input.query ? { title: { contains: input.query } } : {}),
       },
       include: {
         stage: { include: { goal: true } },
@@ -140,11 +141,11 @@ export const searchTasksTool: Tool<
       message: `Ditemukan ${tasks.length} task.`,
       data: tasks.map((t) => ({
         id: t.id,
-        name: t.name,
+        name: t.title,
         status: t.status,
         priority: t.priority,
-        stageName: t.stage.name,
-        goalName: t.stage.goal.name,
+        stageName: t.stage?.name ?? "",
+        goalName: t.stage?.goal?.title ?? "",
       })),
     };
   },
@@ -288,8 +289,8 @@ export const deleteTaskTool: Tool<{ id: string }, { id: string; name: string }> 
       success: true,
       toolName: "delete_task",
       type: "DESTRUCTIVE",
-      message: `Task "${exists.name}" berhasil dihapus.`,
-      data: { id: exists.id, name: exists.name },
+      message: `Task "${exists.title}" berhasil dihapus.`,
+      data: { id: exists.id, name: exists.title },
       verified: true,
     };
   },
@@ -320,9 +321,9 @@ export const bulkDeleteTasksTool: Tool<
         ...(input.taskIds ? { id: { in: input.taskIds } } : {}),
         ...(input.stageId ? { stageId: input.stageId } : {}),
         ...(input.goalId ? { stage: { goalId: input.goalId } } : {}),
-        ...(input.status ? { status: input.status } : {}),
+        ...(input.status ? { status: input.status as TaskStatus } : {}),
       },
-      select: { id: true, name: true },
+      select: { id: true, title: true },
     });
 
     if (targets.length === 0) {
@@ -350,7 +351,7 @@ export const bulkDeleteTasksTool: Tool<
       message: `${targets.length} task berhasil dihapus.`,
       data: {
         deletedCount: targets.length,
-        tasks: targets,
+        tasks: targets.map((t) => ({ id: t.id, name: t.title })),
       },
       verified: true,
     };
@@ -388,7 +389,7 @@ export const bulkCompleteTasksTool: Tool<
         ...(input.stageId ? { stageId: input.stageId } : {}),
         ...(input.goalId ? { stage: { goalId: input.goalId } } : {}),
       },
-      select: { id: true, name: true },
+      select: { id: true, title: true },
     });
 
     if (targets.length === 0) {
@@ -414,7 +415,7 @@ export const bulkCompleteTasksTool: Tool<
       message: `${targets.length} task berhasil ditandai selesai.`,
       data: {
         completedCount: targets.length,
-        tasks: targets,
+        tasks: targets.map((t) => ({ id: t.id, name: t.title })),
       },
       verified: true,
     };

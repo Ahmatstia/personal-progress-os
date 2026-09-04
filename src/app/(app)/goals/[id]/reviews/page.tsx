@@ -34,7 +34,7 @@ export default async function ReviewsPage({ params }: { params: Promise<{ id: st
           href={`/goals/${goal.id}`}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-surface-500 transition hover:text-primary-700"
         >
-          <Icon name="arrowLeft" size={15} /> Kembali ke {goal.name}
+          <Icon name="arrowLeft" size={15} /> Kembali ke {goal.title}
         </Link>
       </div>
 
