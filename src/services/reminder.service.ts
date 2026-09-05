@@ -3,6 +3,7 @@ import { findExistingNotification, createNotification } from "@/repositories/not
 import { getUserPreference } from "@/services/user-preference.service";
 import { requireUserId } from "@/lib/ownership";
 import type { NotificationType, NotificationSeverity } from "@/generated/prisma/client";
+import { dispatchExternalNotification } from "./external-notification.service";
 
 export interface ReminderCycleOptions {
   now?: Date;
@@ -128,6 +129,13 @@ export async function runReminderCycle(
     title: string;
     severity: NotificationSeverity;
   }> = [];
+  const externalDispatchQueue: Array<{
+    title: string;
+    message: string;
+    severity: NotificationSeverity;
+    type: string;
+    linkUrl?: string | null;
+  }> = [];
 
   // ==========================================
   // 1. TASK REMINDERS (DUE TODAY & OVERDUE)
@@ -207,6 +215,13 @@ export async function runReminderCycle(
         title: notif.title,
         severity: notif.severity,
       });
+      externalDispatchQueue.push({
+        title: notif.title,
+        message: notif.message,
+        severity: notif.severity,
+        type: notif.type,
+        linkUrl: notif.linkUrl,
+      });
     }
   }
 
@@ -258,6 +273,13 @@ export async function runReminderCycle(
         title: notif.title,
         severity: notif.severity,
       });
+      externalDispatchQueue.push({
+        title: notif.title,
+        message: notif.message,
+        severity: notif.severity,
+        type: notif.type,
+        linkUrl: notif.linkUrl,
+      });
     }
   }
 
@@ -306,6 +328,13 @@ export async function runReminderCycle(
           type: notif.type,
           title: notif.title,
           severity: notif.severity,
+        });
+        externalDispatchQueue.push({
+          title: notif.title,
+          message: notif.message,
+          severity: notif.severity,
+          type: notif.type,
+          linkUrl: notif.linkUrl,
         });
       }
     }
@@ -356,8 +385,26 @@ export async function runReminderCycle(
           title: notif.title,
           severity: notif.severity,
         });
+        externalDispatchQueue.push({
+          title: notif.title,
+          message: notif.message,
+          severity: notif.severity,
+          type: notif.type,
+          linkUrl: notif.linkUrl,
+        });
       }
     }
+  }
+
+  // Dispatch notifications to external channels (Telegram & Email)
+  for (const item of externalDispatchQueue) {
+    await dispatchExternalNotification({
+      title: item.title,
+      message: item.message,
+      severity: item.severity as "INFO" | "WARNING" | "CRITICAL",
+      type: item.type,
+      linkUrl: item.linkUrl || undefined,
+    });
   }
 
   return {

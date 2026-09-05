@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Nilai TEST saja untuk static validation & build. Bukan secret produksi.
-      DATABASE_URL: "file:./prisma/dev.db"
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/test?schema=public"
+      DIRECT_URL: "postgresql://postgres:postgres@localhost:5432/test?schema=public"
       AUTH_SECRET: "ci-test-secret-0123456789abcdef0123456789abcdef"
       AUTH_ACCESS_CODE: "ci-test-access-code"
     steps:

@@ -19,6 +19,35 @@ export function UserPreferenceControls({ initialPref }: { initialPref: Preferenc
   const [dailyFocusLimit, setDailyFocusLimit] = useState(initialPref.dailyFocusLimit);
   const [enableNotifications, setEnableNotifications] = useState(initialPref.enableNotifications);
   const [saving, setSaving] = useState(false);
+  const [testingChannel, setTestingChannel] = useState<"telegram" | "email" | null>(null);
+
+  async function testChannel(channel: "telegram" | "email") {
+    setTestingChannel(channel);
+    try {
+      const res = await fetch("/api/notifications/test-channel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ channel }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        toast(`Notifikasi uji coba ${channel === "telegram" ? "Telegram" : "Email"} berhasil dikirim!`, "success");
+      } else {
+        const reason = data.details?.reason || data.error || "Gagal mengirimkan notifikasi uji coba";
+        if (reason === "TELEGRAM_NOT_CONFIGURED") {
+          toast("TELEGRAM_BOT_TOKEN atau TELEGRAM_CHAT_ID belum diatur di .env", "error");
+        } else if (reason === "EMAIL_NOT_CONFIGURED" || reason === "RECIPIENT_NOT_CONFIGURED") {
+          toast("EMAIL_USER, EMAIL_PASS, atau NOTIFICATION_EMAIL_TO belum diatur di .env", "error");
+        } else {
+          toast(`Gagal: ${reason}`, "error");
+        }
+      }
+    } catch (err: unknown) {
+      toast(err instanceof Error ? err.message : "Terjadi kesalahan jaringan", "error");
+    } finally {
+      setTestingChannel(null);
+    }
+  }
 
   async function updatePref(patch: Partial<PreferenceData>) {
     setSaving(true);
@@ -118,6 +147,67 @@ export function UserPreferenceControls({ initialPref }: { initialPref: Preferenc
           }}
           className="h-4 w-4 rounded border-surface-300 text-primary-600 focus:ring-primary-500"
         />
+      </div>
+
+      {/* Saluran Notifikasi Eksternal (Telegram & Email) */}
+      <div className="mt-6 pt-4 border-t border-surface-150">
+        <h4 className="text-sm font-semibold text-surface-900 mb-1 flex items-center gap-2">
+          <span>🔔 Saluran Notifikasi Eksternal</span>
+          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">
+            Gratis
+          </span>
+        </h4>
+        <p className="text-xs text-surface-500 mb-4">
+          Hubungkan pengingat tenggat waktu, fokus harian, dan ringkasan mingguan ke akun Telegram dan Email Anda melalui konfigurasi environment.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Telegram Card */}
+          <div className="p-3 rounded-xl border border-surface-200 bg-surface-50/50 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-bold text-surface-800 flex items-center gap-1.5">
+                  <span>✈️</span> Telegram Bot
+                </span>
+                <span className="text-[10px] text-surface-400 font-mono">100% Free API</span>
+              </div>
+              <p className="text-[11px] text-surface-500 mb-3 leading-relaxed">
+                Kirim pengingat real-time ke akun Telegram Anda via Bot API.
+              </p>
+            </div>
+            <button
+              type="button"
+              disabled={testingChannel !== null}
+              onClick={() => testChannel("telegram")}
+              className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-sky-600 hover:bg-sky-700 text-white transition-all shadow-sm active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+            >
+              {testingChannel === "telegram" ? "Mengirim Tes..." : "Tes Notifikasi Telegram"}
+            </button>
+          </div>
+
+          {/* Email Card */}
+          <div className="p-3 rounded-xl border border-surface-200 bg-surface-50/50 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-bold text-surface-800 flex items-center gap-1.5">
+                  <span>✉️</span> Email (SMTP)
+                </span>
+                <span className="text-[10px] text-surface-400 font-mono">Gmail / Free Tier</span>
+              </div>
+              <p className="text-[11px] text-surface-500 mb-3 leading-relaxed">
+                Kirim email ringkasan dan peringatan berbobot penting ke kotak masuk Anda.
+              </p>
+            </div>
+            <button
+              type="button"
+              disabled={testingChannel !== null}
+              onClick={() => testChannel("email")}
+              className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+            >
+              {testingChannel === "email" ? "Mengirim Tes..." : "Tes Notifikasi Email"}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
