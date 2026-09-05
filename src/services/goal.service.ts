@@ -15,6 +15,7 @@ import {
   type UpdateGoalInput,
 } from "@/schemas/goal.schema";
 import { requireUserId } from "../lib/ownership";
+import { prisma } from "@/lib/prisma";
 
 export class GoalServiceError extends Error {
   constructor(
@@ -41,10 +42,21 @@ function withGoalNameAlias<T extends { title: string }>(goal: T): T & { name: st
 }
 
 export async function createGoal(input: CreateGoalInput, userId?: string) {
+  const owner = requireUserId(userId);
   const parsed = createGoalSchema.parse(input);
+
+  if (parsed.areaId) {
+    const area = await prisma.area.findFirst({
+      where: { id: parsed.areaId, userId: owner },
+    });
+    if (!area) {
+      throw new GoalServiceError("Area tidak ditemukan atau bukan milik Anda.");
+    }
+  }
+
   const title = parsed.title ?? parsed.name ?? "";
   const targetDate = parsed.targetDate ? new Date(parsed.targetDate) : null;
-  const result = await createGoalRecord(requireUserId(userId), {
+  const result = await createGoalRecord(owner, {
     ...parsed,
     title,
     targetDate,
@@ -56,6 +68,16 @@ export async function updateGoal(id: string, input: UpdateGoalInput, userId?: st
   const owner = requireUserId(userId);
   if (!(await findGoalRecord(owner, id))) throw new GoalServiceError("Goal tidak ditemukan.");
   const validated = updateGoalSchema.parse(input);
+
+  if (validated.areaId) {
+    const area = await prisma.area.findFirst({
+      where: { id: validated.areaId, userId: owner },
+    });
+    if (!area) {
+      throw new GoalServiceError("Area tidak ditemukan atau bukan milik Anda.");
+    }
+  }
+
   const title = validated.title ?? validated.name;
   const targetDate = validated.targetDate
     ? new Date(validated.targetDate)

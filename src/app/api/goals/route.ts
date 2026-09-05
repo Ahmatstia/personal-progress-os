@@ -1,15 +1,7 @@
 import { NextResponse } from "next/server";
-import { createGoal } from "@/services/goal.service";
-import { z } from "zod";
+import { createGoal, GoalServiceError } from "@/services/goal.service";
+import { createGoalSchema } from "@/schemas/goal.schema";
 import { requireCurrentUser, authErrorResponse, AuthorizationError } from "@/lib/auth";
-
-const createGoalSchema = z.object({
-  title: z.string().min(1).optional(),
-  name: z.string().min(1).optional(),
-  type: z.enum(["LEARNING", "ACHIEVEMENT", "HABIT", "MAINTENANCE"]).default("LEARNING"),
-  description: z.string().optional(),
-  areaId: z.string().optional().nullable(),
-});
 
 export async function POST(request: Request) {
   try {
@@ -19,19 +11,22 @@ export async function POST(request: Request) {
     const result = createGoalSchema.safeParse(body);
 
     if (!result.success) {
+      console.error("POST /api/goals validation error:", result.error.issues);
+      const firstIssue = result.error.issues[0]?.message;
       return NextResponse.json(
         {
-          error: "Data tidak valid",
+          error: firstIssue ? `Data tidak valid: ${firstIssue}` : "Data tidak valid",
+          details: result.error.issues,
         },
         { status: 400 },
       );
     }
 
     const title = result.data.title ?? result.data.name;
-    if (!title) {
+    if (!title || !title.trim()) {
       return NextResponse.json(
         {
-          error: "Judul goal wajib diisi",
+          error: "Nama goal wajib diisi.",
         },
         { status: 400 },
       );
@@ -39,10 +34,13 @@ export async function POST(request: Request) {
 
     const goal = await createGoal(
       {
-        title,
+        title: title.trim(),
+        name: title.trim(),
         type: result.data.type,
-        description: result.data.description ?? "",
-        areaId: result.data.areaId || null,
+        description: result.data.description ?? null,
+        areaId: result.data.areaId ?? null,
+        priority: result.data.priority,
+        targetDate: result.data.targetDate,
       },
       user.id,
     );
@@ -50,13 +48,14 @@ export async function POST(request: Request) {
     return NextResponse.json(goal, { status: 201 });
   } catch (error) {
     if (error instanceof AuthorizationError) return authErrorResponse(error);
+    const isServiceError = error instanceof GoalServiceError;
     console.error("POST /api/goals error:", error);
 
     return NextResponse.json(
       {
-        error: "Gagal membuat goal",
+        error: isServiceError ? error.message : "Gagal membuat goal.",
       },
-      { status: 500 },
+      { status: isServiceError ? 400 : 500 },
     );
   }
 }
