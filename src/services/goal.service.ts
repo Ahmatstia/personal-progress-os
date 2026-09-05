@@ -3,6 +3,9 @@ import {
   createGoal as createGoalRecord,
   deleteGoal as deleteGoalRecord,
   findGoal as findGoalRecord,
+  findGoalDetail as findGoalDetailRecord,
+  findGoals as findGoalsRecord,
+  findGoalsWithStages as findGoalsWithStagesRecord,
   updateGoal as updateGoalRecord,
 } from "@/repositories/goal.repository";
 import {
@@ -73,7 +76,24 @@ export async function deleteGoal(id: string, userId?: string) {
   return deleteGoalRecord(owner, id);
 }
 
-export async function findGoal(userId: string, id: string) {
-  const goal = await findGoalRecord(userId, id);
+export async function findGoal(userId: string, id: string, includeRelations: boolean = false) {
+  const goal = await findGoalRecord(userId, id, includeRelations);
+  return goal ? withGoalNameAlias(goal) : null;
+}
+
+export async function getGoals(userId?: string) {
+  const owner = requireUserId(userId);
+  const goals = await findGoalsRecord(owner);
+  return goals.map(withGoalNameAlias);
+}
+
+export async function getGoalsWithStages(userId?: string) {
+  const owner = requireUserId(userId);
+  const goals = await findGoalsWithStagesRecord(owner);
+  return goals.map(withGoalNameAlias);
+}
+
+export async function getGoalDetail(userId: string, id: string) {
+  const goal = await findGoalDetailRecord(userId, id);
   return goal ? withGoalNameAlias(goal) : null;
 }

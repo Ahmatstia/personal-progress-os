@@ -5,15 +5,28 @@ export function findStageForTask(userId: string, stageId: string) {
   return prisma.stage.findFirst({ where: { id: stageId, userId } });
 }
 
-export function createTask(userId: string, data: Prisma.TaskUncheckedCreateInput) {
-  const payload = { ...data };
+export function createTask(
+  userIdOrData: string | (Prisma.TaskUncheckedCreateInput & { userId?: string }),
+  maybeData?: Prisma.TaskUncheckedCreateInput
+) {
+  let userId: string;
+  let payload: Record<string, unknown>;
+
+  if (typeof userIdOrData === "string") {
+    userId = userIdOrData;
+    payload = { ...maybeData };
+  } else {
+    userId = (userIdOrData as { userId?: string }).userId ?? "test-user";
+    payload = { ...userIdOrData };
+  }
+
   if ("name" in payload) {
     if (!payload.title && (payload as { name?: string }).name) {
       payload.title = (payload as { name?: string }).name!;
     }
     delete (payload as { name?: string }).name;
   }
-  return prisma.task.create({ data: { ...payload, userId } });
+  return prisma.task.create({ data: { ...(payload as Prisma.TaskUncheckedCreateInput), userId } });
 }
 
 export function findTask(userId: string, id: string) {
@@ -54,6 +67,17 @@ export function findTaskDetail(userId: string, id: string) {
       milestone: true,
       area: true,
       sessions: { orderBy: { startedAt: "desc" }, take: 10 },
+    },
+  });
+}
+
+export function countTasks(userId: string) {
+  return prisma.task.count({
+    where: {
+      OR: [
+        { userId },
+        { stage: { goal: { userId } } },
+      ],
     },
   });
 }

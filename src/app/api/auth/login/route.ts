@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { upsertUserByEmail } from "@/repositories/user.repository";
 import { setSession } from "@/lib/auth";
 import { loginSchema } from "@/schemas/auth.schema";
 
@@ -47,11 +47,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Kode akses salah." }, { status: 401 });
   }
 
-  const user = await prisma.user.upsert({
-    where: { email: parsed.data.email.toLowerCase() },
-    update: parsed.data.name ? { name: parsed.data.name } : {},
-    create: { id: crypto.randomUUID(), email: parsed.data.email.toLowerCase(), name: parsed.data.name ?? null },
-  });
+  const user = await upsertUserByEmail(parsed.data.email, parsed.data.name);
   await setSession(user.id);
   return NextResponse.json({ id: user.id, email: user.email, name: user.name });
 }

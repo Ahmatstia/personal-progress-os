@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { createGoal } from "@/services/goal.service";
 import { z } from "zod";
 import { requireCurrentUser, authErrorResponse, AuthorizationError } from "@/lib/auth";
 
@@ -36,19 +36,19 @@ export async function POST(request: Request) {
       );
     }
 
-    const goal = await prisma.goal.create({
-      data: {
+    const goal = await createGoal(
+      {
         title,
         type: result.data.type,
         description: result.data.description ?? "",
-        userId: user.id,
       },
-    });
+      user.id,
+    );
 
     return NextResponse.json(goal, { status: 201 });
-} catch (error) {
+  } catch (error) {
     if (error instanceof AuthorizationError) return authErrorResponse(error);
-    console.error(error);
+    console.error("POST /api/goals error:", error);
 
     return NextResponse.json(
       {

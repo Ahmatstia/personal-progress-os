@@ -31,15 +31,43 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
       {/* ── Breadcrumb & Top Bar ───────────────────────────────── */}
       <nav aria-label="Breadcrumb" className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-[13px]">
-          <Link
-            href={`/goals/${task.stage?.goalId}`}
-            className="inline-flex items-center gap-1.5 font-medium text-surface-500 transition hover:text-primary-700"
-          >
-            <Icon name="arrowLeft" size={14} />
-            <span className="truncate max-w-[160px] sm:max-w-none">{task.stage?.goal.title}</span>
-          </Link>
-          <span className="text-surface-300">/</span>
-          <span className="chip bg-surface-100 text-surface-600 font-semibold">{task.stage?.name}</span>
+          {task.stage ? (
+            <>
+              <Link
+                href={`/goals/${task.stage.goalId}`}
+                className="inline-flex items-center gap-1.5 font-medium text-surface-500 transition hover:text-primary-700"
+              >
+                <Icon name="arrowLeft" size={14} />
+                <span className="truncate max-w-[160px] sm:max-w-none">{task.stage.goal.title}</span>
+              </Link>
+              <span className="text-surface-300">/</span>
+              <span className="chip bg-surface-100 text-surface-600 font-semibold">{task.stage.name}</span>
+            </>
+          ) : task.project ? (
+            <>
+              <Link
+                href={`/projects/${task.project.id}`}
+                className="inline-flex items-center gap-1.5 font-medium text-surface-500 transition hover:text-primary-700"
+              >
+                <Icon name="arrowLeft" size={14} />
+                <span className="truncate max-w-[160px] sm:max-w-none">{task.project.title}</span>
+              </Link>
+              {task.milestone && (
+                <>
+                  <span className="text-surface-300">/</span>
+                  <span className="chip bg-surface-100 text-surface-600 font-semibold">{task.milestone.title}</span>
+                </>
+              )}
+            </>
+          ) : (
+            <Link
+              href="/today"
+              className="inline-flex items-center gap-1.5 font-medium text-surface-500 transition hover:text-primary-700"
+            >
+              <Icon name="arrowLeft" size={14} />
+              <span>Hari Ini</span>
+            </Link>
+          )}
         </div>
 
         <TaskActions
@@ -234,8 +262,8 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
               key={activeSession?.id ?? "idle-timer"}
               taskId={task.id}
               taskName={task.title}
-              goalName={task.stage?.goal.title}
-              stageName={task.stage?.name}
+              goalName={task.stage?.goal?.title ?? task.project?.title}
+              stageName={task.stage?.name ?? task.milestone?.title}
               activeSession={
                 activeSession
                   ? { id: activeSession.id, startedAt: activeSession.startedAt.toISOString() }

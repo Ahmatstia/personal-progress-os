@@ -48,7 +48,8 @@ export type IconName =
   | "pen"
   | "brain"
   | "pomodoro"
-  | "flame";
+  | "flame"
+  | "bell";
 
 const paths: Record<IconName, React.ReactNode> = {
   sparkles: (
@@ -267,6 +268,12 @@ const paths: Record<IconName, React.ReactNode> = {
     <>
       <path d="M8.5 14.5A4.5 4.5 0 0012 19a4.5 4.5 0 002-8.5c0 1.5-1 3-2 3.5 0-2-1-4-3.5-4.5C9 11 8.5 13 8.5 14.5z" />
       <path d="M12 19c-3.3 0-6-2.7-6-6 0-4 3-7 6-10 3 3 6 6 6 10 0 3.3-2.7 6-6 6z" />
+    </>
+  ),
+  bell: (
+    <>
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
     </>
   ),
 };

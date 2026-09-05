@@ -16,3 +16,7 @@ export function deleteStage(userId: string, id: string) {
 export function findGoalStages(userId: string, goalId: string) {
   return prisma.stage.findMany({ where: { goalId, userId }, orderBy: { order: "asc" } });
 }
+
+export function createStageRecord(data: Prisma.StageUncheckedCreateInput) {
+  return prisma.stage.create({ data });
+}

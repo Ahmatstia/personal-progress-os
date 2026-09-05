@@ -152,7 +152,7 @@ export function AppShell({
                 <Icon name="sparkles" size={14} />
               </span>
               <span className="text-sm font-bold tracking-tight text-surface-900">
-                Progress<span className="gradient-text">OS</span>
+                My<span className="gradient-text">Life</span>
               </span>
             </Link>
 

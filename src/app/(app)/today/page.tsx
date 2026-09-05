@@ -7,10 +7,13 @@ import { FocusOrb } from "@/app/components/core/FocusOrb";
 import QuickCapture from "@/app/components/QuickCapture";
 import { getToday } from "@/services/today.service";
 import { getRecentCaptures } from "@/services/capture.service";
+import { getTodayInsightsSummary } from "@/services/insights/insights.service";
 import { requirePageUser } from "@/lib/auth";
 import { Icon } from "@/app/components/ui/Icon";
 import { StatRow } from "@/app/components/ui/StatRow";
 import { HistoryDeleteButton } from "@/app/components/ui/HistoryDeleteButton";
+import { NeedsAttentionCard, type NeedsAttentionItem } from "@/app/components/core/NeedsAttentionCard";
+import { findNotifications } from "@/repositories/notification.repository";
 import { formatDuration } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -34,8 +37,12 @@ function formatCaptureTime(value: Date) {
 
 export default async function TodayPage() {
   const user = await requirePageUser();
-  const today = await getToday(new Date(), user.id);
-  const recentCaptures = await getRecentCaptures(user.id, 6);
+  const [today, recentCaptures, insightsSummary, unreadNotifs] = await Promise.all([
+    getToday(new Date(), user.id),
+    getRecentCaptures(user.id, 6),
+    getTodayInsightsSummary(user.id),
+    findNotifications({ userId: user.id, isRead: false, limit: 3 }),
+  ]);
 
   const primaryFocus = today.focusTasks[0]?.task;
   const ranked = today.nextAction;
@@ -91,6 +98,56 @@ export default async function TodayPage() {
     estimatedHours: t.estimatedHours,
   }));
 
+  const needsAttentionItems: NeedsAttentionItem[] = [];
+
+  // 1. Overdue tasks
+  for (const t of today.overdueTasks.slice(0, 3)) {
+    needsAttentionItems.push({
+      id: `overdue-${t.id}`,
+      type: "OVERDUE_TASK",
+      title: t.title,
+      subtitle: `Tenggat terlewat${t.dueDate ? ` (${t.dueDate.toISOString().slice(0, 10)})` : ""}`,
+      linkUrl: `/tasks/${t.id}`,
+      severity: t.priority === "URGENT" ? "URGENT" : "WARNING",
+    });
+  }
+
+  // 2. Unread notifications
+  for (const n of unreadNotifs.slice(0, 2)) {
+    needsAttentionItems.push({
+      id: `notif-${n.id}`,
+      type: "URGENT_NOTIFICATION",
+      title: n.title,
+      subtitle: n.message,
+      linkUrl: n.linkUrl || "/notifications",
+      severity: n.severity === "URGENT" ? "URGENT" : n.severity === "WARNING" ? "WARNING" : "INFO",
+    });
+  }
+
+  // 3. Active session
+  if (today.currentSession) {
+    needsAttentionItems.push({
+      id: `session-${today.currentSession.id}`,
+      type: "ACTIVE_SESSION",
+      title: `Sesi Berjalan: ${today.currentSession.task.title}`,
+      subtitle: "Fokus sedang aktif. Klik untuk kembali ke panel timer.",
+      linkUrl: "/focus",
+      severity: "INFO",
+    });
+  }
+
+  // 4. Incomplete Daily Focus
+  if (today.focusTotal > 0 && today.focusCompleted < today.focusTotal) {
+    needsAttentionItems.push({
+      id: "focus-reminder",
+      type: "DAILY_FOCUS",
+      title: "Fokus Harian Terbuka",
+      subtitle: `${today.focusTotal - today.focusCompleted} task fokus belum selesai`,
+      linkUrl: "/focus",
+      severity: "INFO",
+    });
+  }
+
   return (
     <div className="lg:grid lg:grid-cols-[1fr_268px] lg:items-start lg:gap-5">
       {/* Left — main focus zone */}
@@ -139,6 +196,56 @@ export default async function TodayPage() {
           </p>
         </header>
 
+        {/* Quick Action Toolbar */}
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/focus"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-surface-200 bg-white px-3 py-1.5 text-xs font-semibold text-surface-800 shadow-xs hover:border-warning-300 hover:text-warning-700 transition"
+          >
+            <Icon name="target" size={13} className="text-warning-500" />
+            Fokus Harian
+          </Link>
+          <Link
+            href="/capture"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-surface-200 bg-white px-3 py-1.5 text-xs font-semibold text-surface-800 shadow-xs hover:border-primary-300 hover:text-primary-700 transition"
+          >
+            <Icon name="inbox" size={13} className="text-primary-500" />
+            Inbox ({insightsSummary.inboxCount})
+          </Link>
+          <Link
+            href="/insights"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-surface-200 bg-white px-3 py-1.5 text-xs font-semibold text-surface-800 shadow-xs hover:border-brand-300 hover:text-brand-700 transition"
+          >
+            <Icon name="chart" size={13} className="text-brand-500" />
+            Insights ({insightsSummary.lifeHealthScore})
+          </Link>
+          <Link
+            href="/calendar"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-surface-200 bg-white px-3 py-1.5 text-xs font-semibold text-surface-800 shadow-xs hover:border-emerald-300 hover:text-emerald-700 transition"
+          >
+            <Icon name="calendar" size={13} className="text-emerald-500" />
+            Jadwal Kalender
+          </Link>
+          <Link
+            href="/review"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-surface-200 bg-white px-3 py-1.5 text-xs font-semibold text-surface-800 shadow-xs hover:border-info-300 hover:text-info-600 transition"
+          >
+            <Icon name="check" size={13} className="text-info-500" />
+            Buka Review
+          </Link>
+          {insightsSummary.conflicts.length > 0 && (
+            <Link
+              href="/insights"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 shadow-xs hover:bg-rose-100 transition animate-pulse"
+            >
+              ⚠️ {insightsSummary.conflicts.length} Konflik Waktu
+            </Link>
+          )}
+        </div>
+
+        {/* Proactive Needs Attention widget */}
+        <NeedsAttentionCard items={needsAttentionItems} />
+
         {/* Quick start suggestion when no focus selected */}
         {today.focusTasks.length === 0 && !today.currentSession && (
           <DailyQuickStart tasks={quickStartTasks} />
@@ -162,6 +269,52 @@ export default async function TodayPage() {
         )}
 
         <FocusPanel focus={today.focusTasks} available={today.availableTasks} />
+
+        {/* Scheduled Calendar Events for Today */}
+        <section className="rounded-2xl border border-surface-150 bg-white p-5 shadow-soft">
+          <div className="flex items-center justify-between gap-3 mb-3.5">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                <Icon name="calendar" size={13} />
+              </span>
+              <p className="text-[14px] font-bold text-surface-900">Agenda Kalender Hari Ini</p>
+            </div>
+            <Link
+              href="/calendar"
+              className="text-[12px] font-semibold text-primary-600 hover:text-primary-700"
+            >
+              Buka Kalender →
+            </Link>
+          </div>
+          {today.calendarEvents && today.calendarEvents.length > 0 ? (
+            <div className="space-y-2">
+              {today.calendarEvents.map((evt) => (
+                <div
+                  key={evt.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-surface-150 bg-surface-50/60 px-3.5 py-2.5 text-xs"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="font-semibold text-surface-700 whitespace-nowrap">
+                      {new Intl.DateTimeFormat("id-ID", { hour: "2-digit", minute: "2-digit" }).format(new Date(evt.startTime))}
+                      {" – "}
+                      {new Intl.DateTimeFormat("id-ID", { hour: "2-digit", minute: "2-digit" }).format(new Date(evt.endTime))}
+                    </span>
+                    <span className="font-medium text-surface-900 truncate">{evt.title}</span>
+                  </div>
+                  {evt.project && (
+                    <span className="shrink-0 rounded-md bg-surface-150 px-2 py-0.5 text-[10px] text-surface-600 font-medium">
+                      {evt.project.title}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-[12.5px] text-surface-400">
+              Tidak ada agenda kalender terjadwal untuk hari ini.
+            </p>
+          )}
+        </section>
 
         {/* Completed today — Grid */}
         <section className="rounded-2xl border border-surface-150 bg-white p-5 shadow-soft">
@@ -200,7 +353,10 @@ export default async function TodayPage() {
                       {task.title}
                     </Link>
                     <p className="truncate text-[10.5px] text-surface-400">
-                      {task.stage?.goal.title}
+                      {(task as { stage?: { goal?: { title?: string } } }).stage?.goal?.title ||
+                        (task as { project?: { title?: string } }).project?.title ||
+                        (task as { area?: { name?: string } }).area?.name ||
+                        "Task"}
                     </p>
                   </div>
                 </div>
@@ -218,9 +374,17 @@ export default async function TodayPage() {
               </span>
               <p className="text-[14px] font-bold text-surface-900">Catatan terbaru</p>
             </div>
-            <span className="chip bg-surface-100 text-surface-500">
-              {recentCaptures.length}
-            </span>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/capture"
+                className="text-[12px] font-semibold text-primary-600 hover:text-primary-700"
+              >
+                Buka Inbox →
+              </Link>
+              <span className="chip bg-surface-100 text-surface-500">
+                {recentCaptures.length}
+              </span>
+            </div>
           </div>
           {recentCaptures.length === 0 ? (
             <p className="text-[12.5px] text-surface-400">

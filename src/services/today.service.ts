@@ -1,7 +1,18 @@
 import { selectNextAction } from "./progress.service";
 import { requireUserId } from "../lib/ownership";
 import { calculateSessionDurationMinutes } from "./progress.service";
-import { createFocus, deleteFocus as deleteFocusRecord, findFocusById, findTaskForFocus, findTodayContext, findTodayFocus, findTodaySessions, updateFocus } from "../repositories/today.repository";
+import {
+  createFocus,
+  deleteFocus as deleteFocusRecord,
+  findFocusById,
+  findTaskForFocus,
+  findTodayCalendarEvents,
+  findTodayContext,
+  findTodayFocus,
+  findTodaySessions,
+  findTodayTasks,
+  updateFocus,
+} from "../repositories/today.repository";
 
 export function localDayBounds(date = new Date()) {
   const start = new Date(date); start.setHours(0, 0, 0, 0);
@@ -18,8 +29,16 @@ async function focusRecords(date: Date, userId?: string) { return findTodayFocus
 export async function getToday(date = new Date(), userId?: string) {
   const owner = requireUserId(userId);
   const { start, end } = localDayBounds(date);
-  const [focus, goals, sessions] = await Promise.all([focusRecords(date, owner), findTodayContext(owner), findTodaySessions(owner, start, end)]);
-  const tasks = goals.flatMap((goal) => goal.stages.flatMap((stage) => stage.tasks));
+  const [focus, goals, dbTasks, calendarEvents, sessions] = await Promise.all([
+    focusRecords(date, owner),
+    findTodayContext(owner),
+    findTodayTasks(owner).catch(() => []),
+    findTodayCalendarEvents(owner, start, end).catch(() => []),
+    findTodaySessions(owner, start, end),
+  ]);
+
+  const fallbackTasks = goals.flatMap((goal) => goal.stages.flatMap((stage) => stage.tasks));
+  const tasks = dbTasks.length > 0 ? dbTasks : fallbackTasks;
   const completedTasks = tasks.filter((task) => task.completedAt && task.completedAt >= start && task.completedAt <= end);
   const focusTasks = focus.filter((item) => item.task.status !== "COMPLETED");
   const activeSession = sessions.find((session) => session.endedAt === null) ?? null;
@@ -68,6 +87,7 @@ export async function getToday(date = new Date(), userId?: string) {
     focusCompleted: focus.filter((item) => item.task.status === "COMPLETED").length,
     focusTotal: focus.length,
     momentumSessions: finishedSessions,
+    calendarEvents,
   };
 }
 

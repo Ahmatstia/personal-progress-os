@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -63,7 +63,9 @@ export default function GoalActionsMenu({
   const [description, setDescription] = useState(initialData?.description ?? "");
 
   // Sync state if initialData changes
-  useEffect(() => {
+  const [prevInitialData, setPrevInitialData] = useState(initialData);
+  if (initialData !== prevInitialData) {
+    setPrevInitialData(initialData);
     if (initialData) {
       setName(initialData.name ?? goalName);
       setType(initialData.type ?? "LEARNING");
@@ -71,7 +73,7 @@ export default function GoalActionsMenu({
       setTargetDate(formatDateForInput(initialData.targetDate));
       setDescription(initialData.description ?? "");
     }
-  }, [initialData, goalName]);
+  }
 
   // Close menu on outside click
   useEffect(() => {

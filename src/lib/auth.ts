@@ -1,7 +1,7 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { prisma } from "./prisma";
+import { findUserById } from "@/repositories/user.repository";
 
 export const SESSION_COOKIE = "ppos_session";
 const SESSION_TTL = 60 * 60 * 24 * 30;
@@ -52,7 +52,7 @@ export async function getCurrentUser(request?: Request) {
     ? request.headers.get("cookie")?.split(";").map((item) => item.trim()).find((item) => item.startsWith(`${SESSION_COOKIE}=`))?.slice(SESSION_COOKIE.length + 1)
     : (await cookies()).get(SESSION_COOKIE)?.value;
   const userId = token ? verify(token) : null;
-  return userId ? prisma.user.findUnique({ where: { id: userId } }) : null;
+  return userId ? findUserById(userId) : null;
 }
 
 export async function requireCurrentUser(request?: Request) {

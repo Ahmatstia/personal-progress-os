@@ -28,8 +28,21 @@ export function createGoal(
   });
 }
 
-export function findGoal(userId: string, id: string) {
-  return prisma.goal.findFirst({ where: { id, userId } });
+export function findGoal(userId: string, id: string, includeRelations: boolean = false) {
+  return prisma.goal.findFirst({
+    where: { id, userId },
+    ...(includeRelations && {
+      include: {
+        area: { select: { id: true, name: true, color: true } },
+        objectives: { orderBy: [{ createdAt: "asc" }] },
+        projects: { select: { id: true, title: true, status: true, priority: true } },
+        stages: {
+          orderBy: [{ order: "asc" }],
+          include: { tasks: { select: { id: true, title: true, status: true, priority: true } } },
+        },
+      },
+    }),
+  });
 }
 
 export function updateGoal(
@@ -65,4 +78,48 @@ export function updateGoal(
 
 export function deleteGoal(userId: string, id: string) {
   return prisma.goal.deleteMany({ where: { id, userId } });
+}
+
+export function findGoals(userId: string) {
+  return prisma.goal.findMany({
+    where: { userId },
+    include: {
+      stages: { select: { id: true, name: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export function findGoalsWithStages(userId: string) {
+  return prisma.goal.findMany({
+    where: { userId },
+    orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
+    include: {
+      stages: {
+        orderBy: { order: "asc" },
+        include: {
+          tasks: { orderBy: { createdAt: "asc" } },
+        },
+      },
+    },
+  });
+}
+
+export function findGoalDetail(userId: string, id: string) {
+  return prisma.goal.findFirst({
+    where: { id, userId },
+    include: {
+      objectives: {
+        orderBy: { createdAt: "asc" },
+      },
+      stages: {
+        orderBy: { order: "asc" },
+        include: { tasks: { orderBy: { createdAt: "asc" } } },
+      },
+    },
+  });
+}
+
+export function countGoals(userId: string) {
+  return prisma.goal.count({ where: { userId } });
 }

@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Frozen AI foundation:
+    "src/ai/**",
+    "tests/ai.*",
   ]),
 ]);
 

@@ -16,10 +16,10 @@ vi.mock("@/repositories/review.repository", () => ({
     3,
   ]),
   findReviewByGoalAndPeriod: vi.fn(async () => state.review),
-  createReview: vi.fn(async (data: object) => { state.review = { ...data, id: "review-1" }; state.reviews.unshift(state.review); return state.review; }),
+  createReview: vi.fn(async (_userId: string, data: object) => { state.review = { ...data, id: "review-1" }; state.reviews.unshift(state.review); return state.review; }),
   findReviewById: vi.fn(async () => state.review),
   findReviewsByGoalId: vi.fn(async () => state.reviews),
-  updateReview: vi.fn(async (_id: string, data: object) => { if (!state.review) throw new Error("missing"); state.review = { ...state.review, ...data }; return state.review; }),
+  updateReview: vi.fn(async (_userId: string, _id: string, data: object) => { if (!state.review) throw new Error("missing"); state.review = { ...state.review, ...data }; return state.review; }),
 }));
 
 import { createReview, getGoalReviews, getGoalReviewPageData, getPeriodReview, getWeekPeriod, updateReview } from "../src/services/review.service";

@@ -48,5 +48,5 @@ export const updateTaskSchema = z.object({
   status: taskStatusSchema.optional(),
 });
 
-export type CreateTaskInput = z.infer<typeof createTaskSchema>;
-export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
+export type CreateTaskInput = z.input<typeof createTaskSchema>;
+export type UpdateTaskInput = z.input<typeof updateTaskSchema>;

@@ -5,6 +5,8 @@ vi.mock("../src/repositories/today.repository", () => ({
   findTodayFocus: vi.fn(async () => state.focus),
   findTodayContext: vi.fn(async () => state.goals),
   findTodaySessions: vi.fn(async () => state.sessions),
+  findTodayTasks: vi.fn(async () => []),
+  findTodayCalendarEvents: vi.fn(async () => []),
   findTaskForFocus: vi.fn(),
   findFocusById: vi.fn(),
   createFocus: vi.fn(),

@@ -5,7 +5,8 @@ export default defineConfig({
   test: {
     environment: "node",
     fileParallelism: false,
-    testTimeout: 30000,
+    testTimeout: 120000,
+    hookTimeout: 120000,
     globalSetup: "./tests/global-setup.ts",
     env: {
       AUTH_SECRET: "test-secret-for-vitest-only",

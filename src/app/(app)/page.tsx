@@ -60,10 +60,10 @@ export default async function Home() {
               </span>
               <div>
                 <p className="text-[15px] font-bold tracking-tight text-surface-900">
-                  Personal Progress<span className="gradient-text">OS</span>
+                  My<span className="gradient-text">Life</span>
                 </p>
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-surface-400">
-                  Sistem kemajuan
+                  Personal Life Operating System
                 </p>
               </div>
             </div>
@@ -130,7 +130,9 @@ export default async function Home() {
       ? `${today.focusTasks.length} task terpilih untuk hari ini`
       : dashboard.nextAction
         ? `Task berikutnya: ${dashboard.nextAction.taskName}`
-        : "Pilih fokus hari ini untuk mulai";
+        : goalCount === 0
+          ? "Mulai dengan membuat Goal pertama Anda untuk menentukan arah hidup dan pekerjaan."
+          : "Pilih fokus hari ini untuk mulai";
 
   return (
     <div className="space-y-8">
@@ -189,6 +191,37 @@ export default async function Home() {
           </div>
         </div>
       </header>
+
+      {/* ── Onboarding Card for New Users ─────────────────────── */}
+      {goalCount === 0 && (
+        <section className="rounded-2xl border border-primary-200 bg-gradient-to-br from-primary-50/70 via-white to-ai-50/40 p-6 shadow-soft">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-2.5 py-0.5 text-[11px] font-bold text-primary-700">
+                Langkah Awal
+              </span>
+              <h2 className="text-lg font-bold text-surface-900">
+                Selamat Datang di MyLife
+              </h2>
+              <p className="text-xs text-surface-600 max-w-lg leading-relaxed">
+                MyLife membantu Anda menyelaraskan tujuan hidup, proyek kerja, fokus harian, dan refleksi mingguan dalam satu sistem yang tenang.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link href="/goals">
+                <Button variant="primary" icon="flag" size="sm">
+                  Buat Goal Pertama
+                </Button>
+              </Link>
+              <Link href="/capture">
+                <Button variant="secondary" icon="inbox" size="sm">
+                  Catat Ide di Inbox
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── Bento Row: Next Action & Smart Insights ──────────── */}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:items-start">

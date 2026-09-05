@@ -88,3 +88,7 @@ export function markTaskInProgress(userId: string, taskId: string, startedAt?: D
 export function findTaskForSession(taskId: string, userId: string) {
   return prisma.task.findFirst({ where: { id: taskId, userId } });
 }
+
+export function countSessions(userId: string) {
+  return prisma.session.count({ where: { userId } });
+}

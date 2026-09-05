@@ -1,9 +1,11 @@
 import { requirePageUser } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { getUserAccountStats } from "@/services/user.service";
+import { getUserPreference } from "@/services/user-preference.service";
 import LogoutButton from "@/app/components/LogoutButton";
 import { PageHeader } from "@/app/components/ui/PageHeader";
 import { StatRow } from "@/app/components/ui/StatRow";
 import { Icon } from "@/app/components/ui/Icon";
+import { UserPreferenceControls } from "./UserPreferenceControls";
 
 export const dynamic = "force-dynamic";
 
@@ -14,11 +16,11 @@ function formatDate(value: Date) {
 export default async function SettingsPage() {
   const user = await requirePageUser();
 
-  const [goalCount, taskCount, sessionCount] = await Promise.all([
-    prisma.goal.count({ where: { userId: user.id } }),
-    prisma.task.count({ where: { stage: { goal: { userId: user.id } } } }),
-    prisma.session.count({ where: { userId: user.id } }),
+  const [stats, preference] = await Promise.all([
+    getUserAccountStats(user.id),
+    getUserPreference(user.id),
   ]);
+  const { goalCount, taskCount, sessionCount } = stats;
 
   return (
     <div className="space-y-12">
@@ -53,16 +55,29 @@ export default async function SettingsPage() {
 
       <section className="max-w-2xl border-t border-surface-150 pt-8">
         <p className="eyebrow text-surface-400">Preferensi</p>
-        <ul className="mt-5 divide-y divide-surface-150">
-          <li className="flex items-center justify-between gap-4 py-3">
-            <span className="text-sm font-medium text-surface-800">Bahasa aplikasi</span>
-            <span className="text-sm text-surface-500">Indonesia</span>
-          </li>
-          <li className="flex items-center justify-between gap-4 py-3">
-            <span className="text-sm font-medium text-surface-800">Mode tampilan</span>
-            <span className="text-sm text-surface-500">Terang</span>
-          </li>
-        </ul>
+        <div className="mt-4">
+          <UserPreferenceControls initialPref={preference} />
+        </div>
+      </section>
+
+      <section className="max-w-2xl border-t border-surface-150 pt-8">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="eyebrow text-primary-600">Kedaulatan Data (Data Sovereignty)</p>
+            <h2 className="mt-1 font-semibold text-surface-900">Ekspor Data Pribadi</h2>
+            <p className="mt-1 text-xs text-surface-500 max-w-md leading-relaxed">
+              Anda memegang kendali penuh atas data Anda. Unduh salinan lengkap seluruh Goal, Task, Sesi, Catatan, Kalender, dan Riwayat Anda dalam format file JSON standar.
+            </p>
+          </div>
+          <a
+            href="/api/settings/export"
+            download
+            className="inline-flex items-center gap-2 rounded-xl border border-surface-200 bg-white px-4 py-2.5 text-xs font-bold text-surface-800 shadow-xs hover:border-primary-300 hover:text-primary-700 transition"
+          >
+            <Icon name="arrowRight" size={14} className="rotate-90" />
+            Unduh Cadangan JSON
+          </a>
+        </div>
       </section>
 
       <section className="max-w-2xl border-t border-surface-150 pt-8">

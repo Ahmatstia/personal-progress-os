@@ -45,3 +45,70 @@ export function findReviewMetrics(userId: string, goalId: string, periodStart: D
     prisma.task.count({ where: { userId, stage: { goalId }, status: "COMPLETED", completedAt: { gte: periodStart, lte: periodEnd } } }),
   ]);
 }
+
+export function findUserReviews(userId: string, limit = 50) {
+  return prisma.review.findMany({
+    where: { userId },
+    orderBy: { periodStart: "desc" },
+    take: limit,
+    include: { goal: { select: { id: true, title: true, status: true } } },
+  });
+}
+
+export const findAllReviews = findUserReviews;
+
+export function deleteReview(userId: string, id: string) {
+  return prisma.review.deleteMany({
+    where: { id, userId },
+  });
+}
+
+export async function findWeeklyReviewDashboardData(userId: string, periodStart: Date) {
+  const [goals, reviewedList, captures, sessionReflections] = await Promise.all([
+    prisma.goal.findMany({
+      where: { userId, status: { not: "COMPLETED" } },
+      orderBy: { updatedAt: "desc" },
+      include: {
+        stages: {
+          orderBy: { order: "asc" },
+          include: { tasks: true },
+        },
+      },
+    }),
+    prisma.review.findMany({
+      where: { userId, periodStart },
+      select: { goalId: true },
+    }),
+    prisma.capture.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    }),
+    prisma.session.findMany({
+      where: {
+        userId,
+        OR: [{ obstacle: { not: null } }, { understanding: { not: null } }],
+      },
+      orderBy: { startedAt: "desc" },
+      take: 20,
+      include: {
+        task: {
+          include: {
+            stage: {
+              include: {
+                goal: true,
+              },
+            },
+          },
+        },
+      },
+    }),
+  ]);
+
+  return {
+    goals,
+    reviewedGoalIds: new Set(reviewedList.map((r) => r.goalId)),
+    captures,
+    sessionReflections,
+  };
+}

@@ -149,7 +149,7 @@ export async function executeAICommand(rawInput: AICommandInput, userId?: string
   const { intent, confidenceLevel } = interpretation;
 
   // Context and reference resolution
-  const contextRefs = resolveContextReferences(input.text, convContext, input.context);
+  resolveContextReferences(input.text, convContext, input.context);
 
   if (intent === "UNKNOWN" || !canRead(confidenceLevel)) {
     return {

@@ -11,6 +11,7 @@ import {
   recomputeTaskActualHours,
   deleteSessionById,
 } from "@/repositories/session.repository";
+import { createActivity as createActivityRecord } from "@/repositories/activity.repository";
 import type { EndSessionInput } from "@/schemas/session.schema";
 import { requireUserId } from "../lib/ownership";
 
@@ -117,12 +118,31 @@ export async function endSession(sessionId: string, data: EndSessionInput, userI
 
   const updated = await endSessionRecord(owner, sessionId, endData);
   await recomputeTaskActualHours(session.taskId, owner);
+
+  if (endData.durationMinutes >= 1) {
+    try {
+      await createActivityRecord(owner, {
+        title: session.task?.title ? `Sesi Fokus: ${session.task.title}` : "Sesi Fokus",
+        category: "WORK",
+        startTime: session.startedAt,
+        endTime: endedAt,
+        durationMinutes: endData.durationMinutes,
+        notes: data.activity || data.obstacle ? `Aktivitas: ${data.activity || "-"}. Hambatan: ${data.obstacle || "-"}` : null,
+        taskId: session.taskId,
+        projectId: session.task?.projectId ?? null,
+        areaId: session.task?.areaId ?? null,
+      });
+    } catch {
+      // Non-blocking activity logging
+    }
+  }
+
   return updated;
 }
 
 export async function deleteSession(sessionId: string, userId?: string) {
   const owner = requireUserId(userId);
-  const session = await findSessionById(owner, sessionId);
+  const session = await findSessionById(sessionId, owner);
   if (!session) {
     throw new SessionServiceError("Session tidak ditemukan.", "SESSION_NOT_FOUND");
   }

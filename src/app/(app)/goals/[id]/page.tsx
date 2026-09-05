@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { getGoalDetail } from "@/services/goal.service";
 import { requirePageUser } from "@/lib/auth";
 import StageForm from "@/app/components/StageForm";
 import GoalActionsMenu from "@/app/components/GoalActionsMenu";
@@ -19,6 +19,7 @@ import { Icon } from "@/app/components/ui/Icon";
 import { CurrentWaypointTag } from "@/app/components/core/JourneyRoute";
 import { JourneyPath } from "@/app/components/core/JourneyPath";
 import { FocusOrb } from "@/app/components/core/FocusOrb";
+import { ObjectivesSection } from "@/app/components/goals/ObjectivesSection";
 
 export const dynamic = "force-dynamic";
 
@@ -39,15 +40,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const { id } = await params;
   const user = await requirePageUser();
 
-  const goal = await prisma.goal.findUnique({
-    where: { id, userId: user.id },
-    include: {
-      stages: {
-        orderBy: { order: "asc" },
-        include: { tasks: { orderBy: { createdAt: "asc" } } },
-      },
-    },
-  });
+  const goal = await getGoalDetail(user.id, id);
 
   if (!goal) notFound();
 
@@ -304,6 +297,11 @@ export default async function GoalPage({ params }: GoalPageProps) {
             />
           </div>
         )}
+      </section>
+
+      {/* Objectives / Key Results */}
+      <section>
+        <ObjectivesSection goalId={goal.id} initialObjectives={goal.objectives} />
       </section>
 
       {/* Timeline stage — jalur vertikal + node heksagon, card radius asimetris */}

@@ -80,6 +80,25 @@ export function PomodoroPanel({
   }, [phase]);
   useEffect(() => () => setFocusMode(false), []);
 
+  function playBell() {
+    try {
+      const ctx = new AudioContext();
+      bellRef.current = ctx;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      osc.type = "sine";
+      gain.gain.setValueAtTime(0.4, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 1.5);
+    } catch {
+      // Audio not available
+    }
+  }
+
   // Tick
   useEffect(() => {
     if (phase !== "running" || paused) {
@@ -107,25 +126,6 @@ export function PomodoroPanel({
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, paused, session, targetSeconds]);
-
-  function playBell() {
-    try {
-      const ctx = new AudioContext();
-      bellRef.current = ctx;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.frequency.value = 880;
-      osc.type = "sine";
-      gain.gain.setValueAtTime(0.4, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 1.5);
-    } catch {
-      // Audio not available
-    }
-  }
 
   async function startSession() {
     if (!taskId) return;

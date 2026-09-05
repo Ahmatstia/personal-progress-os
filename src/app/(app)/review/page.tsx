@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
 import { requirePageUser } from "@/lib/auth";
-import { getWeekPeriod, getPeriodMetrics, getPeriodReview } from "@/services/review.service";
+import {
+  getWeekPeriod,
+  getPeriodMetrics,
+  getPeriodReview,
+  getWeeklyReviewOverview,
+  getAllReviews,
+} from "@/services/review.service";
 import { calculateGoalProgress } from "@/services/progress.service";
 import { PageHeader } from "@/app/components/ui/PageHeader";
 import { Button } from "@/app/components/ui/Button";
@@ -22,65 +27,12 @@ export default async function ReviewPage() {
   const user = await requirePageUser();
   const period = getWeekPeriod(new Date());
 
-  const goals = await prisma.goal.findMany({
-    where: { userId: user.id, status: { not: "COMPLETED" } },
-    orderBy: { updatedAt: "desc" },
-    include: {
-      stages: {
-        orderBy: { order: "asc" },
-        include: { tasks: true },
-      },
-    },
-  });
-
-  const [reviewedList, captures, sessionReflections, allPastReviews] = await Promise.all([
-    prisma.review.findMany({
-      where: {
-        goal: { userId: user.id },
-        periodStart: period.periodStart,
-      },
-      select: { goalId: true },
-    }),
-    prisma.capture.findMany({
-      where: { userId: user.id },
-      orderBy: { createdAt: "desc" },
-      take: 20,
-    }),
-    prisma.session.findMany({
-      where: {
-        userId: user.id,
-        OR: [
-          { obstacle: { not: null } },
-          { understanding: { not: null } },
-        ],
-      },
-      orderBy: { startedAt: "desc" },
-      take: 20,
-      include: {
-        task: {
-          include: {
-            stage: {
-              include: {
-                goal: true,
-              },
-            },
-          },
-        },
-      },
-    }),
-    prisma.review.findMany({
-      where: {
-        goal: { userId: user.id },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 15,
-      include: {
-        goal: true,
-      },
-    }),
+  const [overview, allPastReviews] = await Promise.all([
+    getWeeklyReviewOverview(user.id),
+    getAllReviews(user.id, 15),
   ]);
 
-  const reviewed = new Set(reviewedList.map((item) => item.goalId));
+  const { goals, reviewedGoalIds: reviewed, captures, sessionReflections } = overview;
 
   const rows = await Promise.all(
     goals.map(async (goal) => {

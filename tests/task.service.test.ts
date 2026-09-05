@@ -15,7 +15,7 @@ const state = vi.hoisted(() => ({
 
 vi.mock("@/repositories/task.repository", () => ({
   findStageForTask: vi.fn(async () => ({ id: "stage-1", goalId: "goal-1", userId: "test-user" })),
-  createTask: vi.fn(async (data: object) => ({ id: "task-new", ...data })),
+  createTask: vi.fn(async (a: unknown, b?: unknown) => ({ id: "task-new", ...(typeof a === "string" && b ? (b as object) : (a as object)) })),
   findTask: vi.fn(async () => state.task),
   updateTask: vi.fn(async (_id: string, data: Record<string, unknown>) => {
     Object.assign(state.task, data);

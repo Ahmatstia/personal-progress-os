@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { getGoalsWithStages } from "@/services/goal.service";
 import { requirePageUser } from "@/lib/auth";
 import { calculateGoalProgress } from "@/services/progress.service";
 import NewGoalButton from "@/app/components/NewGoalButton";
@@ -74,18 +74,7 @@ function buildGoalCard(goal: GoalWithRelations): GoalCard {
 export default async function GoalsPage() {
   const user = await requirePageUser();
 
-  const goals = await prisma.goal.findMany({
-    where: { userId: user.id },
-    orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
-    include: {
-      stages: {
-        orderBy: { order: "asc" },
-        include: {
-          tasks: { orderBy: { createdAt: "asc" } },
-        },
-      },
-    },
-  });
+  const goals = await getGoalsWithStages(user.id);
 
   const activeGoals = goals
     .filter((g) => g.status !== "COMPLETED")

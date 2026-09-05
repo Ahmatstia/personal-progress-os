@@ -25,5 +25,5 @@ export const updateGoalSchema = z.object({
   targetDate: z.string().datetime().optional().nullable().or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable()).or(z.date().optional().nullable()),
 });
 
-export type CreateGoalInput = z.infer<typeof createGoalSchema>;
-export type UpdateGoalInput = z.infer<typeof updateGoalSchema>;
+export type CreateGoalInput = z.input<typeof createGoalSchema>;
+export type UpdateGoalInput = z.input<typeof updateGoalSchema>;

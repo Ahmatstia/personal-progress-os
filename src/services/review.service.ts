@@ -1,12 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createReview as createReviewRecord,
+  deleteReview as deleteReviewRecord,
   findGoalForReview,
   findGoalReviewContext,
   findReviewByGoalAndPeriod,
   findReviewById,
   findReviewMetrics,
   findReviewsByGoalId,
+  findUserReviews,
+  findWeeklyReviewDashboardData,
   updateReview as updateReviewRecord,
 } from "@/repositories/review.repository";
 import type { ReviewInput } from "@/schemas/review.schema";
@@ -31,9 +33,32 @@ export async function createReview(goalId: string, input: ReviewInput, userId?: 
   if (!(await findGoalForReview(owner, goalId))) throw new ReviewServiceError("Goal tidak ditemukan.", "GOAL_NOT_FOUND");
   const metrics = await derivedMetrics(owner, goalId, input.periodStart, input.periodEnd);
   const existing = await findReviewByGoalAndPeriod(owner, goalId, input.periodStart, input.periodEnd);
-  const reviewData = { goalId, userId: owner, ...input, ...metrics };
-  if (existing) return process.env.NODE_ENV === "test" ? (updateReviewRecord as unknown as (id: string, data: unknown) => Promise<any>)(existing.id, { ...input, ...metrics }) : updateReviewRecord(owner, existing.id, { ...input, ...metrics });
-  return process.env.NODE_ENV === "test" ? (createReviewRecord as unknown as (data: unknown) => Promise<any>)(reviewData) : createReviewRecord(owner, reviewData);
+  const dbData = {
+    goalId,
+    userId: owner,
+    periodStart: input.periodStart,
+    periodEnd: input.periodEnd,
+    learningHours: metrics.learningHours,
+    tasksCompleted: metrics.tasksCompleted,
+    understanding: metrics.understanding ?? input.understanding,
+    wentWell: input.wentWell,
+    difficulties: input.difficulties,
+    improvements: input.improvements,
+    nextFocus: input.nextFocus,
+  };
+  if (existing) {
+    const updateData = {
+      learningHours: metrics.learningHours,
+      tasksCompleted: metrics.tasksCompleted,
+      understanding: metrics.understanding ?? input.understanding,
+      wentWell: input.wentWell,
+      difficulties: input.difficulties,
+      improvements: input.improvements,
+      nextFocus: input.nextFocus,
+    };
+    return updateReviewRecord(owner, existing.id, updateData);
+  }
+  return createReviewRecord(owner, dbData);
 }
 
 export function getReview(id: string, userId?: string) { return findReviewById(requireUserId(userId), id); }
@@ -63,7 +88,18 @@ export async function updateReview(id: string, input: ReviewInput, userId?: stri
   const review = await findReviewById(owner, id);
   if (!review) throw new ReviewServiceError("Review tidak ditemukan.", "REVIEW_NOT_FOUND");
   const metrics = await derivedMetrics(owner, review.goalId, input.periodStart, input.periodEnd);
-  return process.env.NODE_ENV === "test" ? (updateReviewRecord as unknown as (id: string, data: unknown) => Promise<any>)(id, { ...input, ...metrics }) : updateReviewRecord(owner, id, { ...input, ...metrics });
+  const updateData = {
+    periodStart: input.periodStart,
+    periodEnd: input.periodEnd,
+    learningHours: metrics.learningHours,
+    tasksCompleted: metrics.tasksCompleted,
+    understanding: metrics.understanding ?? input.understanding,
+    wentWell: input.wentWell,
+    difficulties: input.difficulties,
+    improvements: input.improvements,
+    nextFocus: input.nextFocus,
+  };
+  return updateReviewRecord(owner, id, updateData);
 }
 
 export function getWeekPeriod(date = new Date()) {
@@ -76,4 +112,23 @@ export function getWeekPeriod(date = new Date()) {
   end.setDate(end.getDate() + 6);
   end.setHours(23, 59, 59, 999);
   return { periodStart: start, periodEnd: end };
+}
+
+export function getAllReviews(userId?: string, limit = 50) {
+  return findUserReviews(requireUserId(userId), limit);
+}
+
+export async function deleteReviewItem(id: string, userId?: string) {
+  const owner = requireUserId(userId);
+  const existing = await findReviewById(owner, id);
+  if (!existing) {
+    throw new ReviewServiceError("Review tidak ditemukan.", "REVIEW_NOT_FOUND");
+  }
+  return deleteReviewRecord(owner, id);
+}
+
+export async function getWeeklyReviewOverview(userId?: string) {
+  const owner = requireUserId(userId);
+  const period = getWeekPeriod(new Date());
+  return findWeeklyReviewDashboardData(owner, period.periodStart);
 }

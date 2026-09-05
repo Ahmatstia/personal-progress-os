@@ -8,6 +8,7 @@ import {
   findTasksForAI,
   updateTask as updateTaskRecord,
 } from "@/repositories/task.repository";
+import { createActivity as createActivityRecord } from "@/repositories/activity.repository";
 import type { CreateTaskInput, UpdateTaskInput } from "@/schemas/task.schema";
 import { requireUserId } from "../lib/ownership";
 import { validateTaskParents } from "./task-validation.service";
@@ -69,9 +70,7 @@ export async function createTask(input: CreateTaskInput, userId?: string) {
     notes: input.notes || null,
   };
 
-  const created = process.env.NODE_ENV === "test"
-    ? await (createTaskRecord as unknown as (data: unknown) => Promise<any>)(data)
-    : await createTaskRecord(owner, data);
+  const created = await createTaskRecord(owner, data);
 
   return withNameAlias(created);
 }
@@ -121,6 +120,26 @@ export async function updateTask(id: string, input: UpdateTaskInput, userId?: st
 
   const fn = updateTaskRecord as unknown as (...args: unknown[]) => Promise<any>;
   const updated = fn.length === 2 ? await fn(id, data) : await fn(owner, id, data);
+
+  if (data.status === "COMPLETED" && task.status !== "COMPLETED") {
+    try {
+      const now = new Date();
+      await createActivityRecord(owner, {
+        title: `Task Selesai: ${updated.title ?? task.title ?? "Task"}`,
+        category: "WORK",
+        startTime: task.startedAt ?? now,
+        endTime: now,
+        durationMinutes: Math.max(1, Math.round((now.getTime() - (task.startedAt ? new Date(task.startedAt).getTime() : now.getTime())) / 60000)),
+        notes: `Task "${updated.title ?? task.title}" diselesaikan.`,
+        taskId: id,
+        projectId: (updated as any).projectId ?? task.projectId ?? null,
+        areaId: (updated as any).areaId ?? task.areaId ?? null,
+      });
+    } catch {
+      // Non-blocking activity recording
+    }
+  }
+
   return withNameAlias(updated);
 }
 
