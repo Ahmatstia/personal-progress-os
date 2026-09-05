@@ -95,6 +95,7 @@ export function findGoalsWithStages(userId: string) {
     where: { userId },
     orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
     include: {
+      area: { select: { id: true, name: true, color: true } },
       stages: {
         orderBy: { order: "asc" },
         include: {
@@ -109,6 +110,7 @@ export function findGoalDetail(userId: string, id: string) {
   return prisma.goal.findFirst({
     where: { id, userId },
     include: {
+      area: { select: { id: true, name: true, color: true } },
       objectives: {
         orderBy: { createdAt: "asc" },
       },

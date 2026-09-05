@@ -60,6 +60,16 @@ export function findAreas(userId: string, filter?: { isActive?: boolean }) {
           tasks: true,
         },
       },
+      goals: {
+        select: { id: true, title: true, status: true },
+        orderBy: { updatedAt: "desc" },
+        take: 4,
+      },
+      projects: {
+        select: { id: true, title: true, status: true },
+        orderBy: { updatedAt: "desc" },
+        take: 4,
+      },
     },
   });
 }

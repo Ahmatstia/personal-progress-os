@@ -1,4 +1,5 @@
 import { getGoalsWithStages } from "@/services/goal.service";
+import { getAreas } from "@/services/area.service";
 import { requirePageUser } from "@/lib/auth";
 import { calculateGoalProgress } from "@/services/progress.service";
 import NewGoalButton from "@/app/components/NewGoalButton";
@@ -24,6 +25,7 @@ type GoalWithRelations = {
   type: string;
   status: string;
   targetDate: Date | null;
+  area?: { id: string; name: string; color: string } | null;
   stages: {
     id: string;
     name: string;
@@ -59,6 +61,7 @@ function buildGoalCard(goal: GoalWithRelations): GoalCard {
     name: goal.title,
     type: goal.type,
     status: goal.status,
+    area: goal.area ?? null,
     targetDateLabel: formatDate(goal.targetDate),
     progress,
     totalTasks: tasks.length,
@@ -74,7 +77,10 @@ function buildGoalCard(goal: GoalWithRelations): GoalCard {
 export default async function GoalsPage() {
   const user = await requirePageUser();
 
-  const goals = await getGoalsWithStages(user.id);
+  const [goals, areas] = await Promise.all([
+    getGoalsWithStages(user.id),
+    getAreas(user.id, { isActive: true }),
+  ]);
 
   const activeGoals = goals
     .filter((g) => g.status !== "COMPLETED")
@@ -89,7 +95,7 @@ export default async function GoalsPage() {
         eyebrow="Goals"
         title="Perjalanan Anda"
         description="Setiap goal adalah sebuah perjalanan: stage demi stage, task demi task, hingga tiba di tujuan."
-        actions={<NewGoalButton />}
+        actions={<NewGoalButton areas={areas} />}
       />
 
       {goals.length === 0 ? (
@@ -97,8 +103,8 @@ export default async function GoalsPage() {
           <EmptyState
             icon="flag"
             title="Mulai dengan goal yang bermakna"
-            description="Ubah hal yang Anda pedulikan menjadi jalur yang jelas. Buat goal, pecah menjadi stage, lalu menjadi task kecil."
-            action={<NewGoalButton />}
+            description="Ubah hal yang Anda pedulikan menjadi jalur yang jelas. Buat goal, hubungkan ke area kehidupan, lalu pecah menjadi stage dan task kecil."
+            action={<NewGoalButton areas={areas} />}
           />
         </div>
       ) : (

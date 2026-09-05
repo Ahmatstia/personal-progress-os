@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Icon } from "@/app/components/ui/Icon";
 import { useToast } from "@/app/components/ui/Toast";
@@ -18,6 +19,8 @@ type AreaItem = {
     projects: number;
     tasks: number;
   };
+  goals?: Array<{ id: string; title: string; status: string }>;
+  projects?: Array<{ id: string; title: string; status: string }>;
 };
 
 export function AreasManager({ initialAreas }: { initialAreas: AreaItem[] }) {
@@ -190,12 +193,52 @@ export function AreasManager({ initialAreas }: { initialAreas: AreaItem[] }) {
 
             {area.description && <p className="mt-2 text-xs text-surface-600 line-clamp-2">{area.description}</p>}
 
-            <div className="mt-4 flex items-center gap-3 text-xs text-surface-400 border-t border-surface-100 pt-3">
-              <span>{area._count?.goals ?? 0} Goals</span>
+            {/* Linked Goals & Projects */}
+            {((area.goals && area.goals.length > 0) || (area.projects && area.projects.length > 0)) && (
+              <div className="mt-3 space-y-2 pt-2.5 border-t border-surface-100">
+                {area.goals && area.goals.length > 0 && (
+                  <div>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-surface-400">Goals Terhubung:</span>
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {area.goals.map((g) => (
+                        <Link
+                          key={g.id}
+                          href={`/goals/${g.id}`}
+                          className="inline-flex items-center gap-1 rounded-md bg-surface-100 hover:bg-primary-50 hover:text-primary-700 px-2 py-0.5 text-[11px] font-medium text-surface-700 transition"
+                        >
+                          <span className="text-[10px]">🎯</span>
+                          <span className="truncate max-w-[130px]">{g.title}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {area.projects && area.projects.length > 0 && (
+                  <div>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-surface-400">Proyek Terhubung:</span>
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {area.projects.map((p) => (
+                        <Link
+                          key={p.id}
+                          href={`/projects/${p.id}`}
+                          className="inline-flex items-center gap-1 rounded-md bg-surface-100 hover:bg-primary-50 hover:text-primary-700 px-2 py-0.5 text-[11px] font-medium text-surface-700 transition"
+                        >
+                          <span className="text-[10px]">📁</span>
+                          <span className="truncate max-w-[130px]">{p.title}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="mt-4 flex items-center justify-between text-xs text-surface-400 border-t border-surface-100 pt-3">
+              <span className="font-semibold text-surface-600">{area._count?.goals ?? 0} Goals</span>
               <span>•</span>
-              <span>{area._count?.projects ?? 0} Proyek</span>
+              <span className="font-semibold text-surface-600">{area._count?.projects ?? 0} Proyek</span>
               <span>•</span>
-              <span>{area._count?.tasks ?? 0} Tasks</span>
+              <span className="font-semibold text-surface-600">{area._count?.tasks ?? 0} Tasks</span>
             </div>
           </div>
         ))}

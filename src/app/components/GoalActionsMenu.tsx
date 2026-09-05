@@ -9,12 +9,10 @@ import { Icon } from "./ui/Icon";
 import { useToast } from "./ui/Toast";
 
 const goalTypes = [
-  { value: "LEARNING", label: "Learning (Belajar)" },
-  { value: "PROJECT", label: "Project (Proyek)" },
-  { value: "PERSONAL", label: "Personal (Pribadi)" },
-  { value: "HEALTH", label: "Health (Kesehatan)" },
-  { value: "CAREER", label: "Career (Karir)" },
-  { value: "OTHER", label: "Other (Lainnya)" },
+  { value: "LEARNING", label: "Pembelajaran (Belajar Hal Baru)" },
+  { value: "ACHIEVEMENT", label: "Pencapaian (Target Tertentu)" },
+  { value: "HABIT", label: "Kebiasaan (Membangun Rutinitas)" },
+  { value: "MAINTENANCE", label: "Pemeliharaan (Menjaga Standar)" },
 ];
 
 const goalStatuses = [
@@ -35,6 +33,7 @@ export default function GoalActionsMenu({
   goalId,
   goalName,
   initialData,
+  areas = [],
 }: {
   goalId: string;
   goalName: string;
@@ -44,7 +43,9 @@ export default function GoalActionsMenu({
     type?: string;
     status?: string;
     targetDate?: Date | string | null;
+    areaId?: string | null;
   };
+  areas?: Array<{ id: string; name: string; color?: string }>;
 }) {
   const router = useRouter();
   const { toast } = useToast();
@@ -59,8 +60,25 @@ export default function GoalActionsMenu({
   const [name, setName] = useState(initialData?.name ?? goalName);
   const [type, setType] = useState(initialData?.type ?? "LEARNING");
   const [status, setStatus] = useState(initialData?.status ?? "ACTIVE");
+  const [areaId, setAreaId] = useState(initialData?.areaId ?? "");
   const [targetDate, setTargetDate] = useState(formatDateForInput(initialData?.targetDate));
   const [description, setDescription] = useState(initialData?.description ?? "");
+  const [fetchedAreas, setFetchedAreas] = useState<Array<{ id: string; name: string; color?: string }>>([]);
+
+  const activeAreas = areas.length > 0 ? areas : fetchedAreas;
+
+  useEffect(() => {
+    if (editOpen && areas.length === 0 && fetchedAreas.length === 0) {
+      fetch("/api/areas")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.data)) {
+            setFetchedAreas(data.data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [editOpen, areas.length, fetchedAreas.length]);
 
   // Sync state if initialData changes
   const [prevInitialData, setPrevInitialData] = useState(initialData);
@@ -70,6 +88,7 @@ export default function GoalActionsMenu({
       setName(initialData.name ?? goalName);
       setType(initialData.type ?? "LEARNING");
       setStatus(initialData.status ?? "ACTIVE");
+      setAreaId(initialData.areaId ?? "");
       setTargetDate(formatDateForInput(initialData.targetDate));
       setDescription(initialData.description ?? "");
     }
@@ -113,6 +132,7 @@ export default function GoalActionsMenu({
           name: name.trim(),
           type,
           status,
+          areaId: areaId || null,
           targetDate: targetDate ? targetDate : null,
           description: description.trim() || null,
         }),
@@ -178,29 +198,35 @@ export default function GoalActionsMenu({
               }}
               className="flex w-full items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-surface-700 hover:bg-primary-50 hover:text-primary-700 transition-colors"
             >
-              <Icon name="edit" size={14} className="text-primary-600" />
-              Edit goal & detail
+              <Icon name="edit" size={15} className="text-surface-400" />
+              Edit Goal
             </button>
 
+            {/* AI Decompose Action */}
             <Link
-              href={`/goals/${goalId}/reviews`}
               role="menuitem"
+              href={`/goals/${goalId}?action=ai-breakdown`}
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-surface-700 hover:bg-primary-50 hover:text-primary-700 transition-colors"
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-ai-600 hover:bg-ai-50 hover:text-ai-700 transition-colors"
             >
-              <Icon name="sparkles" size={14} className="text-ai-500" />
-              Review progres
+              <Icon name="sparkles" size={15} className="text-ai-500" />
+              Pecah dengan AI
             </Link>
+
+            {/* Add Review Action */}
             <Link
-              href={`/dashboard?goalId=${goalId}`}
               role="menuitem"
+              href={`/goals/${goalId}/review`}
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-surface-700 hover:bg-primary-50 hover:text-primary-700 transition-colors"
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-surface-700 hover:bg-surface-50 hover:text-surface-900 transition-colors"
             >
-              <Icon name="chart" size={14} className="text-success-600" />
-              Lihat analitik
+              <Icon name="bookOpen" size={15} className="text-surface-400" />
+              Review Mingguan
             </Link>
-            <div className="my-1 h-px bg-surface-100" aria-hidden />
+
+            <div className="my-1 border-t border-surface-100" />
+
+            {/* Delete Goal Action */}
             <button
               role="menuitem"
               type="button"
@@ -210,8 +236,8 @@ export default function GoalActionsMenu({
               }}
               className="flex w-full items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-danger-600 hover:bg-danger-50 transition-colors"
             >
-              <Icon name="trash" size={14} />
-              Hapus goal
+              <Icon name="trash" size={15} className="text-danger-500" />
+              Hapus Goal
             </button>
           </div>
         )}
@@ -221,8 +247,8 @@ export default function GoalActionsMenu({
       <Dialog
         open={editOpen}
         onClose={() => setEditOpen(false)}
-        title={`Edit Goal: ${name}`}
-        description="Perbarui informasi, status, atau target waktu perjalanan ini."
+        title="Edit Goal"
+        description="Perbarui detail atau kelola pilar kehidupan dari goal ini."
       >
         <form onSubmit={handleEditSubmit} className="space-y-4">
           {error && <p className="text-sm text-danger-600">{error}</p>}
@@ -236,6 +262,25 @@ export default function GoalActionsMenu({
               required
               className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
             />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-surface-700">Area Kehidupan (Pilar)</span>
+            <select
+              value={areaId}
+              onChange={(e) => setAreaId(e.target.value)}
+              className="w-full rounded-xl border border-surface-200 bg-surface-50 px-3.5 py-2.5 text-sm text-surface-900 outline-none focus:border-primary-400"
+            >
+              <option value="">-- Umum / Tanpa Area --</option>
+              {activeAreas.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name}
+                </option>
+              ))}
+            </select>
+            <span className="mt-1 block text-xs text-surface-400">
+              Hubungkan goal ini ke domain seperti Karir, Kesehatan, Keuangan, atau Belajar.
+            </span>
           </label>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

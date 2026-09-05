@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getGoalDetail } from "@/services/goal.service";
+import { getAreas } from "@/services/area.service";
 import { requirePageUser } from "@/lib/auth";
 import StageForm from "@/app/components/StageForm";
 import GoalActionsMenu from "@/app/components/GoalActionsMenu";
@@ -40,7 +41,10 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const { id } = await params;
   const user = await requirePageUser();
 
-  const goal = await getGoalDetail(user.id, id);
+  const [goal, areas] = await Promise.all([
+    getGoalDetail(user.id, id),
+    getAreas(user.id, { isActive: true }),
+  ]);
 
   if (!goal) notFound();
 
@@ -141,6 +145,25 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-surface-400">
                   {goal.type}
                 </p>
+                {goal.area && (
+                  <>
+                    <span className="h-1 w-1 rounded-full bg-surface-300" />
+                    <span
+                      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                      style={{
+                        backgroundColor: `${goal.area.color}15`,
+                        color: goal.area.color,
+                        border: `1px solid ${goal.area.color}35`,
+                      }}
+                    >
+                      <span
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{ backgroundColor: goal.area.color }}
+                      />
+                      {goal.area.name}
+                    </span>
+                  </>
+                )}
                 <span className="h-1 w-1 rounded-full bg-surface-300" />
                 <StatusBadge status={goal.status} />
               </div>
@@ -189,13 +212,14 @@ export default async function GoalPage({ params }: GoalPageProps) {
               </div>
             </div>
 
-            <div className="hidden lg:flex lg:justify-center">
+            {/* Focus Orb — pilar navigasi visual yang konsisten */}
+            <div className="flex justify-center lg:justify-end">
               <FocusOrb
                 value={progress}
-                size={140}
-                stroke={9}
-                tone="primary"
-                label={`Progres goal ${goal.title} ${progress} persen`}
+                size={180}
+                stroke={12}
+                tone={allStagesDone ? "success" : "primary"}
+                label={`Progres keseluruhan ${goal.title}`}
               >
                 <span className="text-3xl font-bold text-surface-900">
                   {progress}%
@@ -227,12 +251,14 @@ export default async function GoalPage({ params }: GoalPageProps) {
             <GoalActionsMenu
               goalId={goal.id}
               goalName={goal.title}
+              areas={areas}
               initialData={{
                 name: goal.title,
                 description: goal.description,
                 type: goal.type,
                 status: goal.status,
                 targetDate: goal.targetDate,
+                areaId: (goal as unknown as { areaId?: string | null }).areaId ?? goal.area?.id ?? null,
               }}
             />
           </div>

@@ -2,7 +2,10 @@ import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@/generated/prisma/client";
 
 export function findStageForTask(userId: string, stageId: string) {
-  return prisma.stage.findFirst({ where: { id: stageId, userId } });
+  return prisma.stage.findFirst({
+    where: { id: stageId, userId },
+    include: { goal: { select: { id: true, areaId: true } } },
+  });
 }
 
 export function createTask(

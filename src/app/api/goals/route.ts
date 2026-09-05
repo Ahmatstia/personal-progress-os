@@ -8,6 +8,7 @@ const createGoalSchema = z.object({
   name: z.string().min(1).optional(),
   type: z.enum(["LEARNING", "ACHIEVEMENT", "HABIT", "MAINTENANCE"]).default("LEARNING"),
   description: z.string().optional(),
+  areaId: z.string().optional().nullable(),
 });
 
 export async function POST(request: Request) {
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
         title,
         type: result.data.type,
         description: result.data.description ?? "",
+        areaId: result.data.areaId || null,
       },
       user.id,
     );

@@ -60,7 +60,7 @@ export async function validateTaskParents(
   const resolvedStageId: string | null = stageId ?? null;
   const resolvedMilestoneId: string | null = milestoneId ?? null;
   let resolvedProjectId: string | null = projectId ?? null;
-  const resolvedAreaId: string | null = areaId ?? null;
+  let resolvedAreaId: string | null = areaId ?? null;
   let resolvedGoalId: string | null = null;
 
   // Rule 2: Goal-track validation via Stage
@@ -72,7 +72,7 @@ export async function validateTaskParents(
         "STAGE_NOT_FOUND"
       );
     }
-    const stageWithGoal = stage as { goalId?: string | null };
+    const stageWithGoal = stage as { goalId?: string | null; goal?: { id: string; areaId?: string | null } | null };
     if (goalId && stageWithGoal.goalId && goalId !== stageWithGoal.goalId) {
       throw new TaskValidationError(
         "Task goalId does not match the parent Stage's goalId.",
@@ -80,6 +80,9 @@ export async function validateTaskParents(
       );
     }
     resolvedGoalId = stageWithGoal.goalId ?? null;
+    if (!resolvedAreaId && stageWithGoal.goal?.areaId) {
+      resolvedAreaId = stageWithGoal.goal.areaId;
+    }
   }
 
   // Rule 3: Milestone validation
@@ -123,6 +126,9 @@ export async function validateTaskParents(
       resolvedGoalId = project.goalId;
     } else {
       resolvedGoalId = null;
+    }
+    if (!resolvedAreaId && project.areaId) {
+      resolvedAreaId = project.areaId;
     }
   }
 

@@ -15,6 +15,7 @@ export type GoalCard = {
   name?: string;
   type: string;
   status: string;
+  area?: { id: string; name: string; color: string } | null;
   targetDateLabel: string | null;
   progress: number;
   totalTasks: number;
@@ -31,21 +32,27 @@ export type GoalCard = {
 };
 
 const typeConfig: Record<string, { icon: IconName; bg: string; text: string; border: string }> = {
-  LEARNING: { icon: "sparkles", bg: "bg-ai-50", text: "text-ai-600", border: "border-ai-200" },
-  PROJECT:  { icon: "layers",   bg: "bg-primary-50", text: "text-primary-600", border: "border-primary-200" },
-  PERSONAL: { icon: "sun",      bg: "bg-warning-50", text: "text-warning-600", border: "border-warning-200" },
-  HEALTH:   { icon: "bolt",     bg: "bg-success-50", text: "text-success-600", border: "border-success-200" },
-  CAREER:   { icon: "trendingUp", bg: "bg-info-50", text: "text-info-600", border: "border-info-200" },
-  OTHER:    { icon: "target",   bg: "bg-surface-100", text: "text-surface-600", border: "border-surface-200" },
+  LEARNING:    { icon: "sparkles", bg: "bg-ai-50", text: "text-ai-600", border: "border-ai-200" },
+  ACHIEVEMENT: { icon: "target",   bg: "bg-primary-50", text: "text-primary-600", border: "border-primary-200" },
+  HABIT:       { icon: "bolt",     bg: "bg-warning-50", text: "text-warning-600", border: "border-warning-200" },
+  MAINTENANCE: { icon: "gauge",    bg: "bg-success-50", text: "text-success-600", border: "border-success-200" },
+  PROJECT:     { icon: "layers",   bg: "bg-primary-50", text: "text-primary-600", border: "border-primary-200" },
+  PERSONAL:    { icon: "sun",      bg: "bg-warning-50", text: "text-warning-600", border: "border-warning-200" },
+  HEALTH:      { icon: "bolt",     bg: "bg-success-50", text: "text-success-600", border: "border-success-200" },
+  CAREER:      { icon: "trendingUp", bg: "bg-info-50", text: "text-info-600", border: "border-info-200" },
+  OTHER:       { icon: "target",   bg: "bg-surface-100", text: "text-surface-600", border: "border-surface-200" },
 };
 
 const accentGradient: Record<string, string> = {
-  LEARNING: "from-ai-500 to-primary-500",
-  PROJECT:  "from-primary-500 to-primary-700",
-  PERSONAL: "from-warning-400 to-warning-600",
-  HEALTH:   "from-success-500 to-success-700",
-  CAREER:   "from-info-400 to-info-600",
-  OTHER:    "from-surface-400 to-surface-600",
+  LEARNING:    "from-ai-500 to-primary-500",
+  ACHIEVEMENT: "from-primary-500 to-primary-700",
+  HABIT:       "from-warning-400 to-warning-600",
+  MAINTENANCE: "from-success-500 to-success-700",
+  PROJECT:     "from-primary-500 to-primary-700",
+  PERSONAL:    "from-warning-400 to-warning-600",
+  HEALTH:      "from-success-500 to-success-700",
+  CAREER:      "from-info-400 to-info-600",
+  OTHER:       "from-surface-400 to-surface-600",
 };
 
 function StatStrip({
@@ -115,6 +122,22 @@ function GoalCardRow({ goal }: { goal: GoalCard }) {
               <span className={`chip border text-[10px] ${cfg.bg} ${cfg.text} ${cfg.border}`}>
                 {goal.type}
               </span>
+              {goal.area && (
+                <span
+                  className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold border"
+                  style={{
+                    backgroundColor: `${goal.area.color}15`,
+                    color: goal.area.color,
+                    borderColor: `${goal.area.color}35`,
+                  }}
+                >
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: goal.area.color }}
+                  />
+                  {goal.area.name}
+                </span>
+              )}
               <StatusBadge status={goal.status} />
             </div>
             <FocusOrb
@@ -206,7 +229,20 @@ function CompletedGrid({ goals }: { goals: GoalCard[] }) {
               <Icon name="check" size={15} strokeWidth={3} />
             </span>
             <div className="min-w-0">
-              <span className={`chip ${cfg.bg} ${cfg.text} mb-0.5`}>{goal.type}</span>
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className={`chip ${cfg.bg} ${cfg.text}`}>{goal.type}</span>
+                {goal.area && (
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.2 text-[9px] font-semibold"
+                    style={{
+                      backgroundColor: `${goal.area.color}15`,
+                      color: goal.area.color,
+                    }}
+                  >
+                    {goal.area.name}
+                  </span>
+                )}
+              </div>
               <p className="truncate text-[13px] font-semibold text-surface-800 transition-colors group-hover:text-success-700">
                 {goal.title}
               </p>

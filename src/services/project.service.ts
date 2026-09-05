@@ -29,17 +29,22 @@ export async function createProject(input: CreateProjectInput, userId?: string) 
   const owner = requireUserId(userId);
   const parsed = createProjectSchema.parse(input);
 
+  let resolvedAreaId = parsed.areaId;
+
   // Validate goal ownership if goalId provided
   if (parsed.goalId) {
     const goal = await prisma.goal.findFirst({ where: { id: parsed.goalId, userId: owner } });
     if (!goal) {
       throw new ProjectServiceError("Goal tidak ditemukan atau bukan milik Anda.", "GOAL_NOT_FOUND");
     }
+    if (!resolvedAreaId && goal.areaId) {
+      resolvedAreaId = goal.areaId;
+    }
   }
 
   // Validate area ownership if areaId provided
-  if (parsed.areaId) {
-    const area = await prisma.area.findFirst({ where: { id: parsed.areaId, userId: owner } });
+  if (resolvedAreaId) {
+    const area = await prisma.area.findFirst({ where: { id: resolvedAreaId, userId: owner } });
     if (!area) {
       throw new ProjectServiceError("Area tidak ditemukan atau bukan milik Anda.", "AREA_NOT_FOUND");
     }
@@ -49,7 +54,7 @@ export async function createProject(input: CreateProjectInput, userId?: string) 
     title: parsed.title,
     description: parsed.description,
     goalId: parsed.goalId,
-    areaId: parsed.areaId,
+    areaId: resolvedAreaId,
     status: parsed.status as ProjectStatus,
     priority: parsed.priority as Priority,
     startDate: parsed.startDate ? new Date(parsed.startDate) : null,
