@@ -22,6 +22,7 @@ const primaryNav: NavItem[] = [
   { href: "/goals", label: "Goals", verb: "Plan", icon: "flag", color: "text-ai-600" },
   { href: "/dashboard", label: "Analitik", verb: "Insight", icon: "chart", color: "text-success-600" },
   { href: "/review", label: "Refleksi", verb: "Review", icon: "capture", color: "text-info-500" },
+  { href: "/tutorial", label: "Tutorial Sistem", verb: "Guide", icon: "bookOpen", color: "text-amber-500" },
 ];
 
 const domainNav: NavItem[] = [
@@ -45,6 +46,7 @@ const navItemActiveBg: Record<string, string> = {
   "/areas": "from-ai-50/80 to-ai-100/50 border-ai-200/60",
   "/calendar": "from-warning-50/80 to-warning-100/50 border-warning-200/60",
   "/activity": "from-success-50/80 to-success-100/50 border-success-200/60",
+  "/tutorial": "from-amber-50/80 to-amber-100/50 border-amber-200/60",
 };
 
 const navItemActiveText: Record<string, string> = {
@@ -61,6 +63,7 @@ const navItemActiveText: Record<string, string> = {
   "/areas": "text-ai-700",
   "/calendar": "text-warning-700",
   "/activity": "text-success-700",
+  "/tutorial": "text-amber-700",
 };
 
 export function isActive(href: string, pathname: string): boolean {
